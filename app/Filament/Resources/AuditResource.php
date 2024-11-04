@@ -141,6 +141,7 @@ class AuditResource extends Resource
             'create' => Pages\CreateAudit::route('/create'),
             'view' => Pages\ViewAudit::route('/{record}'),
             'edit' => Pages\EditAudit::route('/{record}/edit'),
+            'import-irl' => Pages\ImportIrl::route('/import-irl/{record}'),
         ];
     }
 

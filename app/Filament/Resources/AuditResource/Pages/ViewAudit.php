@@ -7,7 +7,6 @@ use App\Filament\Resources\AuditResource;
 use App\Filament\Resources\AuditResource\Components\DataRequestFilesTable;
 use App\Http\Controllers\ReportController;
 use App\Models\Audit;
-use App\Models\DataRequest;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Filament\Actions;
 use Filament\Actions\Action;
@@ -172,6 +171,24 @@ class ViewAudit extends ViewRecord
                 ,
             ])
                 ->label('Reports')
+                ->icon('heroicon-m-ellipsis-vertical')
+                ->size(ActionSize::Small)
+                ->color('primary')
+                ->button()
+            ,
+            ActionGroup::make([
+                Action::make('OperationsButton')
+                    ->label('Import IRL')
+                    ->size(ActionSize::Small)
+                    ->color('primary')
+                    ->disabled($record->status == WorkflowStatus::NOTSTARTED)
+                    ->action(function (Audit $audit, $livewire) {
+                        return redirect()->route('filament.app.resources.audits.import-irl', $audit);
+                    }
+                    )
+                ,
+            ])
+                ->label('Data Operations')
                 ->icon('heroicon-m-ellipsis-vertical')
                 ->size(ActionSize::Small)
                 ->color('primary')
