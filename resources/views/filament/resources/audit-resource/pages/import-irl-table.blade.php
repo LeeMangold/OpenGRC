@@ -2,19 +2,11 @@
 
     use League\Csv\Reader;
 
+
+
 @endphp
 
-@if (key_exists('irl_file', $data) && count($data["irl_file"]) > 0)
-    @php
-        $filename = reset($data["irl_file"])->getRealPath();
-        if (file_exists($filename)) {
-            $csv = Reader::createFromPath($filename, 'r');
-            $csv->setHeaderOffset(0);
-            $header = $csv->getHeader();
-            //Todo: Validate the CSV File Here
-        }
-    @endphp
-
+@if (is_array($data) && count($data) > 0)
 
     <table class='fi-ta-table w-full table-auto divide-y divide-gray-200 text-start dark:divide-white/5'>
 
@@ -31,47 +23,31 @@
         </thead>
 
         <tbody>
-        @foreach($csv->getRecords() as $record)
+        @foreach($data as $record)
             <tr class='fi-ta-tr'>
                 @php
-                    //todo: There are much better ways to do this. This is ugly.
-                    if ($currentDataRequests->where("id", $record["Request ID"])->count() > 0) {
+
+                    if ($record["_ACTION"] == "UPDATE") {
                         $action= "update";
                         $action_html = '<span style="--c-50:var(--warning-50);--c-400:var(--warning-400);--c-600:var(--warning-600);"
                                         class="fi-badge flex items-center justify-center gap-x-1 rounded-md text-xs font-medium ring-1 ring-inset px-2 min-w-[theme(spacing.6)] py-1 fi-color-custom bg-custom-50 text-custom-600 ring-custom-600/10 dark:bg-custom-400/10 dark:text-custom-400 dark:ring-custom-400/30 fi-color-warning">
                                         UPDATE
                                         </span>';
-                    } else {
+                    } else if($record["_ACTION"] == "CREATE") {
                         $action= "add";
                         $action_html = '<span style="--c-50:var(--success-50);--c-400:var(--success-400);--c-600:var(--success-600);"
                                         class="fi-badge flex items-center justify-center gap-x-1 rounded-md text-xs font-medium ring-1 ring-inset px-2 min-w-[theme(spacing.6)] py-1 fi-color-custom bg-custom-50 text-custom-600 ring-custom-600/10 dark:bg-custom-400/10 dark:text-custom-400 dark:ring-custom-400/30 fi-color-success">
-                                        ADD
+                                        CREATE
                                         </span>';
                     }
-
-
-
-                    if (array_key_exists($record["Assigned To"], $users->toArray())) {
-                        $user = $users[$record["Assigned To"]];
-                    } else {
-                        $user = '<span class="fi-ta-text-item-label text-sm leading-6 text-custom-600 dark:text-custom-400"
-                                style="--c-400:var(--danger-400);--c-600:var(--danger-600);">
-                                Invalid ID
-                                </span>';
-                    }
-
-                    //Verify that if an item is to be updated, it exists in this audit
-
-                    //Verify that the control codes are valid and part of the audit via requests
-
                 @endphp
 
                 <td class='fi-ta-td text-center align-middle'>{!! $action_html !!}</td>
                 <td class='fi-ta-td text-center align-middle'>{{ $record["Audit ID"] }}</td>
-                <td class='fi-ta-td text-center align-middle'>{{ $record["Request ID"] }}</td>
+                <td class='fi-ta-td text-center align-middle'>{{ $record["Request ID"] ?? 'New'}}</td>
                 <td class='fi-ta-td text-center align-middle'>{{ $record["Control Code"] }}</td>
                 <td class='fi-ta-td'>{{ $record["Details"] }}</td>
-                <td class='fi-ta-td text-center align-middle'>{!! $user !!}</td>
+                <td class='fi-ta-td text-center align-middle'>{!! $record["Assigned To"] !!}</td>
                 <td class='fi-ta-td text-center align-middle'>{{ $record["Due On"] }}</td>
             </tr>
         @endforeach
