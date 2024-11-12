@@ -4,6 +4,7 @@ namespace App\Filament\Resources\AuditResource\Pages;
 
 use App\Filament\Resources\AuditResource;
 use App\Models\DataRequest;
+use App\Models\DataRequestResponse;
 use App\Models\User;
 use Exception;
 use Filament\Actions\Concerns\HasWizard;
@@ -13,11 +14,13 @@ use Filament\Forms\Components\Wizard;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\Concerns\InteractsWithRecord;
 use Filament\Resources\Pages\Page;
 use Filament\Support\Exceptions\Halt;
 use Illuminate\Support\HtmlString;
+use Illuminate\Validation\ValidationException;
 use League\Csv\Reader;
 
 class ImportIrl extends Page implements HasForms
@@ -28,7 +31,9 @@ class ImportIrl extends Page implements HasForms
     protected static string $view = 'filament.resources.audit-resource.pages.import-irl';
 
     public ?array $data = [];
+    public ?array $irlData = [];
     public ?array $errorData = [];
+
     public $irl_file;
     public $currentDataRequests;
     public $auditItems;
@@ -36,13 +41,14 @@ class ImportIrl extends Page implements HasForms
     public $users;
     public ?array $finalData = [];
 
+    public ?string $irl_file_path;
     public bool $isIrlFileValid = false;
+    public ?string $error_string = null;
 
     public function mount(int|string $record): void
     {
         $this->record = $this->resolveRecord($record);
         $this->form->fill();
-
     }
 
     public function form(Form $form): Form
@@ -56,6 +62,7 @@ class ImportIrl extends Page implements HasForms
             ->schema([
                 Wizard::make([
                     Wizard\Step::make('IRL File')
+                        ->id('irl-file')
                         ->schema([
                             Placeholder::make('Introduction')
                                 ->columnSpanFull()
@@ -63,18 +70,20 @@ class ImportIrl extends Page implements HasForms
                                         <p><strong>IRL Import Instructions</strong></p>"))
                                 ->content(new HtmlString("<p>IRL Instructions here...</p>")),
                             FileUpload::make("irl_file")
+                                ->required()
                                 ->label("IRL File")
                                 ->acceptedFileTypes(["text/csv"])
-                                ->afterStateUpdated(function ($state) {
+                                ->rules([])
+                                ->afterStateUpdated(function ($state, Get $get) {
                                     if ($state) {
-                                        $file = $state->getPathname();
-                                        $this->isIrlFileValid = $this->validateIrlFile($file) && $this->validateIrlFileData();
+                                        $this->irl_file_path = $state->getPathname();
+                                        $this->isIrlFileValid = $this->validateIrlFile() && $this->validateIrlFileData();
                                     }
-                                })
-                                ->required(),
+                                }),
                         ])
                         ->afterValidation(function () {
                             if (!$this->isIrlFileValid) {
+                                $this->isIrlFileValid = $this->validateIrlFileData();
                                 throw new Halt();
                             }
                         })
@@ -92,18 +101,18 @@ class ImportIrl extends Page implements HasForms
                                     'currentDataRequests' => $this->currentDataRequests ?? [],
                                     'auditItems' => $this->auditItems ?? [],
                                 ])
-                        ]),
+                        ])
+                ])
+                    ->submitAction(new HtmlString('<button class="fi-btn relative grid-flow-col items-center justify-center font-semibold outline-none transition duration-75 focus-visible:ring-2 rounded-lg fi-color-custom fi-btn-color-primary fi-color-primary fi-size-md fi-btn-size-md gap-1.5 px-3 py-2 text-sm inline-grid shadow-sm bg-custom-600 text-white hover:bg-custom-500 focus-visible:ring-custom-500/50 dark:bg-custom-500 dark:hover:bg-custom-400 dark:focus-visible:ring-custom-400/50 fi-ac-action fi-ac-btn-action" style="--c-400:var(--primary-400);--c-500:var(--primary-500);--c-600:var(--primary-600);" type="submit">Import IRL Requests</button>'))
 
-                ])->submitAction(new HtmlString('<button type="submit">Import IRL Requests</button>'))
                 ,
-
             ]);
     }
 
-    public function validateIrlFile($file): bool
+    public function validateIrlFile(): bool
     {
         try {
-            $reader = Reader::createFromPath($file, 'r');
+            $reader = Reader::createFromPath($this->irl_file_path, 'r');
             $reader->setHeaderOffset(0);
             $headers = $reader->getHeader();
             $normalizedHeaders = array_map(function ($header) {
@@ -120,27 +129,17 @@ class ImportIrl extends Page implements HasForms
             $missingHeaders = array_diff($requiredHeaders, $normalizedHeaders);
 
             if (!empty($missingHeaders)) {
-                $this->addError('irl_file', 'IRL File missing fields: ' . implode(', ', $missingHeaders));
-
-                Notification::make()
-                    ->title('IRL File missing fields: ' . implode(', ', $missingHeaders))
-                    ->danger()
-                    ->send();
+                $err = new HtmlString('IRL File missing fields: ' . implode(', ', $missingHeaders) . "<br><br>Please use the provided template and reupload your IRL");
+                $this->addError('irl_file', $err);
                 return false;
             } else {
                 $this->resetErrorBag('irl_file');
-                $this->data = iterator_to_array($reader->getRecords());
+                $this->irlData = iterator_to_array($reader->getRecords());
                 return true;
             }
 
         } catch (Exception $e) {
             $this->addError('irl_file', 'Invalid CSV file: ' . $e->getMessage());
-
-            Notification::make()
-                ->title('Invalid CSV file: ' . $e->getMessage())
-                ->icon('warning')
-                ->warning()
-                ->send();
             return false;
         }
     }
@@ -149,8 +148,10 @@ class ImportIrl extends Page implements HasForms
     public function validateIrlFileData(): bool
     {
         $has_errors = false;
+        $error_array = [];
+
         try {
-            foreach ($this->data as $index => $row) {
+            foreach ($this->irlData as $index => $row) {
                 $finalRecord = [];
 
                 // If the request exists, update it
@@ -165,7 +166,10 @@ class ImportIrl extends Page implements HasForms
 
                 // Validate that the IRL is for this audit only
                 if ($row['Audit ID'] != $this->record->id) {
-                    $this->addError('irl_file', "Row $index: 'audit id' must match the audit id.");
+//                    $this->addError('irl_file', "Row $index: 'audit id' must match the ID of the current audit. <br> Please correct and re-upload the IRL file.");
+//                    $this->addError('irl_file',
+//                        new HtmlString("Row $index: 'audit id' must match the ID of the current audit."));
+                    $error_array[] = "Row $index: Audit ID must match the ID of the current audit.";
                     $has_errors = true;
                     $finalRecord['Audit ID'] = "Invalid Audit ID";
                 } else {
@@ -175,7 +179,8 @@ class ImportIrl extends Page implements HasForms
 
                 // Validate the user is a real user
                 if (!array_key_exists($row["Assigned To"], $this->users->toArray())) {
-                    $this->addError('irl_file', "Row $index: no user with the id of " . $row["Assigned To"]);
+//                    $this->addError('irl_file', "Row $index: no user with the id of " . $row["Assigned To"]);
+                    $error_array[] = "Row $index: no user with the id of " . $row["Assigned To"];
                     $has_errors = true;
                     $finalRecord['Assigned To'] = "Unknown User";
                 } else {
@@ -184,16 +189,18 @@ class ImportIrl extends Page implements HasForms
 
                 // Validate the control exists by control code
                 if (!in_array($row["Control Code"], $this->controlCodes)) {
-                    $this->addError('irl_file', "Row $index: no control with the code of " . $row["Control Code"]);
+//                    $this->addError('irl_file', "Row $index: no control with the code of " . $row["Control Code"]);
                     $has_errors = true;
                     $finalRecord['Control Code'] = "Control Code Not In Audit: {$row["Control Code"]}";
+                    $error_array[] = "Row $index: no control with the code of " . $row["Control Code"];
                 } else {
                     $finalRecord['Control Code'] = $row["Control Code"];
                 }
 
                 // If $row["Details"] is empty error
                 if (empty($row["Details"])) {
-                    $this->addError('irl_file', "Row $index: 'details' cannot be empty.");
+//                    $this->addError('irl_file', "Row $index: 'details' cannot be empty.");
+                    $error_array[] = "Row $index: 'details' cannot be empty.";
                     $has_errors = true;
                     $finalRecord['Details'] = "Details Cannot Be Empty";
                 } else {
@@ -202,9 +209,10 @@ class ImportIrl extends Page implements HasForms
 
                 // If $row["Due On"] is not a valid date error
                 if (!preg_match('/^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{4}$/', $row['Due On'])) {
-                    $this->addError('irl_file', "Row $index: 'due on' must be a valid date in mm/dd/yyyy format.");
+//                    $this->addError('irl_file', "Row $index: 'due on' must be a valid date in mm/dd/yyyy format.");
                     $has_errors = true;
                     $finalRecord['Due On'] = "Invalid Date Format";
+                    $error_array[] = "Row $index: 'due on' must be a valid date in mm/dd/yyyy format.";
                 } else {
                     $finalRecord['Due On'] = $row["Due On"];
                 }
@@ -219,6 +227,9 @@ class ImportIrl extends Page implements HasForms
 
 
             if ($has_errors) {
+                $this->isIrlFileValid = false;
+                $this->error_string = implode(" | ", $error_array);
+                $this->addError('irl_file', $this->error_string );
                 return false;
             }
 
@@ -251,17 +262,35 @@ class ImportIrl extends Page implements HasForms
             if ($row['_ACTION'] == 'CREATE') {
                 $dataRequest = new DataRequest();
                 $dataRequest->audit_id = $row['Audit ID'];
-                $dataRequest->auditItem = $this->auditItems->where('auditable.code', $row['Control Code'])->first()->id;
+                $dataRequest->audit_item_id = $this->auditItems->where('auditable.code', $row['Control Code'])->first()->id;
                 $dataRequest->details = $row['Details'];
                 $dataRequest->assigned_to_id = array_search($row['Assigned To'], $this->users->toArray());
+                $dataRequest->created_by_id = auth()->id();
 //                $dataRequest->due_on = $row['Due On'];
                 $dataRequest->save();
+
+                // Create a Matching DataRequestResponse
+                $dataRequestResponse = new DataRequestResponse();
+                $dataRequestResponse->data_request_id = $dataRequest->id;
+                $dataRequestResponse->requester_id = auth()->id();
+                $dataRequestResponse->requestee_id = $dataRequest->assigned_to_id;
+                $dataRequestResponse->save();
+
+
             } elseif ($row['_ACTION'] == 'UPDATE') {
                 $dataRequest = DataRequest::find($row['Request ID']);
                 $dataRequest->details = $row['Details'];
                 $dataRequest->assigned_to_id = array_search($row['Assigned To'], $this->users->toArray());
 //                $dataRequest->due_on = $row['Due On'];
                 $dataRequest->save();
+
+                $dataRequestResponse = $dataRequest->responses()->first();
+                if ($dataRequestResponse) {
+                    $dataRequestResponse->data_request_id = $dataRequest->id;
+                    $dataRequestResponse->requestee_id = $dataRequest->assigned_to_id;
+                    $dataRequestResponse->save();
+                }
+
             }
         }
 
@@ -272,7 +301,14 @@ class ImportIrl extends Page implements HasForms
 
         return redirect()->route('filament.app.resources.audits.view', $this->record->id);
 
-
     }
 
+
+    protected function onValidationError(ValidationException $exception): void
+    {
+        Notification::make()
+            ->title($exception->getMessage())
+            ->danger()
+            ->send();
+    }
 }

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('assigned_to_id')->constrained('users');
             $table->foreignId('audit_item_id')->constrained();
             $table->foreignId('audit_id')->constrained();
-            $table->string('status')->default(\App\Enums\WorkflowStatus::NOTSTARTED);
+            $table->string('status')->default(\App\Enums\ResponseStatus::PENDING);
             $table->longText('details')->nullable();
             $table->longText('response')->nullable();
             $table->text('files')->nullable();
