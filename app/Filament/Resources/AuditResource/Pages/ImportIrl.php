@@ -29,6 +29,7 @@ class ImportIrl extends Page implements HasForms
 
     protected static string $resource = AuditResource::class;
     protected static string $view = 'filament.resources.audit-resource.pages.import-irl';
+    protected static ?string $title = 'IRL Import Wizard';
 
     public ?array $data = [];
     public ?array $irlData = [];
@@ -63,12 +64,16 @@ class ImportIrl extends Page implements HasForms
                 Wizard::make([
                     Wizard\Step::make('IRL File')
                         ->id('irl-file')
+                        ->icon('heroicon-m-document')
                         ->schema([
                             Placeholder::make('Introduction')
                                 ->columnSpanFull()
                                 ->label(new HtmlString("
-                                        <p><strong>IRL Import Instructions</strong></p>"))
-                                ->content(new HtmlString("<p>IRL Instructions here...</p>")),
+                                        <p><strong>Information Request List(IRL) Import Wizard</strong></p>"))
+                                ->content(new HtmlString("<p>An Information Request List (IRL), sometimes called a Prepared by Client (PBC) list, is a detailed document outlining 
+                                                                the specific records, evidence, and data that auditors require to conduct an effective audit. If you have received an 
+                                                                IRL from your auditor, you can upload it here to create or update data requests for this audit. Make sure your IRL 
+                                                                uses the template provided to ensure a successful import.</p><p class='mt-3'><a class='underline text-grcblue-400' href=''>IRL Template Download</a></p>")),
                             FileUpload::make("irl_file")
                                 ->required()
                                 ->label("IRL File")
@@ -89,6 +94,7 @@ class ImportIrl extends Page implements HasForms
                         })
                     ,
                     Wizard\Step::make('Review Data')
+                        ->icon('heroicon-m-document-check')
                         ->schema([
                             Placeholder::make('Changes to be made')
                                 ->columnSpanFull()
@@ -104,7 +110,6 @@ class ImportIrl extends Page implements HasForms
                         ])
                 ])
                     ->submitAction(new HtmlString('<button class="fi-btn relative grid-flow-col items-center justify-center font-semibold outline-none transition duration-75 focus-visible:ring-2 rounded-lg fi-color-custom fi-btn-color-primary fi-color-primary fi-size-md fi-btn-size-md gap-1.5 px-3 py-2 text-sm inline-grid shadow-sm bg-custom-600 text-white hover:bg-custom-500 focus-visible:ring-custom-500/50 dark:bg-custom-500 dark:hover:bg-custom-400 dark:focus-visible:ring-custom-400/50 fi-ac-action fi-ac-btn-action" style="--c-400:var(--primary-400);--c-500:var(--primary-500);--c-600:var(--primary-600);" type="submit">Import IRL Requests</button>'))
-
                 ,
             ]);
     }
