@@ -22,30 +22,33 @@ class AppServiceProvider extends ServiceProvider
 
         // Disable mass assignment protection
         Model::unguard();
-        URL::forceScheme('https');
+        if (!$this->app->environment('local')) {
+            URL::forceScheme('https');
+        }
 
         //if table "settings" exists
-        if (Schema::hasTable('settings')) {
+	if (!app()->runningInConsole()) {
+            if (Schema::hasTable('settings')) {
+
+                Config::set('app.name', setting('general.name', 'OpenGRC'));
+                Config::set('app.url', setting('general.url', 'https://localhost'));
 
 
-            Config::set('app.name', setting('general.name', 'OpenGRC'));
-            Config::set('app.url', setting('general.url', 'https://localhost'));
-
-
-            config()->set('mail', array_merge(config('mail'), [
-                'driver' => 'smtp',
-                'transport' => "smtp",
-                'host' => setting('mail.host'),
-                'username' => setting('mail.username'),
-                'password' => setting('mail.password'),
-                'encryption' => setting('mail.encryption'),
-                'port' => setting('mail.port'),
-                'from' => [
-                    'address' => setting('mail.from'),
-                    'name' => setting('general.name'),
-                ]
-            ]));
-        }
+                config()->set('mail', array_merge(config('mail'), [
+                    'driver' => 'smtp',
+                    'transport' => "smtp",
+                    'host' => setting('mail.host'),
+                    'username' => setting('mail.username'),
+                    'password' => setting('mail.password'),
+                    'encryption' => setting('mail.encryption'),
+                    'port' => setting('mail.port'),
+                    'from' => [
+                        'address' => setting('mail.from'),
+                        'name' => setting('general.name'),
+                    ]
+                ]));
+     	    }
+	}
 
         Gate::before(function (User $user, string $ability) {
             return $user->isSuperAdmin() ? true : null;
