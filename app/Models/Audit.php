@@ -54,14 +54,14 @@ class Audit extends Model
     /**
      * The attributes that are mass assignable.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $fillable = ['title', 'description', 'status', 'start_date', 'end_date'];
 
     /**
      * The attributes that should be cast.
      *
-     * @var array
+     * @var array<string, string>
      */
     protected $casts = [
         'controls' => 'array',

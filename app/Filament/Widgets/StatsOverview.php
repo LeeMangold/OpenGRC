@@ -20,7 +20,7 @@ class StatsOverview extends BaseWidget
 
         $audits_in_progress = Audit::all()->where('status', WorkflowStatus::INPROGRESS)->count();
         $audits_performed = Audit::all()->where('status', WorkflowStatus::COMPLETED)->count();
-        $implementations = Implementation::all()->count();
+        $implementations = Implementation::count();
         $controls_in_scope = [];
         $controls_in_scope_tested = [];
 

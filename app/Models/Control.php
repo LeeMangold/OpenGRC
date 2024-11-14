@@ -66,7 +66,7 @@ class Control extends Model
     /**
      * The attributes that should be cast.
      *
-     * @var array
+     * @var array<string, string>
      */
     protected $casts = [
         'id' => 'integer',
@@ -150,9 +150,15 @@ class Control extends Model
         return $this->audits()->where('status', '=', 'Completed');
     }
 
+    /**
+     * Get the latest completed audit item for the control.
+     *
+     * @return AuditItem|null
+     */
     public function latestCompletedAuditItem(): ?AuditItem
     {
-        return $this->completedAuditItems()->latest()->first();
+        $latestCompletedAuditItem = $this->completedAuditItems()->latest()->first();
+        return $latestCompletedAuditItem instanceof AuditItem ? $latestCompletedAuditItem : null;
     }
 
     /**

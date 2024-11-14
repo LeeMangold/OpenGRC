@@ -83,7 +83,7 @@ class CreateAudit extends CreateRecord
                         ->label('Audit Manager')
                         ->required()
                         ->hint("Who will be managing this audit?")
-                        ->options(User::all()->pluck('name', 'id'))
+                        ->options(User::query()->pluck('name', 'id')->toArray())
                         ->columns(1)
                         ->default(fn() => auth()->id())
                         ->searchable(),
@@ -114,8 +114,7 @@ class CreateAudit extends CreateRecord
                                     $controls = Control::where('standard_id', '=', $standard_id)
                                         ->pluck('title', 'id');
                                 } elseif ($audit_type == 'implementations') {
-                                    $controls = Implementation::all()
-                                        ->pluck('title', 'id');
+                                    $controls = Implementation::query()->pluck('title', 'id')->toArray();
                                 } else {
                                     $controls = [];
                                 }

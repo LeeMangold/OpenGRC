@@ -35,6 +35,7 @@ class ImportIrl extends Page implements HasForms
     public ?array $irlData = [];
     public ?array $errorData = [];
 
+    protected $except = ['form'];
     public $irl_file;
     public $currentDataRequests;
     public $auditItems;
@@ -54,8 +55,8 @@ class ImportIrl extends Page implements HasForms
 
     public function form(Form $form): Form
     {
-        $this->users = User::get()->pluck('name', 'id');
-        $this->currentDataRequests = DataRequest::get()->where("audit_id", $this->record->id);
+        $this->users = User::query()->pluck('name', 'id')->toArray();
+        $this->currentDataRequests = DataRequest::query()->where("audit_id", $this->record->id)->get();
         $this->auditItems = $this->record->auditItems()->with('control')->get();
         $this->controlCodes = $this->auditItems->pluck('auditable.code')->toArray();
 
@@ -184,8 +185,7 @@ class ImportIrl extends Page implements HasForms
 
 
                 // Validate the user is a real user
-                if (!array_key_exists($row["Assigned To"], $this->users->toArray())) {
-//                    $this->addError('irl_file', "Row $index: no user with the id of " . $row["Assigned To"]);
+                if (!array_key_exists($row["Assigned To"], $this->users)) {
                     $error_array[] = "Row $index: no user with the id of " . $row["Assigned To"];
                     $has_errors = true;
                     $finalRecord['Assigned To'] = "Unknown User";
@@ -235,7 +235,7 @@ class ImportIrl extends Page implements HasForms
             if ($has_errors) {
                 $this->isIrlFileValid = false;
                 $this->error_string = implode(" | ", $error_array);
-                $this->addError('irl_file', $this->error_string );
+                $this->addError('irl_file', $this->error_string);
                 return false;
             }
 
@@ -270,7 +270,7 @@ class ImportIrl extends Page implements HasForms
                 $dataRequest->audit_id = $row['Audit ID'];
                 $dataRequest->audit_item_id = $this->auditItems->where('auditable.code', $row['Control Code'])->first()->id;
                 $dataRequest->details = $row['Details'];
-                $dataRequest->assigned_to_id = array_search($row['Assigned To'], $this->users->toArray());
+                $dataRequest->assigned_to_id = array_search($row['Assigned To'], $this->users);
                 $dataRequest->created_by_id = auth()->id();
 //                $dataRequest->due_on = $row['Due On'];
                 $dataRequest->save();
@@ -286,8 +286,8 @@ class ImportIrl extends Page implements HasForms
             } elseif ($row['_ACTION'] == 'UPDATE') {
                 $dataRequest = DataRequest::find($row['Request ID']);
                 $dataRequest->details = $row['Details'];
-                $dataRequest->assigned_to_id = array_search($row['Assigned To'], $this->users->toArray());
-//                $dataRequest->due_on = $row['Due On'];
+                $dataRequest->assigned_to_id = array_search($row['Assigned To'], $this->users);
+                //                $dataRequest->due_on = $row['Due On'];
                 $dataRequest->save();
 
                 $dataRequestResponse = $dataRequest->responses()->first();

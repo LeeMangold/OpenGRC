@@ -2,27 +2,16 @@
 
 namespace App\Filament\Resources\AuditResource\Pages;
 
-use App\Enums\WorkflowStatus;
 use App\Filament\Resources\AuditResource;
-use App\Models\Control;
-use App\Models\Implementation;
 use App\Models\Standard;
-use App\Models\User;
 use Filament\Actions;
-use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Grid;
-use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Wizard;
 use Filament\Forms\Form;
-use Filament\Forms\Get;
 use Filament\Resources\Pages\EditRecord;
-use Illuminate\Support\HtmlString;
-use LucasGiovanny\FilamentMultiselectTwoSides\Forms\Components\Fields\MultiselectTwoSides;
 
 class EditAudit extends EditRecord
 {
@@ -55,7 +44,7 @@ class EditAudit extends EditRecord
                         Select::make('manager_id')
                             ->label('Audit Manager')
                             ->hint("Who will be managing this audit?")
-                            ->options(User::all()->pluck('name', 'id'))
+                            ->options(Standard::query()->where("status", "In Scope")->pluck('name', 'id')->toArray())
                             ->columns(1)
                             ->searchable(),
                         Textarea::make('description')

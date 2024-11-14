@@ -22,6 +22,11 @@ class AuditItem extends Model
 
     protected $fillable = ['audit_id', 'user_id', 'control_id', 'auditor_notes', 'status', 'effectiveness', 'applicability'];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
     protected $casts = [
         'id' => 'integer',
         'applicability' => Applicability::class,

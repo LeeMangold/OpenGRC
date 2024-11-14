@@ -26,6 +26,7 @@ class PasswordResetPage extends Component implements HasForms, HasActions
     public ?array $data = [];
 
     public User $user;
+    protected Form $form;
 
     public function mount(): void
     {

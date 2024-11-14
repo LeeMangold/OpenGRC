@@ -62,7 +62,7 @@ class Implementation extends Model
     /**
      * The attributes that should be cast.
      *
-     * @var array
+     * @var array<string, string>
      */
     protected $casts = [
         'id' => 'integer',
@@ -73,7 +73,7 @@ class Implementation extends Model
     /**
      * The attributes that are mass assignable.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $fillable = ['details', 'status', 'notes', 'effectiveness'];
 

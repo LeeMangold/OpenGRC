@@ -77,7 +77,7 @@ class AuditResource extends Resource
             ->filters([
                 SelectFilter::make('manager_id')
                     ->label('Manager')
-                    ->options(User::all()->pluck('name', 'id')->toArray())
+                    ->options(User::query()->pluck('name', 'id')->toArray())
                     ->searchable(),
 
                 SelectFilter::make('status')
