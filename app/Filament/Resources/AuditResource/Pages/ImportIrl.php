@@ -151,6 +151,7 @@ class ImportIrl extends Page implements HasForms
         $error_array = [];
 
         try {
+            $this->finalData = [];
             foreach ($this->irlData as $index => $row) {
                 $finalRecord = [];
 

@@ -176,24 +176,6 @@ class ViewAudit extends ViewRecord
                 ->color('primary')
                 ->button()
             ,
-            ActionGroup::make([
-                Action::make('OperationsButton')
-                    ->label('Import IRL')
-                    ->size(ActionSize::Small)
-                    ->color('primary')
-                    ->disabled($record->status == WorkflowStatus::NOTSTARTED)
-                    ->action(function (Audit $audit, $livewire) {
-                        return redirect()->route('filament.app.resources.audits.import-irl', $audit);
-                    }
-                    )
-                ,
-            ])
-                ->label('Data Operations')
-                ->icon('heroicon-m-ellipsis-vertical')
-                ->size(ActionSize::Small)
-                ->color('primary')
-                ->button()
-            ,
         ];
     }
 

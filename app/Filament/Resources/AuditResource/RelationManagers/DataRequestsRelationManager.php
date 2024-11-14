@@ -2,12 +2,14 @@
 
 namespace App\Filament\Resources\AuditResource\RelationManagers;
 
+use App\Enums\ResponseStatus;
 use App\Enums\WorkflowStatus;
 use App\Filament\Resources\DataRequestResource;
 use App\Models\AuditItem;
 use App\Models\DataRequest;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -26,7 +28,6 @@ class DataRequestsRelationManager extends RelationManager
     {
         return $form
             ->schema([
-
                 Section::make('Request')
                     ->columns(2)
                     ->schema([
@@ -109,6 +110,27 @@ class DataRequestsRelationManager extends RelationManager
                             ->content(function ($record) {
                                 return new HtmlString($record->auditItem->auditable->description);
                             }),
+                        Repeater::make('responses')
+                            ->label('Responses')
+                            ->relationship('responses')
+                            ->addable(false)
+                            ->columns(2)
+                            ->schema([
+                                Select::make('requestee')
+                                    ->label('Assigned To')
+                                    ->relationship('requestee', 'name')
+                                    ->required(),
+                                Select::make('status')
+                                    ->label('Status')
+                                    ->options(ResponseStatus::class)
+                                    ->default(ResponseStatus::PENDING)
+                                    ->required(),
+                                Placeholder::make('response')
+                                    ->content(function ($record) {
+                                        return new HtmlString($record->response);
+                                    })
+                                    ->label('Response'),
+                            ]),
                     ]),
             ]);
     }
@@ -118,6 +140,10 @@ class DataRequestsRelationManager extends RelationManager
         return $table
             ->description('Note: You can currently only edit requests made in this table. Responses are currently only visible on the Audit Item assessment page. This will be addressed in a future release.')
             ->columns([
+                TextColumn::make('id')
+                    ->toggleable()
+                    ->toggledHiddenByDefault()
+                    ->label('ID'),
                 TextColumn::make('details')
                     ->label('Request Details')
                     ->wrap(),
@@ -130,7 +156,14 @@ class DataRequestsRelationManager extends RelationManager
                 TextColumn::make('status')->badge(),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('status')
+                    ->options(WorkflowStatus::class)
+                    ->label('Status'),
+                Tables\Filters\SelectFilter::make('assigned_to_id')
+                    ->options(DataRequest::pluck('assigned_to_id', 'assigned_to_id')->toArray())
+                    ->label('Assigned To'),
+
+
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
@@ -140,11 +173,30 @@ class DataRequestsRelationManager extends RelationManager
                     ->after(function (DataRequest $record, Tables\Actions\Action $action) {
                         DataRequestResource::createResponses($record);
                     }),
+                Tables\Actions\Action::make('import_irl')
+                    ->label('Import IRL')
+                    ->color('primary')
+                    ->disabled(function () {
+                        return $this->getOwnerRecord()->status != WorkflowStatus::INPROGRESS;
+                    })
+                    ->action(function () {
+                        $audit = $this->getOwnerRecord();
+                        return redirect()->route('filament.app.resources.audits.import-irl', $audit);
+                    }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
-                    ->modalHeading("Edit Data Request"),
-                Tables\Actions\DeleteAction::make(),
+                    ->modalHeading("View Data Request")
+                    ->disabled(function () {
+                        return $this->getOwnerRecord()->status != WorkflowStatus::INPROGRESS;
+                    }),
+                Tables\Actions\DeleteAction::make()
+                    ->disabled(function () {
+                        return $this->getOwnerRecord()->status != WorkflowStatus::INPROGRESS;
+                    })
+                    ->visible(function () {
+                        return $this->getOwnerRecord()->status == WorkflowStatus::INPROGRESS;
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
