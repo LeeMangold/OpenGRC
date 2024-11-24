@@ -48,7 +48,7 @@ return [
             'driver' => 'local',
             'root' => storage_path('app/private'),
             'visibility' => 'private',
-            'url' => env('APP_URL').'/priv-storage',
+            'url' => env('APP_URL').'/app/priv-storage',
         ],
 
         's3' => [

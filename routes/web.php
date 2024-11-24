@@ -18,12 +18,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Private storage routes
 Route::middleware(['auth'])->group(function () {
 
     Route::get('/app/reset-password', \App\Livewire\PasswordResetPage::class)->name('password-reset-page');
 
-    Route::get('/priv-storage/{filepath}', function ($filepath) {
+    Route::get('/app/priv-storage/{filepath}', function ($filepath) {
         return Storage::disk('private')->download($filepath);
     })->where('filepath', '.*')->name('priv-storage');
 
