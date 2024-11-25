@@ -12,8 +12,6 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Str;
 
 class FileAttachmentResource extends Resource
@@ -38,6 +36,7 @@ class FileAttachmentResource extends Resource
                         $rand = Carbon::now()->timestamp . '-' . Str::random(2);
                         return "attachments/" . $rand;
                     })
+                    ->downloadable(true)
                     ->visibility('private')
                     ->openable()
                     ->deletable(true)
@@ -58,27 +57,15 @@ class FileAttachmentResource extends Resource
                     ->limit(100)
                     ->wrap(),
                 Tables\Columns\TextColumn::make('file_path')
-//                    ->formatUsing(function ($value) {
-//                        return basename($value);
-//                    })
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('file_size')
-//                    ->formatUsing(function ($value) {
-//                        return Str::of($value)->replace('bytes', 'B')->replace('KB', 'KB')->replace('MB', 'MB')->replace('GB', 'GB')->replace('TB', 'TB');
-//                    })
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('uploaded_by')
-//                    ->formatUsing(function ($value) {
-//                        return $value ? $value : 'System';
-//                    })
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
-//                    ->formatUsing(function ($value) {
-//                        return Carbon::parse($value)->format('Y-m-d H:i:s');
-//                    })
                     ->searchable()
                     ->sortable(),
             ])

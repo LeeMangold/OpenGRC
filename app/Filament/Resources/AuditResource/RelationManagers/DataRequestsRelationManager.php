@@ -168,7 +168,6 @@ class DataRequestsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->description('Note: You can currently only edit requests made in this table. Responses are currently only visible on the Audit Item assessment page. This will be addressed in a future release.')
             ->columns([
                 TextColumn::make('id')
                     ->toggleable()

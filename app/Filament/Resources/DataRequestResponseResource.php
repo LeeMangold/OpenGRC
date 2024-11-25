@@ -66,6 +66,11 @@ class DataRequestResponseResource extends Resource
 
                                 Hidden::make('uploaded_by')
                                     ->default(Auth::id()),
+                                Hidden::make('audit_id')
+                                    ->default(function ($livewire) {
+                                        $drr = DataRequestResponse::where('id', $livewire->data['id'])->first();
+                                        return $drr->dataRequest->audit_id;
+                                    }),
                             ]),
 
                     ]),

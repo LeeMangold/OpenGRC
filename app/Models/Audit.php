@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Carbon;
@@ -110,20 +109,13 @@ class Audit extends Model
     }
 
     /**
-     * Get the file attachments for the audit through data requests.
+     * Get the file attachments for the audit through data requests and responses.
      *
-     * @return HasManyThrough
+     * @return HasMany
      */
-    public function attachments(): HasManyThrough
+    public function attachments(): HasMany
     {
-        return $this->hasManyThrough(
-            FileAttachment::class,
-            DataRequestResponse::class,
-            'data_request_id',  // Foreign key on DataRequestResponse table
-            'data_request_response_id',      // Foreign key on FileAttachment table
-            'id',               // Local key on Audit table
-            'id'                // Local key on DataRequestResponse table
-        )->join('data_requests', 'data_requests.id', '=', 'data_request_responses.data_request_id')
-            ->where('data_requests.audit_id', $this->id);
+        return $this->hasMany(FileAttachment::class);
     }
+
 }

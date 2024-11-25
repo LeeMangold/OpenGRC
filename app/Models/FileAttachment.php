@@ -61,4 +61,14 @@ class FileAttachment extends Model
     {
         return $this->belongsTo(DataRequestResponse::class);
     }
+
+    public function auditItem(): BelongsTo
+    {
+        return $this->belongsTo(AuditItem::class);
+    }
+
+    public function audit(): BelongsTo
+    {
+        return $this->belongsTo(Audit::class);
+    }
 }
