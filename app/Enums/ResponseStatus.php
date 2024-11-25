@@ -27,7 +27,7 @@ enum ResponseStatus: string implements hasLabel, hasColor, hasDescription
     {
         return match ($this) {
             self::PENDING => 'primary',
-            self::RESPONDED => 'info',
+            self::RESPONDED => 'warning',
             self::ACCEPTED => 'success',
             self::REJECTED => 'danger',
         };

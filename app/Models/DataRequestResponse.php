@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ResponseStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -10,6 +11,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class DataRequestResponse extends Model
 {
     use HasFactory;
+
+    protected function casts(): array
+    {
+        return [
+            'status' => ResponseStatus::class,
+        ];
+    }
+
 
     public function dataRequest(): BelongsTo
     {

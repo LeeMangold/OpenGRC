@@ -13,11 +13,13 @@ use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\HtmlString;
 
 class DataRequestsRelationManager extends RelationManager
@@ -110,27 +112,55 @@ class DataRequestsRelationManager extends RelationManager
                             ->content(function ($record) {
                                 return new HtmlString($record->auditItem->auditable->description);
                             }),
-//                        Repeater::make('responses')
-//                            ->label('Responses')
-//                            ->relationship('responses')
-//                            ->addable(false)
-//                            ->columns(2)
-//                            ->schema([
-//                                Select::make('requestee')
-//                                    ->label('Assigned To')
-//                                    ->relationship('requestee', 'name')
-//                                    ->required(),
-//                                Select::make('status')
-//                                    ->label('Status')
-//                                    ->options(ResponseStatus::class)
-//                                    ->default(ResponseStatus::PENDING)
-//                                    ->required(),
-//                                Placeholder::make('response')
-//                                    ->content(function ($record) {
-//                                        return new HtmlString($record ? $record->response : '');
-//                                    })
-//                                    ->label('Response'),
-//                            ]),
+                        Repeater::make('responses')
+                            ->label('Responses')
+                            ->relationship('responses')
+                            ->addable(false)
+                            ->columns(2)
+                            ->deletable(false)
+                            ->schema([
+                                Select::make('requestee_id')
+                                    ->label('Assigned To')
+                                    ->relationship('requestee', 'name')
+                                    ->required(),
+                                ToggleButtons::make('status')
+                                    ->label('Status')
+                                    ->options(ResponseStatus::class)
+                                    ->default(ResponseStatus::PENDING)
+                                    ->grouped()
+                                    ->required(),
+                                Placeholder::make('response')
+                                    ->label('Text Response')
+                                    ->columnSpanFull()
+                                    ->content(function ($record) {
+                                        return new HtmlString($record ? $record->response : '');
+                                    })
+                                    ->label('Response'),
+                                Placeholder::make('attachments')
+                                    ->columnSpanFull()
+                                    ->content(function ($record) {
+                                    $output = "<table class='min-w-full divide-y divide-gray-200'>
+                                        <thead class='bg-gray-50'>
+                                            <tr>
+                                                <th class='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-auto'>File</th>
+                                                <th class='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>Description</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class='bg-white divide-y divide-gray-200'>";
+                                    if ($record) {
+                                        foreach (json_decode($record->attachments, true) as $attachment) {
+                                            $signedUrl = URL::signedRoute('priv-storage', ['filepath' => $attachment['file_path']]);
+                                            $output .= "<tr>
+                                                <td class='px-6 py-4 whitespace-nowrap w-auto'><a href='$signedUrl' class='text-indigo-600 hover:text-indigo-900'>{$attachment['file_name']}</a></td>
+                                                <td class='px-6 py-4 whitespace-nowrap'>{$attachment['description']}</td>
+                                            </tr>";
+                                        }
+                                    }
+                                    $output .= "</tbody></table>";
+                                    return new HtmlString($output);
+                                    })
+                                    ->label('Attachments'),
+                            ]),
                     ]),
             ]);
     }
@@ -147,13 +177,12 @@ class DataRequestsRelationManager extends RelationManager
                 TextColumn::make('details')
                     ->label('Request Details')
                     ->wrap(),
-                TextColumn::make('responses')
+                TextColumn::make('responses.status')
                     ->label('Responses')
-                    ->formatStateUsing(fn($state, $record) => count($record->responses)),
-
+                    ->badge(),
                 TextColumn::make('assignedTo.name'),
                 TextColumn::make('created_at'),
-                TextColumn::make('status')->badge(),
+//                TextColumn::make('status')->badge(),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('status')
