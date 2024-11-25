@@ -52,11 +52,15 @@ class AttachmentsRelationManager extends RelationManager
     {
         return $table
             ->description('Note: This table is not functional in the current release. This will be addressed in a future release. ')
-            ->recordTitleAttribute('description')
+
             ->columns([
+                Tables\Columns\TextColumn::make('file_name')->label("File Name")
+                    ->getStateUsing(function ($record) {
+                        return json_decode($record->attachment_file_names, true);
+                    }),
+
                 Tables\Columns\TextColumn::make('description')->html()->limit(100)->wrap(),
-                Tables\Columns\TextColumn::make('file_path')->label("File Name")
-                    ->getStateUsing(fn($record) => basename($record->file_path)),
+
                 Tables\Columns\TextColumn::make('created_at')->label('Uploaded At'),
                 Tables\Columns\TextColumn::make('uploaded_by')
                     ->label('Uploaded By')
@@ -84,4 +88,5 @@ class AttachmentsRelationManager extends RelationManager
                 ]),
             ]);
     }
+
 }
