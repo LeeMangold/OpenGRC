@@ -28,10 +28,10 @@ class AuditItemRelationManager extends RelationManager
                     ->schema([
                         Placeholder::make('control_code')
                             ->label('Control Code')
-                            ->content(fn (AuditItem $record): ?string => $record->control->code),
+                            ->content(fn (AuditItem $record): string => $record->control->code),
                         Placeholder::make('control_title')
                             ->label('Control Title')
-                            ->content(fn (AuditItem $record): ?string => $record->control->title),
+                            ->content(fn (AuditItem $record): string => $record->control->title),
                         Placeholder::make('control_desc')
                             ->label('Control Description')
                             ->content(fn (AuditItem $record): HtmlString => new HtmlString(optional($record->control)->description ?? ''))
