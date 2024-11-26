@@ -23,6 +23,9 @@ use Illuminate\Support\HtmlString;
 use Illuminate\Validation\ValidationException;
 use League\Csv\Reader;
 
+/**
+ * @property mixed $form
+ */
 class ImportIrl extends Page implements HasForms
 {
     use HasWizard, InteractsWithForms, InteractsWithRecord;
