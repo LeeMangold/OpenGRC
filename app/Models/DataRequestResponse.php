@@ -1,5 +1,7 @@
 <?php
 
+/** @noinspection SpellCheckingInspection */
+
 namespace App\Models;
 
 use App\Enums\ResponseStatus;

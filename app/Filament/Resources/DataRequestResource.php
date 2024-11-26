@@ -48,7 +48,7 @@ class DataRequestResource extends Resource
                     ->required(),
                 Forms\Components\Select::make('status')
                     ->label('Response Status')
-                    ->options(WorkflowStatus::class)
+                    ->options(ResponseStatus::class)
                     ->default(ResponseStatus::PENDING)
                     ->required(),
                 Forms\Components\RichEditor::make('details')

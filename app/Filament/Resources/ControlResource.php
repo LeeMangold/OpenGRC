@@ -191,16 +191,25 @@ class ControlResource extends Resource
             ]);
     }
 
+    /**
+     * @param  Control  $record
+     */
     public static function getGlobalSearchResultTitle(Model $record): string|Htmlable
     {
         return "{$record->code} - {$record->title}";
     }
 
+    /**
+     * @param  Control  $record
+     */
     public static function getGlobalSearchResultUrl(Model $record): string
     {
         return ControlResource::getUrl('view', ['record' => $record]);
     }
 
+    /**
+     * @param  Control  $record
+     */
     public static function getGlobalSearchResultDetails(Model $record): array
     {
         return [

@@ -3,6 +3,8 @@
 namespace App\Filament\Resources\DataRequestResource\Pages;
 
 use App\Filament\Resources\DataRequestResource;
+use App\Models\DataRequest;
+use App\Models\DataRequestResponse;
 use Filament\Actions\Action;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -48,7 +50,7 @@ class ViewDataRequest extends ViewRecord
                                                                 <path fill-rule="evenodd" d="M6.194 12.753a.75.75 0 0 0 1.06.053L16.5 4.44v2.81a.75.75 0 0 0 1.5 0v-4.5a.75.75 0 0 0-.75-.75h-4.5a.75.75 0 0 0 0 1.5h2.553l-9.056 8.194a.75.75 0 0 0-.053 1.06Z" clip-rule="evenodd"/>
                                                                 </svg>';
 
-                                                    $htmlString = "<a href='".route('priv-storage', $record->file_path)."' target='_blank' class='inline-flex items-center space-x-2'>
+                                                    $htmlString = "<a href='" . route('priv-storage', $record->file_path) . "' target='_blank' class='inline-flex items-center space-x-2'>
                                                                     <span class='align-middle'>{$record->file_name}</span> $icon
                                                                     </a>";
 
@@ -101,13 +103,18 @@ class ViewDataRequest extends ViewRecord
 
     }
 
+    /**
+     * @property DataRequestResponse $record
+     */
     protected function getHeaderActions(): array
     {
+        /** @var DataRequest $record */
+        $record = $this->record;
         return [
             Action::make('back')
                 ->label('Back to Audit Item')
                 ->icon('heroicon-m-arrow-left')
-                ->url(route('filament.app.resources.audit-items.edit', $this->record->audit_item_id)),
+                ->url(route('filament.app.resources.audit-items.edit', $record->audit_item_id)),
         ];
     }
 }

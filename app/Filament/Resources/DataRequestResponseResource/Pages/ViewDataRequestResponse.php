@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\DataRequestResponseResource\Pages;
 
 use App\Filament\Resources\DataRequestResponseResource;
+use App\Models\DataRequestResponse;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
@@ -16,8 +17,14 @@ class ViewDataRequestResponse extends ViewRecord
 {
     protected static string $resource = DataRequestResponseResource::class;
 
+    /**
+     * Get the header actions for the view.
+     *
+     * @return Action[]
+     */
     protected function getHeaderActions(): array
     {
+        /** @var DataRequestResponse $record */
         $record = $this->record;
 
         return [

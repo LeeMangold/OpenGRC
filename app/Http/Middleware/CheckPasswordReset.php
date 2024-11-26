@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\User;
 use Auth;
 use Closure;
 use Illuminate\Http\Request;
@@ -23,8 +24,10 @@ class CheckPasswordReset
             return $next($request);
         }
 
-        //If the user is logged in and password reset is required, redirect to the password reset page
-        if (Auth::check() && Auth::user()->password_reset_required) {
+        // If the user is logged in and password reset is required, redirect to the password reset page
+        /** @var User $user */
+        $user = Auth::user();
+        if (Auth::check() && $user->password_reset_required) {
             return redirect()->route('password-reset-page');
         }
 

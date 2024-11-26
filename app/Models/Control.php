@@ -59,10 +59,8 @@ class Control extends Model
 
     /**
      * Indicates if the model should be indexed as you type.
-     *
-     * @var bool
      */
-    public $asYouType = true;
+    public bool $asYouType = true;
 
     /**
      * The attributes that should be cast.
@@ -91,9 +89,7 @@ class Control extends Model
      */
     public function toSearchableArray(): array
     {
-        $array = $this->toArray();
-
-        return $array;
+        return $this->toArray();
     }
 
     /**

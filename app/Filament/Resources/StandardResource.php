@@ -173,16 +173,25 @@ class StandardResource extends Resource
             ]);
     }
 
+    /**
+     * @param  Standard  $record
+     */
     public static function getGlobalSearchResultTitle(Model $record): string|Htmlable
     {
-        return "{$record->code} - {$record->name}";
+        return $record->code.'-'.$record->name;
     }
 
+    /**
+     * @param  Standard  $record
+     */
     public static function getGlobalSearchResultUrl(Model $record): string
     {
         return StandardResource::getUrl('view', ['record' => $record]);
     }
 
+    /**
+     * @param  Standard  $record
+     */
     public static function getGlobalSearchResultDetails(Model $record): array
     {
         return [

@@ -55,10 +55,8 @@ class Implementation extends Model
 
     /**
      * Indicates if the model should be indexed as you type.
-     *
-     * @var bool
      */
-    public $asYouType = true;
+    public bool $asYouType = true;
 
     /**
      * The attributes that should be cast.

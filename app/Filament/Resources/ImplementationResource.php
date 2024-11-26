@@ -178,16 +178,25 @@ class ImplementationResource extends Resource
             ]);
     }
 
+    /**
+     * @param  Implementation  $record
+     */
     public static function getGlobalSearchResultTitle(Model $record): string|Htmlable
     {
         return "{$record->code} - {$record->title}";
     }
 
+    /**
+     * @param  Implementation  $record
+     */
     public static function getGlobalSearchResultUrl(Model $record): string
     {
         return ImplementationResource::getUrl('view', ['record' => $record]);
     }
 
+    /**
+     * @param  Implementation  $record
+     */
     public static function getGlobalSearchResultDetails(Model $record): array
     {
         return [

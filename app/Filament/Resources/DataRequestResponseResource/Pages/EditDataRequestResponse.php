@@ -4,8 +4,10 @@ namespace App\Filament\Resources\DataRequestResponseResource\Pages;
 
 use App\Enums\ResponseStatus;
 use App\Filament\Resources\DataRequestResponseResource;
+use App\Models\DataRequestResponse;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
+use Illuminate\Database\Eloquent\Model;
 
 class EditDataRequestResponse extends EditRecord
 {
@@ -18,8 +20,9 @@ class EditDataRequestResponse extends EditRecord
         ];
     }
 
-    protected function handleRecordUpdate(\Illuminate\Database\Eloquent\Model $record, array $data): \Illuminate\Database\Eloquent\Model
+    protected function handleRecordUpdate(Model $record, array $data): Model
     {
+        /** @var DataRequestResponse $record */
         $record = parent::handleRecordUpdate($record, $data);
         $record->status = ResponseStatus::RESPONDED;
         $record->save();

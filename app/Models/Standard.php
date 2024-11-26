@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\StandardStatus;
 use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -22,17 +23,17 @@ use Illuminate\Support\Carbon;
  * @property-read Collection|Control[] $controls
  * @property-read int|null $controls_count
  *
- * @method static \Illuminate\Database\Eloquent\Builder|Standard newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Standard newQuery()
- * @method static \Illuminate\Database\Query\Builder|Standard onlyTrashed()
- * @method static \Illuminate\Database\Eloquent\Builder|Standard query()
- * @method static \Illuminate\Database\Eloquent\Builder|Standard whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Standard whereDeletedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Standard whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Standard whereStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Standard whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|Standard withTrashed()
- * @method static \Illuminate\Database\Query\Builder|Standard withoutTrashed()
+ * @method static Builder|Standard newModelQuery()
+ * @method static Builder|Standard newQuery()
+ * @method static Builder|Standard onlyTrashed()
+ * @method static Builder|Standard query()
+ * @method static Builder|Standard whereCreatedAt($value)
+ * @method static Builder|Standard whereDeletedAt($value)
+ * @method static Builder|Standard whereId($value)
+ * @method static Builder|Standard whereStatus($value)
+ * @method static Builder|Standard whereUpdatedAt($value)
+ * @method static Builder|Standard withTrashed()
+ * @method static Builder|Standard withoutTrashed()
  *
  * @mixin Eloquent
  */

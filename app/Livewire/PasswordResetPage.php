@@ -13,8 +13,8 @@ use Filament\Forms\Form;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
+use Illuminate\Http\RedirectResponse;
 use Livewire\Component;
-use Livewire\Features\SupportRedirects\Redirector;
 use Session;
 
 class PasswordResetPage extends Component implements HasActions, HasForms
@@ -56,7 +56,7 @@ class PasswordResetPage extends Component implements HasActions, HasForms
             ->model(User::class);
     }
 
-    public function create(): Redirector
+    public function create(): RedirectResponse
     {
         $data = $this->form->getState();
         $user = auth()->user();
