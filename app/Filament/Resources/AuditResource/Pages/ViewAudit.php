@@ -27,13 +27,13 @@ class ViewAudit extends ViewRecord
                 of this audit.';
                 $bgcolor = 'grcblue';
                 $fgcolor = 'white';
-                $icon = "heroicon-m-information-circle";
+                $icon = 'heroicon-m-information-circle';
                 break;
             case WorkflowStatus::COMPLETED:
                 $message = 'This audit has been marked as complete. An administrator will need to reopen the audit if necessary.';
                 $bgcolor = 'grcblue';
                 $fgcolor = 'white';
-                $icon = "heroicon-m-exclamation-circle";
+                $icon = 'heroicon-m-exclamation-circle';
                 break;
             default:
                 return [];
@@ -93,8 +93,7 @@ class ViewAudit extends ViewRecord
                     ->action(function (Audit $record, $livewire) {
                         $record->update(['status' => WorkflowStatus::INPROGRESS]);
                         $livewire->redirectRoute('filament.app.resources.audits.view', $record);
-                    })
-                ,
+                    }),
                 Action::make('complete_audit')
                     ->label('Transition to Complete')
                     ->color('primary')
@@ -117,7 +116,6 @@ class ViewAudit extends ViewRecord
                     })
                     ->action(function (Audit $record, $livewire) {
 
-
                         foreach ($record->auditItems as $auditItem) {
                             // If the audit item is not completed, mark it as completed
                             $auditItem->update(['status' => WorkflowStatus::COMPLETED]);
@@ -128,9 +126,10 @@ class ViewAudit extends ViewRecord
 
                         //Save the final audit report
                         $auditItems = $record->auditItems;
-                        $reportTemplate = "reports.audit";
-                        if ($record->audit_type == "implementations")
-                            $reportTemplate = "reports.implementation-report";
+                        $reportTemplate = 'reports.audit';
+                        if ($record->audit_type == 'implementations') {
+                            $reportTemplate = 'reports.implementation-report';
+                        }
                         $filepath = "app/private/audit_reports/AuditReport-{$record->id}.pdf";
                         $pdf = Pdf::loadView($reportTemplate, ['audit' => $record, 'auditItems' => $auditItems]);
                         $pdf->save(storage_path($filepath));
@@ -144,8 +143,7 @@ class ViewAudit extends ViewRecord
                 ->icon('heroicon-m-ellipsis-vertical')
                 ->size(ActionSize::Small)
                 ->color('primary')
-                ->button()
-            ,
+                ->button(),
             ActionGroup::make([
                 Action::make('ReportsButton')
                     ->label('Download Audit Report')
@@ -166,25 +164,24 @@ class ViewAudit extends ViewRecord
                             }
                         } else {
                             $auditItems = $audit->auditItems;
-                            $reportTemplate = "reports.audit";
-                            if ($audit->audit_type == "implementations")
-                                $reportTemplate = "reports.implementation-report";
+                            $reportTemplate = 'reports.audit';
+                            if ($audit->audit_type == 'implementations') {
+                                $reportTemplate = 'reports.implementation-report';
+                            }
                             $pdf = Pdf::loadView($reportTemplate, ['audit' => $audit, 'auditItems' => $auditItems]);
+
                             return response()->streamDownload(
-                                fn() => print($pdf->stream()),
+                                fn () => print ($pdf->stream()),
                                 "DRAFT-AuditReport-{$audit->id}.pdf");
                         }
                     }
-                    )
-                ,
+                    ),
             ])
                 ->label('Reports')
                 ->icon('heroicon-m-ellipsis-vertical')
                 ->size(ActionSize::Small)
                 ->color('primary')
-                ->button()
-            ,
+                ->button(),
         ];
     }
-
 }

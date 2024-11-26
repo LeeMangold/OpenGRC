@@ -5,11 +5,11 @@ namespace App\Enums;
 use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasLabel;
 
-enum Applicability: string implements hasLabel, hasColor
+enum Applicability: string implements hasColor, hasLabel
 {
-    case APPLICABLE = "Applicable";
-    case NOTAPPLICABLE = "Not Applicable";
-    case UNKNOWN = "Unknown";
+    case APPLICABLE = 'Applicable';
+    case NOTAPPLICABLE = 'Not Applicable';
+    case UNKNOWN = 'Unknown';
 
     public function getLabel(): ?string
     {
@@ -20,7 +20,7 @@ enum Applicability: string implements hasLabel, hasColor
         };
     }
 
-    public function getColor(): string | array | null
+    public function getColor(): string|array|null
     {
         return match ($this) {
             self::APPLICABLE => 'success',

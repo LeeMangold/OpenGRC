@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
@@ -65,7 +64,7 @@ class SettingsSeeder extends Seeder
 
         foreach ($settings as $setting) {
             $value = stripcslashes($setting['value']);
-//            setting([$setting['key'] => $setting['value']]);
+            //            setting([$setting['key'] => $setting['value']]);
 
             DB::table('settings')->insert(['key' => $setting['key'], 'value' => json_encode($value)]);
         }

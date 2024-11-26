@@ -23,7 +23,6 @@ use LucasGiovanny\FilamentMultiselectTwoSides\Forms\Components\Fields\Multiselec
 
 class CreateAudit extends CreateRecord
 {
-
     use CreateRecord\Concerns\HasWizard;
 
     protected static string $resource = AuditResource::class;
@@ -37,7 +36,7 @@ class CreateAudit extends CreateRecord
                 ->schema([
                     Placeholder::make('Introduction')
                         ->columnSpanFull()
-                        ->content(new HtmlString("
+                        ->content(new HtmlString('
                                     There are three Audit Types to choose from:
                                         <p><strong>Standards Audit</strong></p>
                                         <p>This kind of audit is used to check the compliance of the organization with a specific standard. The standard is selected from the list of standards available in the system. The audit will be performed against the controls specified in the selected standard.</p>
@@ -45,8 +44,7 @@ class CreateAudit extends CreateRecord
                                         <p>(Not yet implemented) This kind of audit is used to audit the specific implementations in your organization. Implementations are selected from your total list of implemented controls and setup for audit.</p>
                                         <p><strong>Custom Audit</strong></p>
                                         <p>Not yet implemented</p>
-                                ")),
-
+                                ')),
 
                     Select::make('audit_type')
                         ->columns(1)
@@ -54,27 +52,26 @@ class CreateAudit extends CreateRecord
                         ->options([
                             'standards' => 'Standards Audit',
                             'implementations' => 'Implementations Audit',
-//                            'custom' => 'Custom Audit',
+                            //                            'custom' => 'Custom Audit',
                         ])
                         ->native(false)
                         ->live(),
                     Select::make('sid')
                         ->columns(1)
                         ->label('Standard to Audit')
-                        ->options(Standard::where("status", "In Scope")->pluck('name', 'id'))
+                        ->options(Standard::where('status', 'In Scope')->pluck('name', 'id'))
                         ->columns(1)
                         ->searchable()
                         ->native(false)
-                        ->visible(fn(Get $get) => $get('audit_type') == 'standards')
-                    ,
+                        ->visible(fn (Get $get) => $get('audit_type') == 'standards'),
                 ]),
 
             Step::make('Basic Information')
                 ->columns(2)
                 ->schema([
                     TextInput::make('title')
-                        ->hint("Give the audit a distinctive title.")
-                        ->default("My Title Here - DELETE ME")
+                        ->hint('Give the audit a distinctive title.')
+                        ->default('My Title Here - DELETE ME')
                         ->required()
                         ->columns(1)
                         ->placeholder('2023 SOC 2 Type II Audit')
@@ -82,10 +79,10 @@ class CreateAudit extends CreateRecord
                     Select::make('manager_id')
                         ->label('Audit Manager')
                         ->required()
-                        ->hint("Who will be managing this audit?")
+                        ->hint('Who will be managing this audit?')
                         ->options(User::query()->pluck('name', 'id')->toArray())
                         ->columns(1)
-                        ->default(fn() => auth()->id())
+                        ->default(fn () => auth()->id())
                         ->searchable(),
                     Textarea::make('description')
                         ->columnSpanFull(),
@@ -125,7 +122,7 @@ class CreateAudit extends CreateRecord
                                         ->selectableLabel('Available Items')
                                         ->selectedLabel('Selected Items')
                                         ->enableSearch()
-                                        ->default(!is_array($controls) ? $controls->toArray() : $controls)
+                                        ->default(! is_array($controls) ? $controls->toArray() : $controls)
                                         ->required(),
                                 ];
                             }),
@@ -146,7 +143,7 @@ class CreateAudit extends CreateRecord
                     'user_id' => $this->data['manager_id'],
                 ]);
 
-                switch(strtolower($this->data['audit_type'])) {
+                switch (strtolower($this->data['audit_type'])) {
                     case 'standards':
                         $audit_item->auditable()->associate(Control::find($control));
                         break;

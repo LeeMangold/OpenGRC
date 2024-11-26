@@ -16,7 +16,6 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
@@ -42,6 +41,7 @@ class DataRequestResponseResource extends Resource
                                 }
                                 $auditManagerId = $record->manager_id ?: 0;
                                 $currentUserId = auth()->id();
+
                                 return $currentUserId !== $auditManagerId;
                             }),
 
@@ -56,7 +56,7 @@ class DataRequestResponseResource extends Resource
                                     ->preserveFilenames()
                                     ->disk('private')
                                     ->directory(function () {
-                                        return "attachments/" . Carbon::now()->timestamp . '-' . Str::random(2);
+                                        return 'attachments/'.Carbon::now()->timestamp.'-'.Str::random(2);
                                     })
                                     ->storeFileNamesIn('file_name')
                                     ->visibility('private')
@@ -69,6 +69,7 @@ class DataRequestResponseResource extends Resource
                                 Hidden::make('audit_id')
                                     ->default(function ($livewire) {
                                         $drr = DataRequestResponse::where('id', $livewire->data['id'])->first();
+
                                         return $drr->dataRequest->audit_id;
                                     }),
                             ]),
@@ -118,5 +119,4 @@ class DataRequestResponseResource extends Resource
             'view' => Pages\ViewDataRequestResponse::route('/{record}'),
         ];
     }
-
 }

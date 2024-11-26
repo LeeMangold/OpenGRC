@@ -24,7 +24,7 @@ class SP800171r2Seeder extends Seeder
             'code' => '800-171r2',
             'authority' => 'NIST',
             'reference_url' => 'https://csrc.nist.gov/publications/detail/sp/800-171/rev-2/final',
-            'description' => "The protection of Controlled Unclassified Information (CUI) resident in nonfederal
+            'description' => 'The protection of Controlled Unclassified Information (CUI) resident in nonfederal
             systems and organizations is of paramount importance to federal agencies and can directly impact the
             ability of the federal government to successfully conduct its essential missions and functions. This
             publication provides agencies with recommended security requirements for protecting the confidentiality
@@ -35,12 +35,12 @@ class SP800171r2Seeder extends Seeder
             policy for the CUI category listed in the CUI Registry. The requirements apply to all components of
             nonfederal systems and organizations that process, store, and/or transmit CUI, or that provide protection
             for such components. The security requirements are intended for use by federal agencies in contractual
-            vehicles or other agreements established between those agencies and nonfederal organizations."
+            vehicles or other agreements established between those agencies and nonfederal organizations.',
         ]);
 
         $csv = Reader::createFromPath(resource_path('data/sp800-171r2.csv'), 'r');
         $csv->setHeaderOffset(0);
-        $records = (new Statement())->process($csv);
+        $records = (new Statement)->process($csv);
 
         // Retrieve the standard_id using DB Query Builder
         $standardId = DB::table('standards')->where('code', '800-171r2')->value('id');
@@ -54,8 +54,8 @@ class SP800171r2Seeder extends Seeder
                 'type' => $record['Type'] ?? ControlType::OTHER,
                 'category' => $record['Category'] ?? ControlCategory::UNKNOWN,
                 'enforcement' => $record['Enforcement'] ?? ControlEnforcementCategory::UNKNOWN,
-                'discussion' => "",
-                'description' => HelperController::linesToParagraphs($record['Description'], "control-description-text")
+                'discussion' => '',
+                'description' => HelperController::linesToParagraphs($record['Description'], 'control-description-text'),
             ]);
         }
     }

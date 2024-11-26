@@ -28,7 +28,7 @@ class EditAuditItem extends EditRecord
     //set title to Assess Audit Item
     protected static string $resource = AuditItemResource::class;
 
-    function getRedirectUrl(): string
+    public function getRedirectUrl(): string
     {
         return route('filament.app.resources.audits.view', $this->record->audit_id);
     }
@@ -40,11 +40,11 @@ class EditAuditItem extends EditRecord
                 ->label('Back to Audit')
                 ->icon('heroicon-m-arrow-left')
                 ->url(route('filament.app.resources.audits.view', $this->record->audit_id)),
-            Action::make("request_evidence")
+            Action::make('request_evidence')
                 ->label('Request Evidence')
                 ->icon('heroicon-m-document')
                 ->action(function ($data) {
-                    $dataRequest = new DataRequest();
+                    $dataRequest = new DataRequest;
                     $dataRequest->audit_item_id = $this->record->id;
                     $dataRequest->audit_id = $this->record->audit->id;
                     $dataRequest->status = ResponseStatus::PENDING;
@@ -86,17 +86,17 @@ class EditAuditItem extends EditRecord
                     ->schema([
                         Placeholder::make('control_code')
                             ->label('Code')
-                            ->content(fn(AuditItem $record): ?string => $record->auditable->code),
+                            ->content(fn (AuditItem $record): ?string => $record->auditable->code),
                         Placeholder::make('control_title')
                             ->label('Title')
-                            ->content(fn(AuditItem $record): ?string => $record->auditable->title),
+                            ->content(fn (AuditItem $record): ?string => $record->auditable->title),
                         Placeholder::make('control_desc')
                             ->label('Description')
-                            ->content(fn(AuditItem $record): HtmlString => new HtmlString(optional($record->auditable)->description ?? ''))
+                            ->content(fn (AuditItem $record): HtmlString => new HtmlString(optional($record->auditable)->description ?? ''))
                             ->columnSpanFull(),
                         Placeholder::make('control_discussion')
                             ->label('Discussion')
-                            ->content(fn(AuditItem $record): HtmlString => new HtmlString(optional($record->auditable)->discussion ?? ''))
+                            ->content(fn (AuditItem $record): HtmlString => new HtmlString(optional($record->auditable)->discussion ?? ''))
                             ->columnSpanFull(),
 
                     ])->columns(2)->collapsible(true),
@@ -139,7 +139,7 @@ class EditAuditItem extends EditRecord
                             ->columnSpanFull()
                             ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Data Requests that have been issued.'),
                     ])
-                    ->collapsible(true)
+                    ->collapsible(true),
             ]);
     }
 }

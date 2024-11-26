@@ -4,13 +4,12 @@ namespace App\Providers;
 
 use App\Models\User;
 use Filament\Support\Facades\FilamentColor;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Schema;
-
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,21 +21,20 @@ class AppServiceProvider extends ServiceProvider
 
         // Disable mass assignment protection
         Model::unguard();
-        if (!$this->app->environment('local')) {
+        if (! $this->app->environment('local')) {
             URL::forceScheme('https');
         }
 
         //if table "settings" exists
-	if (!app()->runningInConsole()) {
+        if (! app()->runningInConsole()) {
             if (Schema::hasTable('settings')) {
 
                 Config::set('app.name', setting('general.name', 'OpenGRC'));
                 Config::set('app.url', setting('general.url', 'https://localhost'));
 
-
                 config()->set('mail', array_merge(config('mail'), [
                     'driver' => 'smtp',
-                    'transport' => "smtp",
+                    'transport' => 'smtp',
                     'host' => setting('mail.host'),
                     'username' => setting('mail.username'),
                     'password' => setting('mail.password'),
@@ -45,10 +43,10 @@ class AppServiceProvider extends ServiceProvider
                     'from' => [
                         'address' => setting('mail.from'),
                         'name' => setting('general.name'),
-                    ]
+                    ],
                 ]));
-     	    }
-	}
+            }
+        }
 
         Gate::before(function (User $user, string $ability) {
             return $user->isSuperAdmin() ? true : null;

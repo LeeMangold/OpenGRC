@@ -2,13 +2,10 @@
 
 namespace App\Filament\Resources\ImplementationResource\RelationManagers;
 
-use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ControlsRelationManager extends RelationManager
 {
@@ -28,8 +25,8 @@ class ControlsRelationManager extends RelationManager
                     ->searchable()
                     ->wrap(),
                 Tables\Columns\TextColumn::make('title')
-                ->sortable()
-                ->wrap(),
+                    ->sortable()
+                    ->wrap(),
             ])
             ->filters([
                 //
@@ -50,7 +47,7 @@ class ControlsRelationManager extends RelationManager
             ])
             ->actions([
                 Tables\Actions\ViewAction::make()
-                    ->url(fn($record) => route('filament.app.resources.controls.view', $record)),
+                    ->url(fn ($record) => route('filament.app.resources.controls.view', $record)),
 
             ])
             ->bulkActions([

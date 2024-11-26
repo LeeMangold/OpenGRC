@@ -4,7 +4,6 @@ namespace App\Filament\Resources\StandardResource\RelationManagers;
 
 use App\Enums\Applicability;
 use Filament\Forms;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
@@ -48,7 +47,6 @@ class ControlsRelationManager extends RelationManager
             ]);
     }
 
-
     public function table(Table $table): Table
     {
         return $table
@@ -66,7 +64,7 @@ class ControlsRelationManager extends RelationManager
             ])
             ->actions([
                 Tables\Actions\ViewAction::make()
-                    ->url(fn($record) => route('filament.app.resources.controls.view', $record)),
+                    ->url(fn ($record) => route('filament.app.resources.controls.view', $record)),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

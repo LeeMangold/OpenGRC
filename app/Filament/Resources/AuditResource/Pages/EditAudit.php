@@ -35,16 +35,16 @@ class EditAudit extends EditRecord
                     ->columns(2)
                     ->schema([
                         TextInput::make('title')
-                            ->hint("Give the audit a distinctive title.")
-                            ->default("My Title Here - DELETE ME")
+                            ->hint('Give the audit a distinctive title.')
+                            ->default('My Title Here - DELETE ME')
                             ->required()
                             ->columns(1)
                             ->placeholder('2023 SOC 2 Type II Audit')
                             ->maxLength(255),
                         Select::make('manager_id')
                             ->label('Audit Manager')
-                            ->hint("Who will be managing this audit?")
-                            ->options(Standard::query()->where("status", "In Scope")->pluck('name', 'id')->toArray())
+                            ->hint('Who will be managing this audit?')
+                            ->options(Standard::query()->where('status', 'In Scope')->pluck('name', 'id')->toArray())
                             ->columns(1)
                             ->searchable(),
                         Textarea::make('description')
@@ -55,7 +55,7 @@ class EditAudit extends EditRecord
                         DatePicker::make('end_date')
                             ->default(now()->addDays(30))
                             ->required(),
-                    ])
+                    ]),
             ]);
     }
 
@@ -63,5 +63,4 @@ class EditAudit extends EditRecord
     {
         return $this->getResource()::getUrl('view', [$this->record]);
     }
-
 }

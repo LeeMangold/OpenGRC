@@ -3,11 +3,11 @@
 namespace Database\Seeders;
 
 //use App\Models\Permission;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
 //use Spatie\Permission\Models\Permission;
-use App\Models\User;
+use Spatie\Permission\Models\Role;
 
 class RolePermissionSeeder extends Seeder
 {
@@ -34,14 +34,14 @@ class RolePermissionSeeder extends Seeder
             'Configure Authentication',
             'Manage Users',
             'View Audit Log',
-            'Manage Preferences'
+            'Manage Preferences',
         ];
 
         foreach ($additionalPermissions as $permission) {
             Permission::firstOrCreate(['name' => $permission, 'category' => 'other']);
         }
 
-//        dd(Permission::all());
+        //        dd(Permission::all());
 
         // Assign Permissions to Super Admin
         $superAdmin->givePermissionTo(Permission::all());
@@ -80,4 +80,3 @@ class RolePermissionSeeder extends Seeder
         }
     }
 }
-

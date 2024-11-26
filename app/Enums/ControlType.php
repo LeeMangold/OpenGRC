@@ -5,13 +5,13 @@ namespace App\Enums;
 use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasLabel;
 
-enum ControlType: string implements hasLabel, hasColor
+enum ControlType: string implements hasColor, hasLabel
 {
-    case ADMINISTRATIVE = "Administrative";
-    case TECHNICAL = "Technical";
-    case PHYSICAL = "Physical";
-    case OPERATIONAL = "Operational";
-    case OTHER = "Other";
+    case ADMINISTRATIVE = 'Administrative';
+    case TECHNICAL = 'Technical';
+    case PHYSICAL = 'Physical';
+    case OPERATIONAL = 'Operational';
+    case OTHER = 'Other';
 
     public function getLabel(): ?string
     {
@@ -24,7 +24,7 @@ enum ControlType: string implements hasLabel, hasColor
         };
     }
 
-    public function getColor(): string | array | null
+    public function getColor(): string|array|null
     {
         return match ($this) {
             self::ADMINISTRATIVE => 'primary',

@@ -12,8 +12,11 @@ class UserForceResetMail extends Mailable
     use Queueable, SerializesModels;
 
     public string $email;
+
     public string $name;
+
     public string $password;
+
     public string $url;
 
     /**

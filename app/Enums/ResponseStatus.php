@@ -6,12 +6,12 @@ use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasDescription;
 use Filament\Support\Contracts\HasLabel;
 
-enum ResponseStatus: string implements hasLabel, hasColor, hasDescription
+enum ResponseStatus: string implements hasColor, hasDescription, hasLabel
 {
-    case PENDING = "Pending";
-    case RESPONDED = "Responded";
-    case REJECTED = "Rejected";
-    case ACCEPTED = "Accepted";
+    case PENDING = 'Pending';
+    case RESPONDED = 'Responded';
+    case REJECTED = 'Rejected';
+    case ACCEPTED = 'Accepted';
 
     public function getLabel(): ?string
     {
@@ -23,7 +23,7 @@ enum ResponseStatus: string implements hasLabel, hasColor, hasDescription
         };
     }
 
-    public function getColor(): string | array | null
+    public function getColor(): string|array|null
     {
         return match ($this) {
             self::PENDING => 'primary',

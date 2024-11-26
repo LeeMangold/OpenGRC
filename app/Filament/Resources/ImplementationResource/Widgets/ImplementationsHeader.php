@@ -6,6 +6,7 @@ use Filament\Widgets\Widget;
 
 class ImplementationsHeader extends Widget
 {
-    protected int | string | array $columnSpan = 'full';
+    protected int|string|array $columnSpan = 'full';
+
     protected static string $view = 'filament.resources.implementation-resource.widgets.implementations-header';
 }

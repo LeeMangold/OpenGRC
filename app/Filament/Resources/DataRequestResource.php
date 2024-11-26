@@ -8,23 +8,20 @@ use App\Filament\Resources\DataRequestResource\Pages;
 use App\Models\Audit;
 use App\Models\DataRequest;
 use App\Models\User;
-use Carbon\Carbon;
 use Filament\Forms;
-use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Livewire;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Illuminate\Support\Str;
 
 class DataRequestResource extends Resource
 {
     protected static ?string $model = DataRequest::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
+
     protected static ?string $navigationGroup = 'Foundations';
 
     protected static bool $shouldRegisterNavigation = false;
@@ -125,5 +122,4 @@ class DataRequestResource extends Resource
             'status' => ResponseStatus::PENDING,
         ]);
     }
-
 }

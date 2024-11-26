@@ -35,7 +35,7 @@
         "fakerphp/faker": "^1.24",
         "larastan/larastan": "^2.0",
         "laravel-shift/blueprint": "^2.10",
-        "laravel/pint": "^1.18.1",
+        "laravel/pint": "^1.18",
         "laravel/sail": "^1.38",
         "mockery/mockery": "^1.6.12",
         "nunomaduro/collision": "^8.5",

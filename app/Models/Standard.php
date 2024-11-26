@@ -14,7 +14,6 @@ use Illuminate\Support\Carbon;
 /**
  * Class Standard
  *
- * @package App\Models
  * @property int $id
  * @property StandardStatus $status
  * @property Carbon|null $created_at
@@ -22,6 +21,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $deleted_at
  * @property-read Collection|Control[] $controls
  * @property-read int|null $controls_count
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Standard newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Standard newQuery()
  * @method static \Illuminate\Database\Query\Builder|Standard onlyTrashed()
@@ -33,6 +33,7 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|Standard whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|Standard withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Standard withoutTrashed()
+ *
  * @mixin Eloquent
  */
 class Standard extends Model
@@ -51,8 +52,6 @@ class Standard extends Model
 
     /**
      * Get the controls for the standard.
-     *
-     * @return HasMany
      */
     public function controls(): HasMany
     {
@@ -61,8 +60,6 @@ class Standard extends Model
 
     /**
      * Get the name of the index associated with the model.
-     *
-     * @return string
      */
     public function searchableAs(): string
     {
@@ -71,8 +68,6 @@ class Standard extends Model
 
     /**
      * Get the array representation of the model for search.
-     *
-     * @return array
      */
     public function toSearchableArray(): array
     {

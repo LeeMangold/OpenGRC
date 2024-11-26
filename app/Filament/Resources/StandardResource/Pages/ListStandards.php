@@ -23,6 +23,4 @@ class ListStandards extends ListRecords
             StandardResource\Widgets\StandardsHeader::class,
         ];
     }
-
-
 }

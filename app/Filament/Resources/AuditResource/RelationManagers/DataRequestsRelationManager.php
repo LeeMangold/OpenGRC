@@ -49,7 +49,7 @@ class DataRequestsRelationManager extends RelationManager
                                     ->get()
                                     ->mapWithKeys(function ($auditItem) {
                                         // Concatenate 'code' and 'title'
-                                        return [$auditItem->id => $auditItem->auditable->code . ' - ' . $auditItem->auditable->title];
+                                        return [$auditItem->id => $auditItem->auditable->code.' - '.$auditItem->auditable->title];
                                     });
                             })
                             ->required(),
@@ -75,7 +75,7 @@ class DataRequestsRelationManager extends RelationManager
                     ])->hidden(function ($get, $record) {
                         if (is_null($record)) {
                             return false;
-                        } else if ($record->assigned_to_id != auth()->id()) {
+                        } elseif ($record->assigned_to_id != auth()->id()) {
                             return false;
                         } else {
                             return true;
@@ -86,7 +86,7 @@ class DataRequestsRelationManager extends RelationManager
                     ->hidden(function ($get, $record) {
                         if (is_null($record)) {
                             return true;
-                        } else if ($record->assigned_to_id === auth()->id()) {
+                        } elseif ($record->assigned_to_id === auth()->id()) {
                             return false;
                         } else {
                             return true;
@@ -104,7 +104,7 @@ class DataRequestsRelationManager extends RelationManager
                             ->label('Control')
                             ->columnSpanFull()
                             ->content(function ($record) {
-                                return $record->auditItem->auditable->code . ' - ' . $record->auditItem->auditable->title;
+                                return $record->auditItem->auditable->code.' - '.$record->auditItem->auditable->title;
                             }),
                         Placeholder::make('control_title')
                             ->label('Control Title')
@@ -139,7 +139,7 @@ class DataRequestsRelationManager extends RelationManager
                                 Placeholder::make('attachments')
                                     ->columnSpanFull()
                                     ->content(function ($record) {
-                                    $output = "<table class='min-w-full divide-y divide-gray-200'>
+                                        $output = "<table class='min-w-full divide-y divide-gray-200'>
                                         <thead class='bg-gray-50'>
                                             <tr>
                                                 <th class='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-auto'>File</th>
@@ -147,17 +147,18 @@ class DataRequestsRelationManager extends RelationManager
                                             </tr>
                                         </thead>
                                         <tbody class='bg-white divide-y divide-gray-200'>";
-                                    if ($record) {
-                                        foreach (json_decode($record->attachments, true) as $attachment) {
-                                            $signedUrl = URL::signedRoute('priv-storage', ['filepath' => $attachment['file_path']]);
-                                            $output .= "<tr>
+                                        if ($record) {
+                                            foreach (json_decode($record->attachments, true) as $attachment) {
+                                                $signedUrl = URL::signedRoute('priv-storage', ['filepath' => $attachment['file_path']]);
+                                                $output .= "<tr>
                                                 <td class='px-6 py-4 whitespace-nowrap w-auto'><a href='$signedUrl' class='text-indigo-600 hover:text-indigo-900'>{$attachment['file_name']}</a></td>
                                                 <td class='px-6 py-4 whitespace-nowrap'>{$attachment['description']}</td>
                                             </tr>";
+                                            }
                                         }
-                                    }
-                                    $output .= "</tbody></table>";
-                                    return new HtmlString($output);
+                                        $output .= '</tbody></table>';
+
+                                        return new HtmlString($output);
                                     })
                                     ->label('Attachments'),
                             ]),
@@ -181,7 +182,7 @@ class DataRequestsRelationManager extends RelationManager
                     ->badge(),
                 TextColumn::make('assignedTo.name'),
                 TextColumn::make('created_at'),
-//                TextColumn::make('status')->badge(),
+                //                TextColumn::make('status')->badge(),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('status')
@@ -190,7 +191,6 @@ class DataRequestsRelationManager extends RelationManager
                 Tables\Filters\SelectFilter::make('assigned_to_id')
                     ->options(DataRequest::pluck('assigned_to_id', 'assigned_to_id')->toArray())
                     ->label('Assigned To'),
-
 
             ])
             ->headerActions([
@@ -209,12 +209,13 @@ class DataRequestsRelationManager extends RelationManager
                     })
                     ->action(function () {
                         $audit = $this->getOwnerRecord();
+
                         return redirect()->route('filament.app.resources.audits.import-irl', $audit);
                     }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
-                    ->modalHeading("View Data Request")
+                    ->modalHeading('View Data Request')
                     ->disabled(function () {
                         return $this->getOwnerRecord()->status != WorkflowStatus::INPROGRESS;
                     }),
@@ -232,5 +233,4 @@ class DataRequestsRelationManager extends RelationManager
                 ]),
             ]);
     }
-
 }

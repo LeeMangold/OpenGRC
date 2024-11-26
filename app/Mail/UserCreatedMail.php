@@ -12,8 +12,11 @@ class UserCreatedMail extends Mailable
     use Queueable, SerializesModels;
 
     public string $email;
+
     public string $name;
+
     public string $password;
+
     public string $url;
 
     /**
@@ -26,7 +29,6 @@ class UserCreatedMail extends Mailable
         $this->password = $password;
         $this->url = setting('general.url');
     }
-
 
     /**
      * Build the message.
@@ -47,5 +49,4 @@ class UserCreatedMail extends Mailable
             ->subject(setting('mail.templates.new_user_subject'))
             ->html($renderedView);
     }
-
 }

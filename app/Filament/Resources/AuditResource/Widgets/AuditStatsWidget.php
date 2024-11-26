@@ -13,6 +13,7 @@ class AuditStatsWidget extends BaseWidget
         $totalAudited = \App\Models\Audit::count();
         $totalInProgress = \App\Models\Audit::where('status', WorkflowStatus::INPROGRESS)->count();
         $totalCompleted = \App\Models\Audit::where('status', WorkflowStatus::COMPLETED)->count();
+
         return [
             Stat::make('Total Audits', $totalAudited),
             Stat::make('In Progress', $totalInProgress),

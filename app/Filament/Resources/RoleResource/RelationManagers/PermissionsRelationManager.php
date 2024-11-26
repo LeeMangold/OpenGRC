@@ -8,7 +8,6 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
 
-
 class PermissionsRelationManager extends RelationManager
 {
     protected static string $relationship = 'permissions';

@@ -13,7 +13,6 @@ use Filament\Resources\Pages\ListRecords;
 use Illuminate\Support\Facades\Mail;
 use Spatie\Permission\Models\Role;
 
-
 class ListUsers extends ListRecords
 {
     protected static string $resource = UserResource::class;
@@ -56,9 +55,10 @@ class ListUsers extends ListRecords
                         Mail::to($data['email'])->send(new UserCreatedMail($data['email'], $data['name'], $password));
                     } catch (\Exception $e) {
                         Notification::make()
-                            ->title('Failed to send invitation email. User still created.' . $e->getMessage())
+                            ->title('Failed to send invitation email. User still created.'.$e->getMessage())
                             ->warning()
                             ->send();
+
                         return;
                     }
 
@@ -71,5 +71,4 @@ class ListUsers extends ListRecords
         ];
 
     }
-
 }

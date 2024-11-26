@@ -56,13 +56,14 @@ class AttachmentsRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('file_name')->label("File Name"),
+                Tables\Columns\TextColumn::make('file_name')->label('File Name'),
                 Tables\Columns\TextColumn::make('description')->html()->limit(100)->wrap(),
                 Tables\Columns\TextColumn::make('created_at')->label('Uploaded At'),
                 Tables\Columns\TextColumn::make('uploaded_by')
                     ->label('Uploaded By')
                     ->getStateUsing(function ($record) {
                         $user = User::find($record->uploaded_by);
+
                         return $user ? $user->name : 'Unknown';
                     }),
             ])
@@ -77,12 +78,14 @@ class AttachmentsRelationManager extends RelationManager
                         ->action(function ($record) {
                             $audit = $this->getOwnerRecord();
                             $auditItems = $audit->auditItems;
-                            $reportTemplate = "reports.audit";
-                            if ($audit->audit_type == "implementations")
-                                $reportTemplate = "reports.implementation-report";
+                            $reportTemplate = 'reports.audit';
+                            if ($audit->audit_type == 'implementations') {
+                                $reportTemplate = 'reports.implementation-report';
+                            }
                             $pdf = Pdf::loadView($reportTemplate, ['audit' => $audit, 'auditItems' => $auditItems]);
+
                             return response()->streamDownload(
-                                fn() => print($pdf->stream()),
+                                fn () => print ($pdf->stream()),
                                 "DRAFT-AuditReport-{$audit->id}.pdf");
                         }),
                     //Button to download final report
@@ -105,8 +108,7 @@ class AttachmentsRelationManager extends RelationManager
                         }),
 
                 ])
-                    ->label('Report Downloads')
-                ,
+                    ->label('Report Downloads'),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make()
@@ -114,5 +116,4 @@ class AttachmentsRelationManager extends RelationManager
                     ->icon('heroicon-o-eye'),
             ]);
     }
-
 }

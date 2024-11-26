@@ -26,9 +26,13 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class ControlResource extends Resource
 {
     protected static ?string $model = Control::class;
+
     protected static ?string $navigationIcon = 'heroicon-o-stop-circle';
+
     protected static ?string $recordTitleAttribute = 'title';
+
     protected static ?string $navigationGroup = 'Foundations';
+
     protected static ?int $navigationSort = 20;
 
     public static function form(Form $form): Form
@@ -161,7 +165,7 @@ class ControlResource extends Resource
     {
         return $infolist
             ->schema([
-                Section::make("Control Details")
+                Section::make('Control Details')
                     ->columns(3)
                     ->schema([
                         TextEntry::make('title')->columnSpanFull(),
@@ -183,7 +187,7 @@ class ControlResource extends Resource
                         TextEntry::make('discussion')
                             ->columnSpanFull()
                             ->html(),
-                    ])
+                    ]),
             ]);
     }
 
@@ -208,5 +212,4 @@ class ControlResource extends Resource
     {
         return ['title', 'description', 'discussion', 'code'];
     }
-
 }

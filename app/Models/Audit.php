@@ -17,7 +17,6 @@ use Illuminate\Support\Carbon;
 /**
  * Class Audit
  *
- * @package App\Models
  * @property int $id
  * @property string $title
  * @property string $description
@@ -34,6 +33,7 @@ use Illuminate\Support\Carbon;
  * @property-read int|null $dataRequest_count
  * @property-read Collection|FileAttachment[] $attachments
  * @property-read int|null $attachments_count
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Audit newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Audit newQuery()
  * @method static Builder|Audit onlyTrashed()
@@ -45,6 +45,7 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|Audit whereUpdatedAt($value)
  * @method static Builder|Audit withTrashed()
  * @method static Builder|Audit withoutTrashed()
+ *
  * @mixin Eloquent
  */
 class Audit extends Model
@@ -70,8 +71,6 @@ class Audit extends Model
 
     /**
      * Get the audit items for the audit.
-     *
-     * @return HasMany
      */
     public function auditItems(): HasMany
     {
@@ -80,8 +79,6 @@ class Audit extends Model
 
     /**
      * Get the manager that owns the audit.
-     *
-     * @return BelongsTo
      */
     public function manager(): BelongsTo
     {
@@ -90,8 +87,6 @@ class Audit extends Model
 
     /**
      * Get the members that are part of the audit
-     *
-     * @return BelongsToMany
      */
     public function members(): BelongsToMany
     {
@@ -100,8 +95,6 @@ class Audit extends Model
 
     /**
      * Get the data requests for the audit.
-     *
-     * @return HasMany
      */
     public function dataRequest(): HasMany
     {
@@ -110,12 +103,9 @@ class Audit extends Model
 
     /**
      * Get the file attachments for the audit through data requests and responses.
-     *
-     * @return HasMany
      */
     public function attachments(): HasMany
     {
         return $this->hasMany(FileAttachment::class);
     }
-
 }

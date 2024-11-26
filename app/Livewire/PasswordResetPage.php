@@ -3,7 +3,6 @@
 namespace App\Livewire;
 
 use App\Models\User;
-use Filament\Actions\Action;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
 use Filament\Facades\Filament;
@@ -18,14 +17,14 @@ use Livewire\Component;
 use Livewire\Features\SupportRedirects\Redirector;
 use Session;
 
-class PasswordResetPage extends Component implements HasForms, HasActions
+class PasswordResetPage extends Component implements HasActions, HasForms
 {
-
     use InteractsWithActions, InteractsWithForms;
 
     public ?array $data = [];
 
     public User $user;
+
     protected Form $form;
 
     public function mount(): void
@@ -67,10 +66,10 @@ class PasswordResetPage extends Component implements HasForms, HasActions
         Filament::auth()->logout();
         Session::invalidate();
         Session::regenerateToken();
+
         return redirect()->route('filament.app.auth.login');
 
     }
-
 
     public function render(): Factory|View|Application
     {

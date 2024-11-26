@@ -16,7 +16,6 @@ use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Filament\Widgets\Text as TextWidget;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -25,8 +24,11 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class StandardResource extends Resource
 {
     protected static ?string $model = Standard::class;
+
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
     protected static ?string $navigationGroup = 'Foundations';
+
     protected static ?int $navigationSort = 10;
 
     public static function form(Form $form): Form
@@ -130,7 +132,7 @@ class StandardResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\ControlsRelationManager::class
+            RelationManagers\ControlsRelationManager::class,
         ];
     }
 
@@ -157,7 +159,7 @@ class StandardResource extends Resource
     {
         return $infolist
             ->schema([
-                Section::make("Standard Details")
+                Section::make('Standard Details')
                     ->columns(4)
                     ->schema([
                         TextEntry::make('name'),
@@ -167,7 +169,7 @@ class StandardResource extends Resource
                         TextEntry::make('description')
                             ->columnSpanFull()
                             ->html(),
-                    ])
+                    ]),
             ]);
     }
 
@@ -192,5 +194,4 @@ class StandardResource extends Resource
     {
         return ['code', 'name', 'description', 'authority'];
     }
-
 }

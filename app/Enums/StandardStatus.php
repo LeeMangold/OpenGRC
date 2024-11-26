@@ -6,11 +6,11 @@ use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasDescription;
 use Filament\Support\Contracts\HasLabel;
 
-enum StandardStatus: string implements hasLabel, hasColor, hasDescription
+enum StandardStatus: string implements hasColor, hasDescription, hasLabel
 {
-    case DRAFT = "Draft";
-    case NOT_IN_SCOPE = "Not in Scope";
-    case IN_SCOPE = "In Scope";
+    case DRAFT = 'Draft';
+    case NOT_IN_SCOPE = 'Not in Scope';
+    case IN_SCOPE = 'In Scope';
 
     public function getLabel(): ?string
     {
@@ -21,7 +21,7 @@ enum StandardStatus: string implements hasLabel, hasColor, hasDescription
         };
     }
 
-    public function getColor(): string | array | null
+    public function getColor(): string|array|null
     {
         return match ($this) {
             self::DRAFT => 'primary',
@@ -38,5 +38,4 @@ enum StandardStatus: string implements hasLabel, hasColor, hasDescription
             self::NOT_IN_SCOPE => 'Not In Scope for Assessment',
         };
     }
-
 }

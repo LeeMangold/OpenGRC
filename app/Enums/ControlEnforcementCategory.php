@@ -5,12 +5,12 @@ namespace App\Enums;
 use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasLabel;
 
-enum ControlEnforcementCategory: string implements hasLabel, hasColor
+enum ControlEnforcementCategory: string implements hasColor, hasLabel
 {
-    case PREVENTATIVE = "Mandatory";
-    case DETECTIVE = "Addressable";
-    case CORRECTIVE = "Optional";
-    case UNKNOWN = "Other";
+    case PREVENTATIVE = 'Mandatory';
+    case DETECTIVE = 'Addressable';
+    case CORRECTIVE = 'Optional';
+    case UNKNOWN = 'Other';
 
     public function getLabel(): ?string
     {
@@ -51,5 +51,4 @@ enum ControlEnforcementCategory: string implements hasLabel, hasColor
             self::UNKNOWN => 'text-primary',
         };
     }
-
 }

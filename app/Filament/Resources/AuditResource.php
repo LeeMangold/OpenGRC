@@ -20,14 +20,16 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-
 class AuditResource extends Resource
 {
     use HasWizard;
 
     protected static ?string $model = Audit::class;
+
     protected static ?string $navigationIcon = 'heroicon-o-pencil-square';
+
     protected static ?string $navigationGroup = 'Foundations';
+
     protected static ?int $navigationSort = 40;
 
     public static function label(): string
@@ -98,7 +100,7 @@ class AuditResource extends Resource
     {
         return $infolist
             ->schema([
-                Section::make("Audit Details")
+                Section::make('Audit Details')
                     ->columns(3)
                     ->schema([
                         TextEntry::make('title'),
@@ -116,7 +118,7 @@ class AuditResource extends Resource
 
     public static function getRelations(): array
     {
-        if (!request()->routeIs('filament.app.resources.audits.edit')) {
+        if (! request()->routeIs('filament.app.resources.audits.edit')) {
             return [
                 RelationManagers\AuditItemRelationManager::class,
                 RelationManagers\DataRequestsRelationManager::class,
@@ -130,7 +132,7 @@ class AuditResource extends Resource
     public static function getWidgets(): array
     {
         return [
-            AuditStatsWidget::class
+            AuditStatsWidget::class,
         ];
     }
 

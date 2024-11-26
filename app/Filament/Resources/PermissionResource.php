@@ -3,14 +3,11 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\PermissionResource\Pages;
-use App\Filament\Resources\PermissionResource\RelationManagers;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Spatie\Permission\Models\Permission;
 
 class PermissionResource extends Resource
@@ -20,7 +17,6 @@ class PermissionResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string $navigationGroup = 'Settings';
-
 
     public static function form(Form $form): Form
     {
@@ -32,7 +28,7 @@ class PermissionResource extends Resource
                 Forms\Components\TextInput::make('guard_name')
                     ->required()
                     ->disabled()
-                    ->default("web")
+                    ->default('web')
                     ->maxLength(255),
             ]);
     }

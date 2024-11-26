@@ -11,8 +11,8 @@ class CreateControlImplementationTable extends Migration
         Schema::create('control_implementation', function (Blueprint $table) {
             $table->foreignId('control_id')->constrained()->onDelete('cascade');
             $table->foreignId('implementation_id')->constrained()->onDelete('cascade');
-//            $table->integer('percentage')->nullable(); // Adding the percentage field
-//            $table->string('status')->nullable(); // Adding the status field
+            //            $table->integer('percentage')->nullable(); // Adding the percentage field
+            //            $table->string('status')->nullable(); // Adding the status field
             $table->primary(['control_id', 'implementation_id']);
             $table->timestamps();
         });

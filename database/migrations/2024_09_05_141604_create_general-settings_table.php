@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up()
+    public function up(): void
     {
         Schema::create('general_settings', function (Blueprint $table) {
             $table->id();
@@ -38,5 +38,4 @@ return new class extends Migration
     {
         Schema::dropIfExists('general_settings');
     }
-
 };

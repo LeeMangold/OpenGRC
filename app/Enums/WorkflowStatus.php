@@ -5,12 +5,12 @@ namespace App\Enums;
 use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasLabel;
 
-enum WorkflowStatus: string implements hasLabel, hasColor
+enum WorkflowStatus: string implements hasColor, hasLabel
 {
-    case NOTSTARTED = "Not Started";
-    case INPROGRESS = "In Progress";
-    case COMPLETED = "Completed";
-    case UNKNOWN = "Unknown";
+    case NOTSTARTED = 'Not Started';
+    case INPROGRESS = 'In Progress';
+    case COMPLETED = 'Completed';
+    case UNKNOWN = 'Unknown';
 
     public function getLabel(): ?string
     {
@@ -22,7 +22,7 @@ enum WorkflowStatus: string implements hasLabel, hasColor
         };
     }
 
-    public function getColor(): string | array | null
+    public function getColor(): string|array|null
     {
         return match ($this) {
             self::NOTSTARTED => 'danger',

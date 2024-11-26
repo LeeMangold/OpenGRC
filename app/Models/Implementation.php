@@ -18,7 +18,6 @@ use Illuminate\Support\Carbon;
 /**
  * Class Implementation
  *
- * @package App\Models
  * @property int $id
  * @property ImplementationStatus $status
  * @property Effectiveness $effectiveness
@@ -35,6 +34,7 @@ use Illuminate\Support\Carbon;
  * @property-read int|null $auditItems_count
  * @property-read Collection|AuditItem[] $completedAuditItems
  * @property-read int|null $completedAuditItems_count
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Implementation newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Implementation newQuery()
  * @method static Builder|Implementation onlyTrashed()
@@ -46,6 +46,7 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|Implementation whereUpdatedAt($value)
  * @method static Builder|Implementation withTrashed()
  * @method static Builder|Implementation withoutTrashed()
+ *
  * @mixin Eloquent
  */
 class Implementation extends Model
@@ -79,8 +80,6 @@ class Implementation extends Model
 
     /**
      * The controls that belong to the implementation.
-     *
-     * @return BelongsToMany
      */
     public function controls(): BelongsToMany
     {
@@ -90,8 +89,6 @@ class Implementation extends Model
 
     /**
      * Get the name of the index associated with the model.
-     *
-     * @return string
      */
     public function searchableAs(): string
     {
@@ -100,8 +97,6 @@ class Implementation extends Model
 
     /**
      * Get the array representation of the model for search.
-     *
-     * @return array
      */
     public function toSearchableArray(): array
     {
@@ -110,8 +105,6 @@ class Implementation extends Model
 
     /**
      * Get the audit items for the implementation.
-     *
-     * @return HasMany
      */
     public function auditItems(): HasMany
     {
@@ -120,8 +113,6 @@ class Implementation extends Model
 
     /**
      * Get the completed audit items for the implementation.
-     *
-     * @return HasMany
      */
     public function completedAuditItems(): HasMany
     {
@@ -130,8 +121,6 @@ class Implementation extends Model
 
     /**
      * Get the effectiveness of the implementation.
-     *
-     * @return Effectiveness
      */
     public function getEffectiveness(): Effectiveness
     {
@@ -140,22 +129,17 @@ class Implementation extends Model
 
     /**
      * Get the date of the last effectiveness update.
-     *
-     * @return string
      */
     public function getEffectivenessDate(): string
     {
-        return $this->completedAuditItems->pluck('effectiveness')->last() ? $this->auditItems->pluck('updated_at')->last() : "";
+        return $this->completedAuditItems->pluck('effectiveness')->last() ? $this->auditItems->pluck('updated_at')->last() : '';
     }
 
     /**
      * Get all the audit items for the implementation.
-     *
-     * @return MorphMany
      */
     public function audits(): MorphMany
     {
         return $this->morphMany(AuditItem::class, 'auditable');
     }
-
 }

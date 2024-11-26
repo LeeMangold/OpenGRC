@@ -3,11 +3,10 @@
 namespace App\Policies;
 
 use App\Models\User;
-use Illuminate\Support\Str;
 
 class UserPolicy
 {
-    protected String $model = User::class;
+    protected string $model = User::class;
 
     public function viewAny(User $user): bool
     {
@@ -33,5 +32,4 @@ class UserPolicy
     {
         return $user->can('Manage Users');
     }
-
 }

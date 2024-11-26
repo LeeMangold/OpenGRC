@@ -7,7 +7,7 @@ use Spatie\Permission\Models\Role;
 
 class PermissionPolicy
 {
-    protected String $model = Role::class;
+    protected string $model = Role::class;
 
     public function viewAny(User $user): bool
     {
@@ -33,5 +33,4 @@ class PermissionPolicy
     {
         return false;
     }
-
 }

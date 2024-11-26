@@ -25,11 +25,14 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class ImplementationResource extends Resource
 {
     protected static ?string $model = Implementation::class;
-    protected static ?string $navigationIcon = 'heroicon-o-cog-6-tooth';
-    protected static ?string $recordTitleAttribute = 'title';
-    protected static ?string $navigationGroup = 'Foundations';
-    protected static ?int $navigationSort = 30;
 
+    protected static ?string $navigationIcon = 'heroicon-o-cog-6-tooth';
+
+    protected static ?string $recordTitleAttribute = 'title';
+
+    protected static ?string $navigationGroup = 'Foundations';
+
+    protected static ?int $navigationSort = 30;
 
     public static function form(Form $form): Form
     {
@@ -42,7 +45,7 @@ class ImplementationResource extends Resource
                     ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Enter a unique code for this implementation. This code will be used to identify this implementation in the system.'),
                 Forms\Components\Select::make('status')
                     ->required()
-                    ->label("Implementation Status")
+                    ->label('Implementation Status')
                     ->enum(ImplementationStatus::class)
                     ->options(ImplementationStatus::class)
                     ->default(ImplementationStatus::UNKNOWN)
@@ -60,27 +63,22 @@ class ImplementationResource extends Resource
                     ->searchable()
                     ->multiple()
                     ->placeholder('Select related controls') // Optional: Adds a placeholder
-                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'All implementations should relate to a control. If you don’t have a relevant control in place, consider creating a new one first.')
-                ,
+                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'All implementations should relate to a control. If you don’t have a relevant control in place, consider creating a new one first.'),
                 Forms\Components\TextInput::make('title')
                     ->maxLength(255)
                     ->required()
                     ->columnSpanFull()
-                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Enter a title for this implementation.')
-                ,
+                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Enter a title for this implementation.'),
                 Forms\Components\RichEditor::make('details')
                     ->required()
                     ->maxLength(65535)
                     ->columnSpanFull()
-                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Enter a description for this implementation. This be an in-depth description of how this implementation is put in place.')
-                ,
+                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Enter a description for this implementation. This be an in-depth description of how this implementation is put in place.'),
 
                 Forms\Components\RichEditor::make('notes')
                     ->maxLength(65535)
                     ->columnSpanFull()
-                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Any additional internal notes. This is never visible to an auditor.')
-                ,
-
+                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Any additional internal notes. This is never visible to an auditor.'),
 
             ]);
     }
@@ -135,11 +133,11 @@ class ImplementationResource extends Resource
     {
         return $infolist
             ->schema([
-                Section::make("Details")
+                Section::make('Details')
                     ->schema([
                         TextEntry::make('code')
                             ->columnSpan(2)
-                            ->getStateUsing(fn($record) => "{$record->code} - {$record->title}")
+                            ->getStateUsing(fn ($record) => "{$record->code} - {$record->title}")
                             ->label('Title'),
                         TextEntry::make('effectiveness')->badge(),
                         TextEntry::make('status')->badge(),
@@ -154,12 +152,11 @@ class ImplementationResource extends Resource
             ]);
     }
 
-
     public static function getRelations(): array
     {
         return [
             RelationManagers\ControlsRelationManager::class,
-            RelationManagers\AuditItemRelationManager::class
+            RelationManagers\AuditItemRelationManager::class,
         ];
     }
 

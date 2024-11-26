@@ -23,5 +23,4 @@ class ListControls extends ListRecords
             ControlResource\Widgets\ControlsHeader::class,
         ];
     }
-
 }

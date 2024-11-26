@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 class HelperController extends Controller
 {
-
-
     /**
      * Converts each line of the given text into a paragraph element.
      *
@@ -13,9 +11,8 @@ class HelperController extends Controller
      * in a paragraph (`<p>`) tag. If a string of classes is provided, it adds them
      * as the class attribute of the paragraph tags.
      *
-     * @param string $text The text to be converted into paragraphs.
-     * @param string|null $classes Optional string of classes to be added to each paragraph tag.
-     *
+     * @param  string  $text  The text to be converted into paragraphs.
+     * @param  string|null  $classes  Optional string of classes to be added to each paragraph tag.
      * @return string The converted text with each line wrapped in a paragraph tag.
      *                If classes are provided, each paragraph tag will include them.
      */
@@ -23,11 +20,11 @@ class HelperController extends Controller
     {
         $lines = explode("\n", trim($text));
         $paragraphs = array_map(function ($line) use ($classes) {
-            $classAttribute = $classes ? " class='" . e($classes) . "'" : "";
-            return "<p" . $classAttribute . ">" . e($line) . "</p>";
+            $classAttribute = $classes ? " class='".e($classes)."'" : '';
+
+            return '<p'.$classAttribute.'>'.e($line).'</p>';
         }, $lines);
 
         return implode('', $paragraphs);
     }
-
 }

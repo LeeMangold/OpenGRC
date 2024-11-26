@@ -2,15 +2,12 @@
 
 namespace Database\Seeders;
 
-use App\Enums\Applicability;
 use App\Enums\ControlCategory;
 use App\Enums\ControlEnforcementCategory;
 use App\Enums\ControlType;
 use App\Enums\StandardStatus;
 use App\Http\Controllers\HelperController;
-use App\Models\Control;
 use App\Models\Standard;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use League\Csv\Reader;
@@ -39,16 +36,15 @@ class CSCSeeder extends Seeder
             responsive strategies, these controls serve as a foundational framework that organizations can implement
             to significantly reduce their vulnerability to cyber threats and bolster their overall security posture.
             This framework is not only practical but also adaptive, allowing for integration with existing security
-            protocols and the evolving landscape of cyber threats."
+            protocols and the evolving landscape of cyber threats.",
         ]);
 
         $csv = Reader::createFromPath(resource_path('data/csc8.csv'), 'r');
         $csv->setHeaderOffset(0);
-        $records = (new Statement())->process($csv);
+        $records = (new Statement)->process($csv);
 
         // Retrieve the standard_id using DB Query Builder
         $standardId = DB::table('standards')->where('code', 'CSCv8')->value('id');
-
 
         foreach ($records as $record) {
             // Inserting data into 'controls' table
@@ -59,8 +55,8 @@ class CSCSeeder extends Seeder
                 'type' => $record['Type'] ?? ControlType::OTHER,
                 'category' => $record['Category'] ?? ControlCategory::UNKNOWN,
                 'enforcement' => $record['Enforcement'] ?? ControlEnforcementCategory::UNKNOWN,
-                'discussion' => "",
-                'description' => HelperController::linesToParagraphs($record['description'], "control-description-text"),
+                'discussion' => '',
+                'description' => HelperController::linesToParagraphs($record['description'], 'control-description-text'),
             ]);
         }
     }

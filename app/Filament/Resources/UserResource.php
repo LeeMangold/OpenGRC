@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
-use App\Filament\Resources\UserResource\RelationManagers;
 use App\Mail\UserForceResetMail;
 use App\Models\User;
 use Faker\Factory;
@@ -21,8 +20,11 @@ use Illuminate\Support\Str;
 class UserResource extends Resource
 {
     protected static ?string $model = User::class;
+
     protected static ?string $navigationIcon = 'heroicon-o-users';
+
     protected static ?string $navigationGroup = 'Settings';
+
     protected static ?int $navigationSort = 10;
 
     public static function form(Form $form): Form
@@ -61,7 +63,7 @@ class UserResource extends Resource
                     ->label('Roles')
                     ->badge()
                     ->sortable()
-                    ->state(fn($record) => $record->roles->pluck('name')->join(', ')),
+                    ->state(fn ($record) => $record->roles->pluck('name')->join(', ')),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -140,5 +142,4 @@ class UserResource extends Resource
     {
         return Str::replace(' ', '-', implode(' ', Factory::create('en_US')->words(4)));
     }
-
 }

@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\FileAttachmentResource\Pages;
-use App\Filament\Resources\FileAttachmentResource\RelationManagers;
 use App\Models\FileAttachment;
 use Carbon\Carbon;
 use Filament\Forms;
@@ -19,6 +18,7 @@ class FileAttachmentResource extends Resource
     protected static ?string $model = FileAttachment::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
     protected static bool $shouldRegisterNavigation = false;
 
     public static function form(Form $form): Form
@@ -33,8 +33,9 @@ class FileAttachmentResource extends Resource
                     ->preserveFilenames()
                     ->disk('private')
                     ->directory(function () {
-                        $rand = Carbon::now()->timestamp . '-' . Str::random(2);
-                        return "attachments/" . $rand;
+                        $rand = Carbon::now()->timestamp.'-'.Str::random(2);
+
+                        return 'attachments/'.$rand;
                     })
                     ->downloadable(true)
                     ->visibility('private')

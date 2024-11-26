@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Traits\Concerns;
 
 use Spatie\Permission\Traits\HasRoles;

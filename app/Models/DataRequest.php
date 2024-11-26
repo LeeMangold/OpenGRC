@@ -19,9 +19,8 @@ class DataRequest extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'files' => 'array'
+        'files' => 'array',
     ];
-
 
     public function createdBy(): BelongsTo
     {
@@ -52,5 +51,4 @@ class DataRequest extends Model
     {
         return $this->hasManyThrough(FileAttachment::class, DataRequestResponse::class);
     }
-
 }

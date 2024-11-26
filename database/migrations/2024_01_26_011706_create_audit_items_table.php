@@ -17,12 +17,12 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('auditable_id')->nullable();
             $table->string('auditable_type')->nullable();
-//            $table->unsignedBigInteger('control_id')->nullable();
-//            $table->unsignedBigInteger('implementation_id')->nullable();
+            //            $table->unsignedBigInteger('control_id')->nullable();
+            //            $table->unsignedBigInteger('implementation_id')->nullable();
             $table->longText('auditor_notes')->nullable();
-            $table->string('status')->default("Not Tested");
-            $table->string('effectiveness')->default("Unknown");
-            $table->string('applicability')->default("Unknown");
+            $table->string('status')->default('Not Tested');
+            $table->string('effectiveness')->default('Unknown');
+            $table->string('applicability')->default('Unknown');
             $table->timestamps();
             $table->softDeletes();
 

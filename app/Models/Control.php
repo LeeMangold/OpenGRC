@@ -22,7 +22,6 @@ use Illuminate\Support\Carbon;
 /**
  * Class Control
  *
- * @package App\Models
  * @property int $id
  * @property Applicability $status
  * @property Effectiveness $effectiveness
@@ -39,6 +38,7 @@ use Illuminate\Support\Carbon;
  * @property-read int|null $auditItems_count
  * @property-read Collection|AuditItem[] $completedAuditItems
  * @property-read int|null $completedAuditItems_count
+ *
  * @method static Builder|Control newModelQuery()
  * @method static Builder|Control newQuery()
  * @method static \Illuminate\Database\Query\Builder|Control onlyTrashed()
@@ -50,6 +50,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Control whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|Control withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Control withoutTrashed()
+ *
  * @mixin Eloquent
  */
 class Control extends Model
@@ -79,8 +80,6 @@ class Control extends Model
 
     /**
      * Get the name of the index associated with the model.
-     *
-     * @return string
      */
     public function searchableAs(): string
     {
@@ -89,19 +88,16 @@ class Control extends Model
 
     /**
      * Get the array representation of the model for search.
-     *
-     * @return array
      */
     public function toSearchableArray(): array
     {
         $array = $this->toArray();
+
         return $array;
     }
 
     /**
      * Get the standard that owns the control.
-     *
-     * @return BelongsTo
      */
     public function standard(): BelongsTo
     {
@@ -110,8 +106,6 @@ class Control extends Model
 
     /**
      * The implementations that belong to the control.
-     *
-     * @return BelongsToMany
      */
     public function implementations(): BelongsToMany
     {
@@ -121,8 +115,6 @@ class Control extends Model
 
     /**
      * Get the audit items for the control.
-     *
-     * @return HasMany
      */
     public function auditItems(): HasMany
     {
@@ -131,19 +123,16 @@ class Control extends Model
 
     /**
      * Get the effectiveness of the control.
-     *
-     * @return Effectiveness
      */
     public function getEffectiveness(): Effectiveness
     {
         $latestAuditItem = $this->latestCompletedAuditItem();
+
         return $latestAuditItem ? $latestAuditItem->effectiveness : Effectiveness::UNKNOWN;
     }
 
     /**
      * Get the completed audit items for the control.
-     *
-     * @return MorphMany
      */
     public function completedAuditItems(): MorphMany
     {
@@ -152,19 +141,16 @@ class Control extends Model
 
     /**
      * Get the latest completed audit item for the control.
-     *
-     * @return AuditItem|null
      */
     public function latestCompletedAuditItem(): ?AuditItem
     {
         $latestCompletedAuditItem = $this->completedAuditItems()->latest()->first();
+
         return $latestCompletedAuditItem instanceof AuditItem ? $latestCompletedAuditItem : null;
     }
 
     /**
      * Get all the audit items for the control.
-     *
-     * @return MorphMany
      */
     public function audits(): MorphMany
     {
@@ -173,13 +159,11 @@ class Control extends Model
 
     /**
      * Get the date of the last effectiveness update.
-     *
-     * @return string
      */
     public function getEffectivenessDate(): string
     {
         $latestAuditItem = $this->latestCompletedAuditItem();
-        return $latestAuditItem ? $latestAuditItem->updated_at->isoFormat('MMM D, YYYY') : "Never";
-    }
 
+        return $latestAuditItem ? $latestAuditItem->updated_at->isoFormat('MMM D, YYYY') : 'Never';
+    }
 }

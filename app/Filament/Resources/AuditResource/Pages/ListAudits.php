@@ -21,7 +21,7 @@ class ListAudits extends ListRecords
     protected function getHeaderWidgets(): array
     {
         return [
-            AuditStatsWidget::class
+            AuditStatsWidget::class,
         ];
     }
 }

@@ -10,14 +10,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 use Jeffgreco13\FilamentBreezy\Traits\TwoFactorAuthenticatable;
+use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
-
 
 class User extends Authenticatable implements FilamentUser
 {
-    use HasApiTokens, HasFactory, Notifiable, TwoFactorAuthenticatable, HasRoles, softDeletes, HasSuperAdmin;
+    use HasApiTokens, HasFactory, HasRoles, HasSuperAdmin, Notifiable, softDeletes, TwoFactorAuthenticatable;
 
     /**
      * The attributes that are mass assignable.
@@ -55,10 +54,8 @@ class User extends Authenticatable implements FilamentUser
         return true;
     }
 
-
     public function audits(): BelongsToMany
     {
         return $this->belongsToMany(Audit::class);
     }
-
 }

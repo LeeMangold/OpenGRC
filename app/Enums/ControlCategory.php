@@ -5,16 +5,16 @@ namespace App\Enums;
 use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasLabel;
 
-enum ControlCategory: string implements hasLabel, hasColor
+enum ControlCategory: string implements hasColor, hasLabel
 {
-    case PREVENTATIVE = "Preventative";
-    case DETECTIVE = "Detective";
-    case CORRECTIVE = "Corrective";
-    case DETERRENT = "Deterrent";
-    case COMPENSATING = "Compensating";
-    case RECOVERY = "Recovery";
-    case OTHER = "Other";
-    case UNKNOWN = "Unknown";
+    case PREVENTATIVE = 'Preventative';
+    case DETECTIVE = 'Detective';
+    case CORRECTIVE = 'Corrective';
+    case DETERRENT = 'Deterrent';
+    case COMPENSATING = 'Compensating';
+    case RECOVERY = 'Recovery';
+    case OTHER = 'Other';
+    case UNKNOWN = 'Unknown';
 
     public function getLabel(): ?string
     {
@@ -30,7 +30,7 @@ enum ControlCategory: string implements hasLabel, hasColor
         };
     }
 
-    public function getColor(): string | array | null
+    public function getColor(): string|array|null
     {
         return match ($this) {
             self::PREVENTATIVE => 'primary',
@@ -43,5 +43,4 @@ enum ControlCategory: string implements hasLabel, hasColor
             self::UNKNOWN => 'primary',
         };
     }
-
 }

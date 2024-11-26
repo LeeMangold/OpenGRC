@@ -9,8 +9,11 @@ use Filament\Widgets\ChartWidget;
 class ImplementationsStatsWidget extends ChartWidget
 {
     protected static ?string $heading = 'Implementation Effectiveness';
+
     protected static ?string $maxHeight = '250px';
+
     protected int|string|array $columnSpan = '1';
+
     protected static ?int $sort = 2;
 
     protected function getData(): array
@@ -29,7 +32,7 @@ class ImplementationsStatsWidget extends ChartWidget
                         'rgb(45, 180, 45)',
                         'rgb(220, 180, 35)',
                         'rgb(255, 99, 132)',
-                        'rgb(90, 90, 90)'
+                        'rgb(90, 90, 90)',
                     ],
                 ],
             ],
@@ -42,9 +45,9 @@ class ImplementationsStatsWidget extends ChartWidget
             'plugins' => [
                 'legend' => [
                     'display' => false,
-                    'position' => 'bottom'
+                    'position' => 'bottom',
                 ],
-            ]
+            ],
         ];
     }
 
@@ -52,6 +55,4 @@ class ImplementationsStatsWidget extends ChartWidget
     {
         return 'bar';
     }
-
-
 }

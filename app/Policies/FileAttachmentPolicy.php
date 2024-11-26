@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 
 class FileAttachmentPolicy
 {
-    protected String $model = Control::class;
+    protected string $model = Control::class;
 
     public function viewAny(User $user): bool
     {
@@ -32,7 +32,6 @@ class FileAttachmentPolicy
 
     public function delete(User $user): bool
     {
-        return $user->can('Delete ' . Str::plural(class_basename($this->model)));
+        return $user->can('Delete '.Str::plural(class_basename($this->model)));
     }
-
 }

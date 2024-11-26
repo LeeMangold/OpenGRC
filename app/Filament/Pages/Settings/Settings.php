@@ -6,15 +6,13 @@ use Closure;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Tabs;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Tables\Filters\SelectFilter;
 use Outerweb\FilamentSettings\Filament\Pages\Settings as BaseSettings;
 
 class Settings extends BaseSettings
 {
-
     protected static ?string $navigationGroup = 'Settings';
+
     protected static ?int $navigationSort = 10;
 
     public static function canAccess(): bool
@@ -40,14 +38,14 @@ class Settings extends BaseSettings
                     Tabs\Tab::make('General')
                         ->schema([
                             TextInput::make('general.name')
-                                ->default("ets")
+                                ->default('ets')
                                 ->minLength(2)
                                 ->maxLength(16)
                                 ->label('Application Name')
                                 ->helperText('The name of your application')
                                 ->required(),
                             TextInput::make('general.url')
-                                ->default("http://localhost")
+                                ->default('http://localhost')
                                 ->url()
                                 ->label('Application URL')
                                 ->helperText('The URL of your application')
@@ -75,21 +73,21 @@ class Settings extends BaseSettings
                                 ->helperText('The email address to send emails from'),
                         ]),
                     Tabs\Tab::make('Mail Templates')
-                    ->schema([
-                        TextInput::make('mail.templates.password_reset_subject')
-                            ->label('Password Reset Subject')
-                            ->columnSpanFull(),
-                        RichEditor::make('mail.templates.password_reset_body')
-                            ->label('Password Reset Body')
-                            ->columnSpanFull(),
-                        TextInput::make('mail.templates.new_account_subject')
-                            ->label('New Account Subject')
-                            ->columnSpanFull(),
-                        RichEditor::make('mail.templates.new_account_body')
-                            ->label('New Account Body')
-                            ->columnSpanFull(),
+                        ->schema([
+                            TextInput::make('mail.templates.password_reset_subject')
+                                ->label('Password Reset Subject')
+                                ->columnSpanFull(),
+                            RichEditor::make('mail.templates.password_reset_body')
+                                ->label('Password Reset Body')
+                                ->columnSpanFull(),
+                            TextInput::make('mail.templates.new_account_subject')
+                                ->label('New Account Subject')
+                                ->columnSpanFull(),
+                            RichEditor::make('mail.templates.new_account_body')
+                                ->label('New Account Body')
+                                ->columnSpanFull(),
 
-                    ])
+                        ]),
                 ]),
         ];
     }

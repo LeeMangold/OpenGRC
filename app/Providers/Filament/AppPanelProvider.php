@@ -2,7 +2,6 @@
 
 namespace App\Providers\Filament;
 
-use Althinect\FilamentSpatieRolesPermissions\FilamentSpatieRolesPermissionsPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -18,9 +17,7 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Jeffgreco13\FilamentBreezy\BreezyCore;
-use Joaopaulolndev\FilamentGeneralSettings\FilamentGeneralSettingsPlugin;
 use Outerweb\FilamentSettings\Filament\Plugins\FilamentSettingsPlugin;
-
 
 //use Tapp\FilamentAuthenticationLog\FilamentAuthenticationLogPlugin;
 
@@ -45,7 +42,7 @@ class AppPanelProvider extends PanelProvider
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
-//                Pages\Dashboard::class,
+                //                Pages\Dashboard::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->plugins([
@@ -66,9 +63,9 @@ class AppPanelProvider extends PanelProvider
                     )
                     ->passwordUpdateRules(
                         rules: [Password::default()->mixedCase()->uncompromised(3)->min(12)],
-                    )
+                    ),
 
-                ],
+            ],
 
             )
             ->navigationGroups([
@@ -91,6 +88,4 @@ class AppPanelProvider extends PanelProvider
                 Authenticate::class,
             ]);
     }
-
-
 }

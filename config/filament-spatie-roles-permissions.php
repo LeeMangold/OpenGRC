@@ -6,9 +6,8 @@ return [
 
     'preload_permissions' => true,
 
-//    'navigation_section_group' => 'filament-spatie-roles-permissions::filament-spatie.section.roles_and_permissions', // Default uses language constant
+    //    'navigation_section_group' => 'filament-spatie-roles-permissions::filament-spatie.section.roles_and_permissions', // Default uses language constant
     'navigation_section_group' => 'Settings', // Default uses language constant
-
 
     //'team_model' => \App\Models\Team::class,
 
@@ -22,7 +21,7 @@ return [
 
     'guard_names' => [
         'web' => 'web',
-//        'api' => 'api',
+        //        'api' => 'api',
     ],
 
     'toggleable_guard_names' => [
@@ -54,14 +53,14 @@ return [
 
     'sort' => [
         'role_navigation' => false,
-        'permission_navigation' => false
+        'permission_navigation' => false,
     ],
 
     'generator' => [
 
         'guard_names' => [
             'web',
-//            ':',
+            //            ':',
         ],
 
         'permission_affixes' => [

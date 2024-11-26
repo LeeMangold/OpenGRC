@@ -13,8 +13,7 @@ class ViewDataRequest extends ViewRecord
 {
     protected static string $resource = DataRequestResource::class;
 
-
-    protected static ?string $title = "Data Request Viewer";
+    protected static ?string $title = 'Data Request Viewer';
 
     public function form(Form $form): Form
     {
@@ -30,7 +29,7 @@ class ViewDataRequest extends ViewRecord
                                     return new HtmlString($record->details);
                                 })
                                 ->columnSpanFull(),
-                            Forms\Components\Repeater::make("Responses")
+                            Forms\Components\Repeater::make('Responses')
                                 ->relationship('responses')
                                 ->schema([
                                     Forms\Components\Placeholder::make('response')
@@ -38,7 +37,7 @@ class ViewDataRequest extends ViewRecord
                                             return new HtmlString($record->response);
                                         })
                                         ->label('Response'),
-                                    Forms\Components\Repeater::make("Files")
+                                    Forms\Components\Repeater::make('Files')
                                         ->relationship('attachments')
                                         ->columns(2)
                                         ->schema([
@@ -49,17 +48,18 @@ class ViewDataRequest extends ViewRecord
                                                                 <path fill-rule="evenodd" d="M6.194 12.753a.75.75 0 0 0 1.06.053L16.5 4.44v2.81a.75.75 0 0 0 1.5 0v-4.5a.75.75 0 0 0-.75-.75h-4.5a.75.75 0 0 0 0 1.5h2.553l-9.056 8.194a.75.75 0 0 0-.053 1.06Z" clip-rule="evenodd"/>
                                                                 </svg>';
 
-                                                    $htmlString = "<a href='" . route('priv-storage', $record->file_path) . "' target='_blank' class='inline-flex items-center space-x-2'>
+                                                    $htmlString = "<a href='".route('priv-storage', $record->file_path)."' target='_blank' class='inline-flex items-center space-x-2'>
                                                                     <span class='align-middle'>{$record->file_name}</span> $icon
                                                                     </a>";
+
                                                     return new HtmlString($htmlString);
                                                 }),
                                             Forms\Components\Placeholder::make('description')
                                                 ->content(function ($record) {
                                                     return new HtmlString($record->description);
-                                                })
-                                        ])
-                                ])
+                                                }),
+                                        ]),
+                                ]),
                         ]),
                     Forms\Components\Section::make('Metadata')
                         ->schema([
@@ -94,13 +94,12 @@ class ViewDataRequest extends ViewRecord
                                         }
                                     }
                                 }),
-                        ])->grow(false)
+                        ])->grow(false),
                 ])->from('md'),
 
             ])->columns(1);
 
     }
-
 
     protected function getHeaderActions(): array
     {
@@ -111,5 +110,4 @@ class ViewDataRequest extends ViewRecord
                 ->url(route('filament.app.resources.audit-items.edit', $this->record->audit_item_id)),
         ];
     }
-
 }

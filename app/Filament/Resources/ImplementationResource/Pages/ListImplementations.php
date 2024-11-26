@@ -11,7 +11,6 @@ class ListImplementations extends ListRecords
 {
     protected static string $resource = ImplementationResource::class;
 
-
     protected function getHeaderActions(): array
     {
         return [

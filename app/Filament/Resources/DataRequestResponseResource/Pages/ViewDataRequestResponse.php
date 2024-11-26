@@ -2,9 +2,7 @@
 
 namespace App\Filament\Resources\DataRequestResponseResource\Pages;
 
-use App\Enums\ResponseStatus;
 use App\Filament\Resources\DataRequestResponseResource;
-use App\Models\AuditItem;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
@@ -38,7 +36,7 @@ class ViewDataRequestResponse extends ViewRecord
                     ->schema([
 
                         Placeholder::make('response')
-                            ->content(fn($record): HtmlString => new HtmlString($record->response))
+                            ->content(fn ($record): HtmlString => new HtmlString($record->response))
                             ->label('Response'),
 
                         Repeater::make('attachments')
@@ -50,9 +48,8 @@ class ViewDataRequestResponse extends ViewRecord
                                 TextInput::make('description'),
                                 TextInput::make('uploaded_by'),
                             ])
-                            ->columnSpanFull()
-                    ])->columns(2)->collapsible(true)
+                            ->columnSpanFull(),
+                    ])->columns(2)->collapsible(true),
             ]);
     }
-
 }

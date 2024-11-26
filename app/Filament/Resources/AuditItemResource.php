@@ -3,8 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\AuditItemResource\Pages;
-use App\Filament\Resources\AuditItemResource\RelationManagers;
-use App\Filament\Resources\AuditItemResource\Widgets\ImplementationsTableWidget;
 use App\Models\AuditItem;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -19,9 +17,10 @@ class AuditItemResource extends Resource
     protected static ?string $model = AuditItem::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-inbox-arrow-down';
-    protected static ?string $navigationGroup = 'Foundations';
-    protected static bool $shouldRegisterNavigation = false;
 
+    protected static ?string $navigationGroup = 'Foundations';
+
+    protected static bool $shouldRegisterNavigation = false;
 
     public static function form(Form $form): Form
     {

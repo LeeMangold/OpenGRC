@@ -11,7 +11,6 @@ use Illuminate\Support\Carbon;
 /**
  * Class FileAttachment
  *
- * @package App\Models
  * @property int $id
  * @property string $file_name
  * @property string $file_path
@@ -20,6 +19,7 @@ use Illuminate\Support\Carbon;
  * @property int $uploaded_by
  * @property int $data_request_id
  * @property-read DataRequest $dataRequest
+ *
  * @method static Builder|FileAttachment newModelQuery()
  * @method static Builder|FileAttachment newQuery()
  * @method static Builder|FileAttachment query()
@@ -29,6 +29,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder|FileAttachment whereUploadedAt($value)
  * @method static Builder|FileAttachment whereUploadedBy($value)
  * @method static Builder|FileAttachment whereDataRequestId($value)
+ *
  * @mixin Eloquent
  */
 class FileAttachment extends Model
@@ -44,13 +45,11 @@ class FileAttachment extends Model
         'file_size',
         'uploaded_at',
         'uploaded_by',
-        'data_request_id'
+        'data_request_id',
     ];
 
     /**
      * Get the data request that owns the file attachment.
-     *
-     * @return BelongsTo
      */
     public function dataRequest(): BelongsTo
     {

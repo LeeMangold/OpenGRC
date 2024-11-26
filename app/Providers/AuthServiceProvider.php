@@ -11,8 +11,6 @@ use Spatie\Permission\Models\Role;
 
 class AuthServiceProvider extends ServiceProvider
 {
-
-
     protected string $redirectTo = '/app/login';
 
     /**

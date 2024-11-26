@@ -19,7 +19,6 @@ class DataRequestResponse extends Model
         ];
     }
 
-
     public function dataRequest(): BelongsTo
     {
         return $this->belongsTo(DataRequest::class);
@@ -39,5 +38,4 @@ class DataRequestResponse extends Model
     {
         return $this->hasMany(FileAttachment::class, 'data_request_response_id');
     }
-
 }

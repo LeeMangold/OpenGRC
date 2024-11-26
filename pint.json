@@ -1,0 +1,7 @@
+{
+    "preset": "laravel",
+    "rules": {
+        "line_ending": false
+    }
+}
+

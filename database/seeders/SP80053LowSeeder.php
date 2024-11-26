@@ -5,14 +5,12 @@ namespace Database\Seeders;
 use App\Enums\ControlCategory;
 use App\Enums\ControlEnforcementCategory;
 use App\Enums\ControlType;
-use App\Models\Control;
+use App\Http\Controllers\HelperController;
 use App\Models\Standard;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use League\Csv\Reader;
 use League\Csv\Statement;
-use App\Http\Controllers\HelperController;
 
 class SP80053LowSeeder extends Seeder
 {
@@ -27,7 +25,7 @@ class SP80053LowSeeder extends Seeder
             'code' => '800-53 (Low)',
             'authority' => 'NIST',
             'reference_url' => 'https://csrc.nist.gov/publications/detail/sp/800-53/rev-5/final',
-            'description' => "The NIST Special Publication 800-53 Low Baseline is a set of federal security controls
+            'description' => 'The NIST Special Publication 800-53 Low Baseline is a set of federal security controls
             specifically designed for information systems with a low impact level in terms of confidentiality,
             integrity, and availability. This baseline, part of the broader NIST 800-53 framework, aims to provide a
             foundational level of security for systems where the potential damage from a security breach is considered
@@ -37,12 +35,12 @@ class SP80053LowSeeder extends Seeder
             incident response, and system and information integrity, but with a scope and depth commensurate with the
             lower risk level. The NIST SP 800-53 Low Baseline is integral for organizations that need to comply with
             federal standards, offering a structured approach to securing systems while aligning with the overall risk
-            management strategy."
+            management strategy.',
         ]);
 
         $csv = Reader::createFromPath(resource_path('data/sp80053Low.csv'), 'r');
         $csv->setHeaderOffset(0);
-        $records = (new Statement())->process($csv);
+        $records = (new Statement)->process($csv);
 
         // Retrieve the standard_id using DB Query Builder
         $standardId = DB::table('standards')->where('code', '800-53 (Low)')->value('id');
@@ -56,8 +54,8 @@ class SP80053LowSeeder extends Seeder
                 'type' => $record['Type'] ?? ControlType::OTHER,
                 'category' => $record['Category'] ?? ControlCategory::UNKNOWN,
                 'enforcement' => $record['Enforcement'] ?? ControlEnforcementCategory::UNKNOWN,
-                'discussion' => HelperController::linesToParagraphs($record['Discussion'], "control-discussion-text"),
-                'description' => HelperController::linesToParagraphs($record['Description'], "control-description-text")
+                'discussion' => HelperController::linesToParagraphs($record['Discussion'], 'control-discussion-text'),
+                'description' => HelperController::linesToParagraphs($record['Description'], 'control-description-text'),
             ]);
         }
     }
