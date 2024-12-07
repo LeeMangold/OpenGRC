@@ -1,9 +1,15 @@
 #!/bin/bash
 
-find . -print0 | xargs --null sudo chown lmangold.www-data
-find . -type f -print0 | xargs --null sudo chmod 666
-find . -type d -print0 | xargs --null sudo chmod 775
-sudo chmod 700 set_permissions
-sudo chmod 700 artisan
+#Note: Always run artisan commands as the web server user
+# e.g. sudo -u www-data php artisan dusk tests/Browser/StandardTest.php
+# create a bash alias for ease of use!
 
-chmod 700 node_modules/.bin/*
+find . -print0 | xargs --null sudo chown lmangold.www-data
+find . -type f -print0 | xargs --null sudo chmod 660
+find . -type d -print0 | xargs --null sudo chmod 770
+
+sudo chmod 750 set_permissions
+sudo chmod 750 artisan
+sudo chmod 770 vendor/laravel/dusk/bin/*
+sudo chmod 770 vendor/bin/*
+chmod 770 node_modules/.bin/*
