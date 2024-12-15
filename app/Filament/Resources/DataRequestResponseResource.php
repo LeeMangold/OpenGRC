@@ -8,6 +8,7 @@ use App\Models\DataRequestResponse;
 use Carbon\Carbon;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
@@ -31,6 +32,16 @@ class DataRequestResponseResource extends Resource
     {
         return $form
             ->schema([
+                Section::make('Evidence Requested')
+                    ->columnSpanFull()
+                    ->schema([
+                        Placeholder::make('request.dataRequest.details')
+                            ->content(fn($record) => $record->dataRequest->details ?? 'No details available')
+                            ->label('Data Request Details'),
+                        Placeholder::make('request.dataRequest.auditItem.audit.name')
+                            ->content(fn($record) => $record->dataRequest->auditItem?? 'No audit name available')
+                            ->label('Audit Name'),
+                    ]),
                 Section::make('Response')
                     ->columnSpanFull()
                     ->schema([
@@ -56,7 +67,7 @@ class DataRequestResponseResource extends Resource
                                     ->preserveFilenames()
                                     ->disk('private')
                                     ->directory(function () {
-                                        return 'attachments/'.Carbon::now()->timestamp.'-'.Str::random(2);
+                                        return 'attachments/' . Carbon::now()->timestamp . '-' . Str::random(2);
                                     })
                                     ->storeFileNamesIn('file_name')
                                     ->visibility('private')

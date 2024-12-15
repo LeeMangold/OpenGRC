@@ -41,7 +41,6 @@ class ViewDataRequestResponse extends ViewRecord
             ->schema([
                 Section::make('Responses')
                     ->schema([
-
                         Placeholder::make('response')
                             ->content(fn ($record): HtmlString => new HtmlString($record->response))
                             ->label('Response'),
