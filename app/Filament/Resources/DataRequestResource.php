@@ -3,18 +3,22 @@
 namespace App\Filament\Resources;
 
 use App\Enums\ResponseStatus;
-use App\Enums\WorkflowStatus;
 use App\Filament\Resources\DataRequestResource\Pages;
 use App\Models\Audit;
 use App\Models\DataRequest;
 use App\Models\User;
 use Filament\Forms;
+use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\HtmlString;
 
 class DataRequestResource extends Resource
 {
@@ -121,5 +125,84 @@ class DataRequestResource extends Resource
             'data_request_id' => $record->id,
             'status' => ResponseStatus::PENDING,
         ]);
+    }
+
+    public static function getEditForm(Form $form): Form
+    {
+        return $form
+            ->schema([
+
+                Forms\Components\Section::make('Request Details')
+                    ->schema([
+                        Forms\Components\Placeholder::make('Requested Information')
+                            ->content(function ($record) {
+                                return new HtmlString($record->details ?? '');
+                            })
+                            ->columnSpanFull(),
+                        Placeholder::make('control')
+                            ->label('Control')
+                            ->columnSpanFull()
+                            ->content(function ($record) {
+                                return $record->auditItem->auditable->code.' - '.$record->auditItem->auditable->title;
+                            }),
+                        Placeholder::make('control_description')
+                            ->label('Control Description')
+                            ->columnSpanFull()
+                            ->content(function ($record) {
+                                return new HtmlString($record->auditItem->auditable->description);
+                            }),
+                        Forms\Components\Repeater::make('Responses')
+                            ->label('Responses')
+                            ->relationship('responses')
+                            ->addable(false)
+                            ->columns(2)
+                            ->deletable(false)
+                            ->schema([
+                                Select::make('requestee_id')
+                                    ->label('Assigned To')
+                                    ->relationship('requestee', 'name')
+                                    ->required(),
+                                ToggleButtons::make('status')
+                                    ->label('Status')
+                                    ->options(ResponseStatus::class)
+                                    ->default(ResponseStatus::PENDING)
+                                    ->grouped()
+                                    ->required(),
+                                Placeholder::make('response')
+                                    ->label('Text Response')
+                                    ->columnSpanFull()
+                                    ->content(function ($record) {
+                                        return new HtmlString($record ? $record->response : '');
+                                    })
+                                    ->label('Response'),
+                                Placeholder::make('attachments')
+                                    ->columnSpanFull()
+                                    ->content(function ($record) {
+                                        $output = "<table class='min-w-full divide-y divide-gray-200'>
+                                        <thead class='bg-gray-50'>
+                                            <tr>
+                                                <th class='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-auto'>File</th>
+                                                <th class='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>Description</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class='bg-white divide-y divide-gray-200'>";
+                                        if ($record) {
+                                            foreach (json_decode($record->attachments, true) as $attachment) {
+                                                $signedUrl = URL::signedRoute('priv-storage', ['filepath' => $attachment['file_path']]);
+                                                $output .= "<tr>
+                                                <td class='px-6 py-4 whitespace-nowrap w-auto'><a href='$signedUrl' class='text-indigo-600 hover:text-indigo-900'>{$attachment['file_name']}</a></td>
+                                                <td class='px-6 py-4 whitespace-nowrap'>{$attachment['description']}</td>
+                                            </tr>";
+                                            }
+                                        }
+                                        $output .= '</tbody></table>';
+
+                                        return new HtmlString($output);
+                                    })
+                                    ->label('Attachments'),
+                            ]),
+                    ]),
+            ]);
+
     }
 }

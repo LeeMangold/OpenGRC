@@ -18,6 +18,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 
 class DataRequestResponseResource extends Resource
@@ -36,11 +37,23 @@ class DataRequestResponseResource extends Resource
                     ->columnSpanFull()
                     ->schema([
                         Placeholder::make('request.dataRequest.details')
-                            ->content(fn($record) => $record->dataRequest->details ?? 'No details available')
+                            ->content(fn ($record) => $record->dataRequest->details ?? 'No details available')
                             ->label('Data Request Details'),
                         Placeholder::make('request.dataRequest.auditItem.audit.name')
-                            ->content(fn($record) => $record->dataRequest->auditItem?? 'No audit name available')
+                            ->content(fn ($record) => $record->dataRequest->auditItem->audit->title ?? 'No audit name available')
                             ->label('Audit Name'),
+                        Placeholder::make('request.dataRequest.auditItem.audit.name')
+                            ->content(function ($record) {
+                                return $record->dataRequest->auditItem->auditable->title ?? 'No audit name available';
+                            })
+                            ->label(function ($record) {
+                                return $record->dataRequest->auditItem->auditable_type === 'App\Models\Control' ? 'Control Name' : 'Implementation Name';
+                            }),
+                        Placeholder::make('request.dataRequest.auditItem.audit.description')
+                            ->content(function ($record) {
+                                return new HtmlString($record->dataRequest->auditItem->auditable->description);
+                            })
+                            ->label('Control Description'),
                     ]),
                 Section::make('Response')
                     ->columnSpanFull()
@@ -67,7 +80,7 @@ class DataRequestResponseResource extends Resource
                                     ->preserveFilenames()
                                     ->disk('private')
                                     ->directory(function () {
-                                        return 'attachments/' . Carbon::now()->timestamp . '-' . Str::random(2);
+                                        return 'attachments/'.Carbon::now()->timestamp.'-'.Str::random(2);
                                     })
                                     ->storeFileNamesIn('file_name')
                                     ->visibility('private')

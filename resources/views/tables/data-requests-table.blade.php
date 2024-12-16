@@ -16,7 +16,7 @@
             <tr>
                 <td class="border px-4 py-2">
                     <a class="underline"
-                       href="{!! route('filament.app.resources.data-requests.view', $request->id) !!}">
+                       href="{!! route('filament.app.resources.data-requests.edit', $request->id) !!}">
                         {{ $request->details }}
                     </a>
                 </td>

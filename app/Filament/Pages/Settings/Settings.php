@@ -86,6 +86,12 @@ class Settings extends BaseSettings
                             RichEditor::make('mail.templates.new_account_body')
                                 ->label('New Account Body')
                                 ->columnSpanFull(),
+                            TextInput::make('mail.templates.evidence_request_subject')
+                                ->label('Evidence Request Subject')
+                                ->columnSpanFull(),
+                            RichEditor::make('mail.templates.evidence_request_body')
+                                ->label('Evidence Request Body')
+                                ->columnSpanFull(),
 
                         ]),
                 ]),

@@ -8,6 +8,7 @@ use App\Enums\ResponseStatus;
 use App\Enums\WorkflowStatus;
 use App\Filament\Resources\AuditItemResource;
 use App\Filament\Resources\DataRequestResource;
+use App\Mail\EvidenceRequestMail;
 use App\Models\AuditItem;
 use App\Models\DataRequest;
 use App\Models\User;
@@ -19,6 +20,7 @@ use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\HtmlString;
 
 class EditAuditItem extends EditRecord
@@ -53,6 +55,23 @@ class EditAuditItem extends EditRecord
                     $dataRequest->details = $data['details'];
                     $dataRequest->save();
 
+                    if ($data['send_email']) {
+                        $user = User::find($dataRequest->assigned_to_id);
+                        $data = [
+                            'email' => $user->email,
+                            'name' => $user->name,
+                        ];
+
+                        try {
+                            Mail::to($data['email'])->send(new EvidenceRequestMail($data['email'], $data['name']));
+                        } catch (\Exception $e) {
+                            Notification::make()
+                                ->title('Failed to send email')
+                                ->danger()
+                                ->send();
+                        }
+                    }
+
                     DataRequestResource::createResponses($dataRequest);
 
                 })
@@ -71,6 +90,9 @@ class EditAuditItem extends EditRecord
                     Forms\Components\Textarea::make('details')
                         ->label('Request Details')
                         ->required(),
+                    Forms\Components\Checkbox::make('send_email')
+                        ->label('Send Email Notification')
+                        ->default(true),
                 ])
                 ->modalHeading('Request Evidence')
                 ->modalSubmitActionLabel('Submit')
