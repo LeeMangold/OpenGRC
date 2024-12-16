@@ -131,7 +131,9 @@ class ViewAudit extends ViewRecord
                             $auditItem->update(['status' => WorkflowStatus::COMPLETED]);
 
                             // If the audit item is an implementation, update the effectiveness
-                            $auditItem->implementation()->update(['effectiveness' => $auditItem->effectiveness]);
+                            if ($auditItem->auditable_type == 'App\Models\Implementation') {
+                                $auditItem->implementation()->update(['effectiveness' => $auditItem->effectiveness]);
+                            }
                         }
 
                         //Save the final audit report
