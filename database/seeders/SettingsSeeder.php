@@ -21,6 +21,10 @@ class SettingsSeeder extends Seeder
                 'value' => 'https://localhost',
             ],
             [
+                'key' => 'general.repo',
+                'value' => 'https://repo.opengrc.com',
+            ],
+            [
                 'key' => 'mail.host',
                 'value' => 'smtp.mailtrap.io',
             ],

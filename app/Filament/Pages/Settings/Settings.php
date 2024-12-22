@@ -50,6 +50,12 @@ class Settings extends BaseSettings
                                 ->label('Application URL')
                                 ->helperText('The URL of your application')
                                 ->required(),
+                            TextInput::make('general.repo')
+                                ->default('https://repo.opengrc.com')
+                                ->url()
+                                ->label('Update Repository URL')
+                                ->helperText('The URL of the repository to check for content updates')
+                                ->required(),
                         ]),
                     Tabs\Tab::make('Mail')
                         ->columns(3)
