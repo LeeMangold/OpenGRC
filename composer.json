@@ -25,6 +25,7 @@
         "laravel/framework": "^11.31",
         "laravel/sanctum": "^4.0.3",
         "laravel/tinker": "^2.10",
+        "leandrocfe/filament-apex-charts": "^3.1",
         "lucasgiovanny/filament-multiselect-two-sides": "^2.1.2",
         "outerweb/filament-settings": "^1.2",
         "outerweb/settings": "^1.0",

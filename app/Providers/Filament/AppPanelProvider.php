@@ -18,9 +18,10 @@ use Illuminate\Validation\Rules\Password;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Jeffgreco13\FilamentBreezy\BreezyCore;
 use JibayMcs\FilamentTour\FilamentTourPlugin;
+use Leandrocfe\FilamentApexCharts\FilamentApexChartsPlugin;
 use Outerweb\FilamentSettings\Filament\Plugins\FilamentSettingsPlugin;
 
-//use Tapp\FilamentAuthenticationLog\FilamentAuthenticationLogPlugin;
+// use Tapp\FilamentAuthenticationLog\FilamentAuthenticationLogPlugin;
 
 class AppPanelProvider extends PanelProvider
 {
@@ -47,7 +48,8 @@ class AppPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->plugins([
-//                FilamentTourPlugin::make(),
+                FilamentApexChartsPlugin::make(),
+                //                FilamentTourPlugin::make(),
                 FilamentSettingsPlugin::make()
                     ->pages([
                         \App\Filament\Pages\Settings\Settings::class,
