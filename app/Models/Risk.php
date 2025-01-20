@@ -29,5 +29,20 @@ class Risk extends Model
         return $this->BelongsToMany(Implementation::class);
     }
 
+    /**
+     * Get the name of the index associated with the model.
+     */
+    public function searchableAs(): string
+    {
+        return 'risks_index';
+    }
+
+    /**
+     * Get the array representation of the model for search.
+     */
+    public function toSearchableArray(): array
+    {
+        return $this->toArray();
+    }
 
 }

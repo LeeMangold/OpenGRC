@@ -3,19 +3,23 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\RiskResource\Pages;
-use App\Filament\Resources\RiskResource\RelationManagers;
 use App\Models\Risk;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Contracts\Support\Htmlable;
+
 
 class RiskResource extends Resource
 {
     protected static ?string $model = Risk::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-fire';
+
+    protected static ?string $navigationLabel = 'Risk Management';
 
     public static function form(Form $form): Form
     {
@@ -86,10 +90,9 @@ class RiskResource extends Resource
 
                 Forms\Components\Select::make('implementations')
                     ->label('Related Implementations')
-                    ->helperText("What are we doing to mitigate this risk?")
+                    ->helperText('What are we doing to mitigate this risk?')
                     ->relationship('implementations', 'title')
                     ->multiple(),
-
 
                 Forms\Components\Select::make('status')
                     ->label('Status')
@@ -152,6 +155,38 @@ class RiskResource extends Resource
             'index' => Pages\ListRisks::route('/'),
             'create' => Pages\CreateRisk::route('/create'),
             'edit' => Pages\EditRisk::route('/{record}/edit'),
+            'view' => Pages\EditRisk::route('/{record}'),
         ];
+    }
+
+    /**
+     * @param  Risk  $record
+     */
+    public static function getGlobalSearchResultTitle(Model $record): string|Htmlable
+    {
+        return "{$record->name}";
+    }
+
+    /**
+     * @param  Risk  $record
+     */
+    public static function getGlobalSearchResultUrl(Model $record): string
+    {
+        return RiskResource::getUrl('view', ['record' => $record]);
+    }
+
+    /**
+     * @param  Risk  $record
+     */
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        return [
+            'Risk' => $record->id,
+        ];
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['name', 'description'];
     }
 }
