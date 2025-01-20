@@ -55,7 +55,8 @@ fi
 
 # Check NPM version
 npm_version=$(npm -v)
-if [[ "$npm_version" < "9" ]]; then
+required_version="9"
+if [[ "$(printf '%s\n' "$required_version" "$npm_version" | sort -V | head -n 1)" != "$required_version" ]]; then
   echo "Checking NPM version... FAILED! NPM version 9 or higher is required. You have $npm_version"
   exit 1
 else

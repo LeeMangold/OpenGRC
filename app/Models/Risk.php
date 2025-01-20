@@ -5,6 +5,9 @@ namespace App\Models;
 use App\Enums\MitigationType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Risk extends Model
 {
@@ -20,6 +23,11 @@ class Risk extends Model
         'likelihood',
         'impact',
     ];
+
+    public function implementations(): BelongsToMany
+    {
+        return $this->BelongsToMany(Implementation::class);
+    }
 
 
 }

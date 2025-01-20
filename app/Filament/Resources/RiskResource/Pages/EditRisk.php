@@ -10,6 +10,8 @@ class EditRisk extends EditRecord
 {
     protected static string $resource = RiskResource::class;
 
+    protected static ?string $title = 'Edit Risk Item';
+
     protected function getHeaderActions(): array
     {
         return [

@@ -10,8 +10,6 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class RiskResource extends Resource
 {
@@ -22,58 +20,82 @@ class RiskResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
+            ->columns(2)
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->label('Name')
+                    ->columnSpanFull()
                     ->required(),
                 Forms\Components\Textarea::make('description')
-                    ->label('Description')
-                    ->required(),
+                    ->columnSpanFull()
+                    ->label('Description'),
+                Forms\Components\Section::make('inherent')
+                    ->columnSpan(1)
+                    ->heading('Inherent Risk Scoring')
+                    ->schema([
+                        Forms\Components\ToggleButtons::make('inherent_likelihood')
+                            ->label('Likelihood')
+                            ->options([
+                                '1' => 'Very Low',
+                                '2' => 'Low',
+                                '3' => 'Moderate',
+                                '4' => 'High',
+                                '5' => 'Very High',
+                            ])
+                            ->grouped()
+                            ->required(),
+                        Forms\Components\ToggleButtons::make('inherent_impact')
+                            ->label('Impact')
+                            ->options([
+                                '1' => 'Very Low',
+                                '2' => 'Low',
+                                '3' => 'Moderate',
+                                '4' => 'High',
+                                '5' => 'Very High',
+                            ])
+                            ->grouped()
+                            ->required(),
+                    ]),
+                Forms\Components\Section::make('residual')
+                    ->columnSpan(1)
+                    ->heading('Residual Risk Scoring')
+                    ->schema([
+                        Forms\Components\ToggleButtons::make('residual_likelihood')
+                            ->label('Likelihood')
+                            ->options([
+                                '1' => 'Very Low',
+                                '2' => 'Low',
+                                '3' => 'Moderate',
+                                '4' => 'High',
+                                '5' => 'Very High',
+                            ])
+                            ->grouped()
+                            ->required(),
+                        Forms\Components\ToggleButtons::make('residual_impact')
+                            ->label('Impact')
+                            ->options([
+                                '1' => 'Very Low',
+                                '2' => 'Low',
+                                '3' => 'Moderate',
+                                '4' => 'High',
+                                '5' => 'Very High',
+                            ])
+                            ->grouped()
+                            ->required(),
+                    ]),
+
+                Forms\Components\Select::make('implementations')
+                    ->label('Related Implementations')
+                    ->helperText("What are we doing to mitigate this risk?")
+                    ->relationship('implementations', 'title')
+                    ->multiple(),
+
+
                 Forms\Components\Select::make('status')
                     ->label('Status')
                     ->options([
                         'Open' => 'Open',
                         'Closed' => 'Closed',
-                    ])
-                    ->required(),
-                Forms\Components\Select::make('inherent_likelihood')
-                    ->label('Inherent Likelihood')
-                    ->options([
-                        '1' => '1',
-                        '2' => '2',
-                        '3' => '3',
-                        '4' => '4',
-                        '5' => '5',
-                    ])
-                    ->required(),
-                Forms\Components\Select::make('inherent_impact')
-                    ->label('Inherent Impact')
-                    ->options([
-                        '1' => '1',
-                        '2' => '2',
-                        '3' => '3',
-                        '4' => '4',
-                        '5' => '5',
-                    ])
-                    ->required(),
-                Forms\Components\Select::make('residual_likelihood')
-                    ->label('Residual Likelihood')
-                    ->options([
-                        '1' => '1',
-                        '2' => '2',
-                        '3' => '3',
-                        '4' => '4',
-                        '5' => '5',
-                    ])
-                    ->required(),
-                Forms\Components\Select::make('residual_impact')
-                    ->label('Residual Impact')
-                    ->options([
-                        '1' => '1',
-                        '2' => '2',
-                        '3' => '3',
-                        '4' => '4',
-                        '5' => '5',
                     ])
                     ->required(),
             ]);
@@ -82,8 +104,9 @@ class RiskResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->defaultSort('residual_risk', 'desc')
             ->emptyStateHeading('No Risks Identified Yet')
-            ->emptyStateDescription('Add and analyse your first risk by clicking the "New Risk" button above.')
+            ->emptyStateDescription('Add and analyse your first risk by clicking the "Track New Risk" button above.')
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()
@@ -94,12 +117,6 @@ class RiskResource extends Resource
                     ->wrap()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('status')
-                    ->searchable()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('likelihood')
-                    ->searchable()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('impact')
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('inherent_risk')

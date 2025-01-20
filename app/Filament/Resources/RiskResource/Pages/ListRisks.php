@@ -16,7 +16,7 @@ class ListRisks extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            Actions\CreateAction::make()->label("Track New Risk"),
         ];
     }
 

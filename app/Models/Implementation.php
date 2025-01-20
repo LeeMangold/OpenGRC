@@ -86,6 +86,14 @@ class Implementation extends Model
     }
 
     /**
+     * The risks that belong to the implementation.
+     */
+    public function risks(): BelongsToMany
+    {
+        return $this->belongsToMany(Risk::class);
+    }
+
+    /**
      * Get the name of the index associated with the model.
      */
     public function searchableAs(): string
