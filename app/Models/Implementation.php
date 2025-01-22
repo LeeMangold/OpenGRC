@@ -144,4 +144,5 @@ class Implementation extends Model
         return $this->completedAuditItems->pluck('effectiveness')->last() ? $this->auditItems->pluck('updated_at')->last()->format('M d, Y') : '';
     }
 
+
 }

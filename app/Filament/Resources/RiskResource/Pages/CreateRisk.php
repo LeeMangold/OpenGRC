@@ -4,8 +4,6 @@ namespace App\Filament\Resources\RiskResource\Pages;
 
 use App\Filament\Resources\RiskResource;
 use Filament\Resources\Pages\CreateRecord;
-use Illuminate\Http\RedirectResponse;
-use Livewire\Features\SupportRedirects\Redirector;
 
 class CreateRisk extends CreateRecord
 {
@@ -18,6 +16,7 @@ class CreateRisk extends CreateRecord
         $this->record->inherent_risk = $inherant_risk;
         $this->record->residual_risk = $residual_risk;
         $this->record->save();
+
         return redirect()->route('filament.app.resources.risks.index');
     }
 }

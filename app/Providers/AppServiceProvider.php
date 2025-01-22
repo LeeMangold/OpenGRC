@@ -25,7 +25,7 @@ class AppServiceProvider extends ServiceProvider
             URL::forceScheme('https');
         }
 
-        //if table "settings" exists
+        // if table "settings" exists
         if (! app()->runningInConsole()) {
             if (Schema::hasTable('settings')) {
 

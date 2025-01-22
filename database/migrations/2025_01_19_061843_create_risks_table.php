@@ -21,8 +21,8 @@ return new class extends Migration
             $table->unsignedTinyInteger('inherent_impact')->default(3);
             $table->unsignedTinyInteger('residual_likelihood')->default(3);
             $table->unsignedTinyInteger('residual_impact')->default(3);
-            $table->unsignedTinyInteger('inherent_risk')->default(0);
-            $table->unsignedTinyInteger('residual_risk')->default(0);
+            $table->float('inherent_risk')->default(0.0);
+            $table->float('residual_risk')->default(0.0);
 
             $table->timestamps();
         });

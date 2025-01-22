@@ -16,7 +16,7 @@ class InherentRisk extends Widget
 
     protected static ?int $sort = 2;
 
-    public function mount($title = 'Inherent Risk')
+    public function mount($title = 'Inherent Risk'): void
     {
         $this->grid = $this->generateGrid(Risk::all(), 'inherent');
         $this->title = $title;
@@ -43,18 +43,4 @@ class InherentRisk extends Widget
         return $grid;
     }
 
-    public static function getRiskColor(int $likelihood, int $impact, int $weight = 200): string
-    {
-        $average = ($likelihood + $impact) / 2;
-
-        if ($average >= 4) {
-            return "bg-red-$weight"; // High risk
-        } elseif ($average >= 3) {
-            return "bg-orange-$weight"; // Moderate-High risk
-        } elseif ($average >= 2) {
-            return "bg-yellow-$weight"; // Moderate risk
-        } else {
-            return "bg-green-$weight"; // Low risk
-        }
-    }
 }

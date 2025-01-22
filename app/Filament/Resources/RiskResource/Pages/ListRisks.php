@@ -12,11 +12,10 @@ class ListRisks extends ListRecords
 
     protected ?string $heading = 'Risk Management';
 
-
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make()->label("Track New Risk"),
+            Actions\CreateAction::make()->label('Track New Risk'),
         ];
     }
 

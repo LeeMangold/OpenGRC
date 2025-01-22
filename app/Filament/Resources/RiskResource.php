@@ -2,16 +2,20 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\ControlResource\RelationManagers\ImplementationRelationManager;
 use App\Filament\Resources\RiskResource\Pages;
+use App\Filament\Resources\RiskResource\RelationManagers\ImplementationsRelationManager;
 use App\Models\Risk;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Infolists\Components\Section;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Support\Htmlable;
-
+use Illuminate\Database\Eloquent\Model;
 
 class RiskResource extends Resource
 {
@@ -119,33 +123,37 @@ class RiskResource extends Resource
                     ->searchable()
                     ->wrap()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('status')
-                    ->searchable()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('inherent_risk')
-                    ->searchable()
-                    ->sortable(),
+                    ->label('Inherent Risk')
+                    ->sortable()
+                    ->color(function (Risk $record) {
+                        return self::getRiskColor($record->inherent_likelihood, $record->inherent_risk);
+                    })
+                    ->badge(),
                 Tables\Columns\TextColumn::make('residual_risk')
-                    ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->badge()
+                    ->color(function (Risk $record) {
+                        return self::getRiskColor($record->residual_likelihood, $record->residual_risk);
+                    }),
             ])
-            ->filters([
-                //
-            ])
+            ->filters([])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make()
+                    ->slideOver()
+                    ->hidden(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                //                Tables\Actions\BulkActionGroup::make([
+                //                    Tables\Actions\DeleteBulkAction::make(),
+                //                ]),
             ]);
     }
 
     public static function getRelations(): array
     {
         return [
-            //
+            'implementations' => ImplementationsRelationManager::class,
         ];
     }
 
@@ -154,8 +162,8 @@ class RiskResource extends Resource
         return [
             'index' => Pages\ListRisks::route('/'),
             'create' => Pages\CreateRisk::route('/create'),
-            'edit' => Pages\EditRisk::route('/{record}/edit'),
-            'view' => Pages\EditRisk::route('/{record}'),
+            //            'edit' => Pages\EditRisk::route('/{record}/edit'),
+            'view' => Pages\ViewRisk::route('/{record}'),
         ];
     }
 
@@ -188,5 +196,20 @@ class RiskResource extends Resource
     public static function getGloballySearchableAttributes(): array
     {
         return ['name', 'description'];
+    }
+
+    public static function getRiskColor(int $likelihood, int $impact, int $weight = 200): string
+    {
+        $average = round(($likelihood + $impact) / 2);
+
+        if ($average >= 4) {
+            return "bg-red-$weight"; // High risk
+        } elseif ($average >= 3) {
+            return "bg-orange-$weight"; // Moderate-High risk
+        } elseif ($average >= 2) {
+            return "bg-yellow-$weight"; // Moderate risk
+        } else {
+            return "bg-green-$weight"; // Low risk
+        }
     }
 }

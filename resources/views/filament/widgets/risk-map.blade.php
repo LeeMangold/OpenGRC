@@ -46,7 +46,7 @@
                                     if($count > 0) {
                                         $colorWeight = 500;
                                     }
-                                    $colorClass = InherentRisk::getRiskColor($likelihoodIndex + 1, sizeof($grid) - $impactIndex, $colorWeight);
+                                    $colorClass = \App\Filament\Resources\RiskResource::getRiskColor($likelihoodIndex + 1, sizeof($grid) - $impactIndex, $colorWeight);
                                 @endphp
 
                                 <div

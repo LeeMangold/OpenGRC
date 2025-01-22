@@ -17,16 +17,21 @@ class RiskFactory extends Factory
      */
     public function definition(): array
     {
+        $inherent_likelihood = $this->faker->numberBetween(2, 5);
+        $inherent_impact = $this->faker->numberBetween(2, 5);
+        $residual_likelihood = $this->faker->numberBetween(1, 4);
+        $residual_impact = $this->faker->numberBetween(1, 4);
+
         return [
             'name' => $this->faker->sentence,
             'description' => $this->faker->paragraph,
             'status' => 'Open',
-            'inherent_likelihood' => $this->faker->numberBetween(2, 5),
-            'inherent_impact' => $this->faker->numberBetween(2, 5),
-            'residual_likelihood' => $this->faker->numberBetween(1, 4),
-            'residual_impact' => $this->faker->numberBetween(1, 4),
-            'inherent_risk' => 0,
-            'residual_risk' => 0,
+            'inherent_likelihood' => $inherent_likelihood,
+            'inherent_impact' => $inherent_impact,
+            'residual_likelihood' => $residual_likelihood,
+            'residual_impact' => $residual_impact,
+            'inherent_risk' => $inherent_likelihood * $inherent_impact,
+            'residual_risk' => $residual_likelihood * $residual_impact,
         ];
     }
 }

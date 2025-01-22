@@ -197,7 +197,7 @@ class ImplementationResource extends Resource
         return [
             'index' => Pages\ListImplementations::route('/'),
             'create' => Pages\CreateImplementation::route('/create'),
-            'view' => Pages\ViewImplementation::route('/{record}'),
+//            'view' => Pages\ViewImplementation::route('/{record}'),
             'edit' => Pages\EditImplementation::route('/{record}/edit'),
         ];
     }
@@ -240,4 +240,113 @@ class ImplementationResource extends Resource
     {
         return ['title', 'details', 'notes', 'code'];
     }
+
+    public static function getForm(Form $form): Form
+    {
+        return $form
+            ->columns(2)
+            ->schema([
+                Forms\Components\TextInput::make('code')
+                    ->required()
+                    ->maxLength(255)
+                    ->placeholder('e.g. ACME-123')
+                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Give the implementation a unique ID or Code.'),
+                Forms\Components\Select::make('status')
+                    ->required()
+                    ->enum(ImplementationStatus::class)
+                    ->options(ImplementationStatus::class)
+                    ->default(ImplementationStatus::UNKNOWN)
+                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Select an implementation status. This will also be assessed in audits.')
+                    ->native(false),
+                Forms\Components\TextInput::make('title')
+                    ->columnSpanFull()
+                    ->required()
+                    ->maxLength(255)
+                    ->placeholder('e.g. Quarterly Access Reviews')
+                    ->hint('Enter the title of the implementation.')
+                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'This should be a detailed description of this implementation in sufficient detail to both implement and test.'),
+                Forms\Components\RichEditor::make('details')
+                    ->columnSpanFull()
+                    ->label('Implementation Details')
+                    ->required()
+                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'This should be a detailed description of this implementation in sufficient detail to both implement and test.'),
+                Forms\Components\RichEditor::make('notes')
+                    ->columnSpanFull()
+                    ->label('Internal Notes')
+                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'These notes are for internal use only and will not be shared with auditors.')
+                    ->maxLength(4096),
+            ]);
+    }
+
+    public static function getTable(Table $table): Table
+    {
+        return $table
+            ->columns([
+                Tables\Columns\TextColumn::make('code')
+                    ->toggleable()
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('title')
+                    ->toggleable()
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('effectiveness')
+                    ->getStateUsing(fn ($record) => $record->getEffectiveness())
+                    ->sortable(true,
+                        fn (Builder $query, $direction) => $query->whereHas('auditItems', function ($q) use ($direction) {
+                            $q->orderBy('effectiveness', $direction);
+                        })
+                    )
+                    ->badge()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('last_assessed')
+                    ->label('Last Audit')
+                    ->getStateUsing(fn ($record) => $record->getEffectivenessDate())
+                    ->sortable(true,
+                        fn (Builder $query, $direction) => $query->whereHas('auditItems', function ($q) use ($direction) {
+                            $q->orderBy('effectiveness', $direction);
+                        })
+                    )
+                    ->badge()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('status')
+                    ->toggleable()
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+            ])
+            ->filters([
+                SelectFilter::make('status')->options(ImplementationStatus::class),
+                SelectFilter::make('effectiveness')
+                    ->options(Effectiveness::class)
+                    ->query(function (Builder $query, array $data) {
+                        if (! isset($data['value'])) {
+                            return $query;
+                        }
+
+                        return $query->whereHas('auditItems', function ($q) use ($data) {
+                            $q->where('effectiveness', $data['value']);
+                        });
+                    }),
+            ])
+            ->actions([
+                Tables\Actions\ViewAction::make(),
+                Tables\Actions\EditAction::make(),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\ForceDeleteBulkAction::make(),
+                    Tables\Actions\RestoreBulkAction::make(),
+                ]),
+            ]);
+    }
+
 }
