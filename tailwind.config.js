@@ -1,8 +1,11 @@
 import preset from './vendor/filament/support/tailwind.config.preset'
+const colors = require('tailwindcss/colors')
+const plugin = require('tailwindcss/plugin');
 
 export default {
     presets: [preset],
     content: [
+        './storage/framework/views/*.php',
         './app/Filament/**/*.php',
         './resources/views/**/*.blade.php',
         './vendor/filament/**/*.blade.php',

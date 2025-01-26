@@ -29,6 +29,10 @@
         background-color: #1375a0 !important;
     }
 
+    .bg-grcblue-200 {
+        background-color: #d4e7ef !important;
+    }
+
     .control-description-text ul {
         /* Force bullet styling */
         list-style-type: disc !important; /* or circle, square, etc. */
@@ -88,10 +92,35 @@ a.fi-logo {
 
 /* Custom Risk Colors */
 .fi-color-bg-red-200 { @apply bg-red-200; }
-.fi-color-bg-red-400 { @apply bg-red-500; }
+.fi-color-bg-red-400 { @apply bg-red-400; }
 .fi-color-bg-orange-200 { @apply bg-orange-200; }
 .fi-color-bg-orange-400 { @apply bg-orange-500; }
 .fi-color-bg-yellow-200 { @apply bg-yellow-200; }
 .fi-color-bg-yellow-400 { @apply bg-yellow-500; }
 .fi-color-bg-green-200 { @apply bg-green-200; }
 .fi-color-bg-green-400 { @apply bg-green-500; }
+
+
+.fi-btn-color-very-high { @apply bg-red-200 hover:bg-red-400; }
+.fi-btn-color-very-high-active { @apply bg-red-500; }
+
+
+.fi-btn-color-very-low {@apply bg-green-200 hover:bg-green-400 !important; }
+.fi-btn-color-low {@apply bg-blue-200 hover:bg-blue-400 !important; }
+.fi-btn-color-medium {@apply bg-yellow-200 hover:bg-yellow-400 !important; }
+.fi-btn-color-high {@apply bg-orange-200 hover:bg-orange-400 !important; }
+.fi-btn-color-very-high {@apply bg-red-200 hover:bg-red-400 !important; }
+
+
+
+.fi-color-grcblue {
+    background-color: #1375a0 !important;
+    color: #ffffff;
+}
+.fi-color-grcblue:hover {
+    background-color: #a8d4ea !important;
+    color: #ffffff;
+}
+/*input:checked+.\[input\:checked\+\&\]\:bg-custom-600 {*/
+/*    border-color: #a52aae !important;*/
+/*}*/

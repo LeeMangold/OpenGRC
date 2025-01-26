@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\RiskStatus;
 use App\Models\Risk;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -21,11 +22,12 @@ class RiskFactory extends Factory
         $inherent_impact = $this->faker->numberBetween(2, 5);
         $residual_likelihood = $this->faker->numberBetween(1, 4);
         $residual_impact = $this->faker->numberBetween(1, 4);
+        $risk_status = $this->faker->randomElement(RiskStatus::cases());
 
         return [
             'name' => $this->faker->sentence,
             'description' => $this->faker->paragraph,
-            'status' => 'Open',
+            'status' => $risk_status,
             'inherent_likelihood' => $inherent_likelihood,
             'inherent_impact' => $inherent_impact,
             'residual_likelihood' => $residual_likelihood,
