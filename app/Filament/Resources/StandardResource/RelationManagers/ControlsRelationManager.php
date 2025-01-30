@@ -52,9 +52,16 @@ class ControlsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('title')
             ->columns([
-                Tables\Columns\TextColumn::make('code'),
-                Tables\Columns\TextColumn::make('title')->wrap(),
-                Tables\Columns\TextColumn::make('description')->html()->wrap()->limit(300),
+                Tables\Columns\TextColumn::make('code')
+                ->sortable(),
+                Tables\Columns\TextColumn::make('title')
+                    ->wrap()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('description')
+                    ->html()
+                    ->wrap()
+                    ->limit(300)
+                    ->searchable(),
             ])
             ->filters([
                 //

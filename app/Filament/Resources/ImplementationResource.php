@@ -102,23 +102,13 @@ class ImplementationResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('effectiveness')
                     ->getStateUsing(fn ($record) => $record->getEffectiveness())
-                    ->sortable(true,
-                        fn (Builder $query, $direction) => $query->whereHas('auditItems', function ($q) use ($direction) {
-                            $q->orderBy('effectiveness', $direction);
-                        })
-                    )
-                    ->badge()
-                    ->searchable(),
+                    ->sortable(true)
+                    ->badge(),
                 Tables\Columns\TextColumn::make('last_assessed')
                     ->label('Last Audit')
-                    ->getStateUsing(fn ($record) => $record->getEffectivenessDate())
-                    ->sortable(true,
-                        fn (Builder $query, $direction) => $query->whereHas('auditItems', function ($q) use ($direction) {
-                            $q->orderBy('effectiveness', $direction);
-                        })
-                    )
-                    ->badge()
-                    ->searchable(),
+                    ->getStateUsing(fn ($record) => $record->getEffectivenessDate() ? $record->getEffectivenessDate() : "Not yet audited")
+                    ->sortable(true)
+                    ->badge(),
                 Tables\Columns\TextColumn::make('status')
                     ->toggleable()
                     ->sortable()
@@ -189,6 +179,7 @@ class ImplementationResource extends Resource
         return [
             RelationManagers\ControlsRelationManager::class,
             RelationManagers\AuditItemRelationManager::class,
+            RelationManagers\RisksRelationManager::class,
         ];
     }
 
@@ -275,77 +266,6 @@ class ImplementationResource extends Resource
                     ->label('Internal Notes')
                     ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'These notes are for internal use only and will not be shared with auditors.')
                     ->maxLength(4096),
-            ]);
-    }
-
-    public static function getTable(Table $table): Table
-    {
-        return $table
-            ->columns([
-                Tables\Columns\TextColumn::make('code')
-                    ->toggleable()
-                    ->sortable()
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('title')
-                    ->toggleable()
-                    ->sortable()
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('effectiveness')
-                    ->getStateUsing(fn ($record) => $record->getEffectiveness())
-                    ->sortable(true,
-                        fn (Builder $query, $direction) => $query->whereHas('auditItems', function ($q) use ($direction) {
-                            $q->orderBy('effectiveness', $direction);
-                        })
-                    )
-                    ->badge()
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('last_assessed')
-                    ->label('Last Audit')
-                    ->getStateUsing(fn ($record) => $record->getEffectivenessDate())
-                    ->sortable(true,
-                        fn (Builder $query, $direction) => $query->whereHas('auditItems', function ($q) use ($direction) {
-                            $q->orderBy('effectiveness', $direction);
-                        })
-                    )
-                    ->badge()
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('status')
-                    ->toggleable()
-                    ->sortable()
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-            ])
-            ->filters([
-                SelectFilter::make('status')->options(ImplementationStatus::class),
-                SelectFilter::make('effectiveness')
-                    ->options(Effectiveness::class)
-                    ->query(function (Builder $query, array $data) {
-                        if (! isset($data['value'])) {
-                            return $query;
-                        }
-
-                        return $query->whereHas('auditItems', function ($q) use ($data) {
-                            $q->where('effectiveness', $data['value']);
-                        });
-                    }),
-            ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\ForceDeleteBulkAction::make(),
-                    Tables\Actions\RestoreBulkAction::make(),
-                ]),
             ]);
     }
 

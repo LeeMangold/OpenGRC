@@ -18,6 +18,8 @@ class AuditItemRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
+            ->emptyStateHeading('No Audits Yet')
+            ->emptyStateDescription('When audits are completed for this control, they will appear here.')
             ->recordTitleAttribute('effectiveness')
             ->columns([
                 Tables\Columns\TextColumn::make('audit.title')

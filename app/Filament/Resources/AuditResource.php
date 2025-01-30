@@ -46,10 +46,6 @@ class AuditResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('manager.name')
-                    ->label('Manager')
-                    ->default('Unassigned')
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('title')
                     ->sortable()
                     ->searchable(),
@@ -61,6 +57,10 @@ class AuditResource extends Resource
                     ->sortable()
                     ->badge()
                     ->searchable(),
+                Tables\Columns\TextColumn::make('manager.name')
+                    ->label('Manager')
+                    ->default('Unassigned')
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('start_date')
                     ->date()
                     ->sortable(),

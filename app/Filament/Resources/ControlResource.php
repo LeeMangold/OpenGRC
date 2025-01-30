@@ -42,12 +42,6 @@ class ControlResource extends Resource
         return $form
             ->columns(3)
             ->schema([
-                Forms\Components\Select::make('standard_id')
-                    ->label('Standard')
-                    ->options(Standard::pluck('name', 'id')->toArray())
-                    ->searchable()
-                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'All controls must belong to a standard. If you dont have a standard to relate this control to, consider creating a new one first.')
-                    ->required(),
                 Forms\Components\TextInput::make('code')
                     ->required()
                     ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Enter a unique code for this control. This code will be used to identify this control in the system.')
@@ -56,8 +50,13 @@ class ControlResource extends Resource
                     ->live()
                     ->afterStateUpdated(function (Forms\Contracts\HasForms $livewire, Forms\Components\TextInput $component) {
                         $livewire->validateOnly($component->getStatePath());
-                    })
-                ,
+                    }),
+                Forms\Components\Select::make('standard_id')
+                    ->label('Standard')
+                    ->searchable()
+                    ->options(Standard::pluck('name', 'id')->toArray())
+                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'All controls must belong to a standard. If you dont have a standard to relate this control to, consider creating a new one first.')
+                    ->required(),
                 Forms\Components\Select::make('enforcement')
                     ->options(ControlEnforcementCategory::class)
                     ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Select an enforcement category for this control. This will help determine how this control is enforced.')
@@ -87,12 +86,15 @@ class ControlResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('code')
+                    ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('title')
+                    ->sortable()
                     ->searchable()
                     ->wrap(),
                 Tables\Columns\TextColumn::make('standard.name')
                     ->label('Standard')
+                    ->wrap()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('type')
                     ->sortable(),
@@ -100,19 +102,20 @@ class ControlResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('enforcement')
                     ->sortable(),
-                // Todo: Make Control Effectiveness Sortable
                 Tables\Columns\TextColumn::make('LatestAuditEffectiveness')
                     ->label('Effectiveness')
                     ->badge()
+                    ->sortable()
                     ->default(function (Control $record) {
                         return $record->getEffectiveness();
                     }),
                 Tables\Columns\TextColumn::make('applicability')
                     ->label('Applicability')
+                    ->sortable()
                     ->badge(),
-                // Todo: Make Last Audit Date Sortable
                 Tables\Columns\TextColumn::make('LatestAuditDate')
                     ->label('Assessed')
+                    ->sortable()
                     ->default(function (Control $record) {
                         return $record->getEffectivenessDate();
                     }),
