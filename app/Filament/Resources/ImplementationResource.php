@@ -148,7 +148,7 @@ class ImplementationResource extends Resource
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+//                Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -197,7 +197,7 @@ class ImplementationResource extends Resource
         return [
             'index' => Pages\ListImplementations::route('/'),
             'create' => Pages\CreateImplementation::route('/create'),
-//            'view' => Pages\ViewImplementation::route('/{record}'),
+            'view' => Pages\ViewImplementations::route('/{record}'),
             'edit' => Pages\EditImplementation::route('/{record}/edit'),
         ];
     }

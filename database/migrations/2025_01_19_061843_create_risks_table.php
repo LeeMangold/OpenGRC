@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('risks', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('code')->unique();
             $table->text('description')->nullable();
             $table->string('status')->default(RiskStatus::NOT_ASSESSED);
             $table->unsignedTinyInteger('inherent_likelihood')->default(3);
@@ -27,6 +28,14 @@ return new class extends Migration
 
             $table->timestamps();
         });
+
+        Schema::create('implementation_risk', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('implementation_id')->constrained();
+            $table->foreignId('risk_id')->constrained();
+            $table->timestamps();
+        });
+
     }
 
     /**
@@ -35,5 +44,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('risks');
+        Schema::dropIfExists('implementation_risk');
     }
 };

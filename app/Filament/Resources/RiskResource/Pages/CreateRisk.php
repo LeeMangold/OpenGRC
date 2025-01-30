@@ -3,8 +3,10 @@
 namespace App\Filament\Resources\RiskResource\Pages;
 
 use App\Filament\Resources\RiskResource;
+use App\Models\Risk;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
@@ -17,15 +19,34 @@ class CreateRisk extends CreateRecord
 
     protected static string $resource = RiskResource::class;
 
-    protected function afterSave()
-    {
-        $inherant_risk = $this->record->inherent_likelihood * $this->record->inherent_impact;
-        $residual_risk = $this->record->residual_likelihood * $this->record->residual_impact;
-        $this->record->inherent_risk = $inherant_risk;
-        $this->record->residual_risk = $residual_risk;
-        $this->record->save();
+//    protected function afterSave(): \Illuminate\Http\RedirectResponse
+//    {
+//        $inherant_risk = $this->record->inherent_likelihood * $this->record->inherent_impact;
+//        $residual_risk = $this->record->residual_likelihood * $this->record->residual_impact;
+//        $this->record->inherent_risk = $inherant_risk;
+//        $this->record->residual_risk = $residual_risk;
+//        $this->record->save();
+//
+//        return redirect()->route('filament.app.resources.risks.index');
+//    }
 
-        return redirect()->route('filament.app.resources.risks.index');
+    protected function mutateFormDataBeforeCreate(array $data): array
+    {
+
+        $data['inherent_risk'] = $data['inherent_likelihood'] * $data['inherent_impact'];
+        $data['residual_risk'] = $data['residual_likelihood'] * $data['residual_impact'];
+
+        return $data;
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+
+    protected function getCreatedNotificationTitle(): ?string
+    {
+        return 'Created new Risk';
     }
 
     public function getSteps(): array
@@ -36,8 +57,10 @@ class CreateRisk extends CreateRecord
                 ->schema([
                     TextInput::make('code')
                         ->label('Code')
+                        ->prefix('RISK-')
+                        ->default(Risk::next())
                         ->helperText('Assign a unique code to the risk')
-//                        ->unique(true)
+                        ->unique('risks', 'code')
                         ->required(),
                     TextInput::make('name')
                         ->columnSpan(3)
@@ -48,17 +71,17 @@ class CreateRisk extends CreateRecord
                         ->label('Description')
                         ->columnSpanFull()
                         ->helperText('Provide a description of the risk that will help others understand it'),
-                    //                                        ]),
-                    //                                Step::make('Risk Assessment')
-                    //                                    ->columns(2)
-                    //                                    ->schema([
+                ]),
+            Step::make('Inherent Risk')
+                ->columns(2)
+                ->schema([
 
                     Section::make('Inherent Likelihood')
                         ->columns(1)
-                        ->columnSpan(2)
+                        ->columnSpan(1)
                         ->schema([
 
-                            Placeholder::make('InherentRisk')
+                            Placeholder::make('InherentLikelihoodText')
                                 ->hiddenLabel(true)
                                 ->columnSpanFull()
                                 ->content('Inherent likelihood is the likelihood of the risk occurring if no 
@@ -94,7 +117,7 @@ class CreateRisk extends CreateRecord
 
                     Section::make('Inherent Impact')
                         ->columns(1)
-                        ->columnSpan(2)
+                        ->columnSpan(1)
                         ->schema([
 
                             Placeholder::make('InherentImpact')
@@ -132,14 +155,17 @@ class CreateRisk extends CreateRecord
 
 
 
-
+                ]),
+            Step::make('Residual Risk')
+                ->columns(2)
+                ->schema([
 
 
 
 
                     Section::make('Residual Likelihood')
                         ->columns(1)
-                        ->columnSpan(2)
+                        ->columnSpan(1)
                         ->schema([
 
                             Placeholder::make('ResidualRisk')
@@ -151,7 +177,7 @@ class CreateRisk extends CreateRecord
                             Placeholder::make('ResidualTable')
                                 ->columnSpanFull()
                                 ->view('components.misc.inherent_likelihood'),
-                            ToggleButtons::make('inherent_likelihood')
+                            ToggleButtons::make('residual_likelihood')
                                 ->label('Residual Likelihood Score')
                                 ->helperText('How likely is it that this risk will impact us if we do nothing?')
                                 ->options([
@@ -183,8 +209,8 @@ class CreateRisk extends CreateRecord
 
 
                     Section::make('Residual Impact')
+                        ->columnSpan(1)
                         ->columns(1)
-                        ->columnSpan(2)
                         ->schema([
 
                             Placeholder::make('ResidualImpact')
@@ -219,6 +245,23 @@ class CreateRisk extends CreateRecord
                                 ->grouped()
                                 ->required(),
                         ]),
+
+                    Section::make('Related Implementations')
+                        ->columnSpan(2)
+                        ->schema([
+                            Placeholder::make('implementations')
+                                ->hiddenLabel(true)
+                                ->columnSpanFull()
+                                ->content('If you already have implementatons in OpenGRC
+                                that you use to control this risk, you can link them here. You
+                                can relate these later if you need to.'),
+                            Select::make('implementations')
+                                ->label('Related Implementations')
+                                ->helperText('What are we doing to mitigate this risk?')
+                                ->relationship('implementations', 'title')
+                                ->multiple(),
+
+                            ]),
 
                 ]),
 

@@ -45,4 +45,9 @@ class Risk extends Model
         return $this->toArray();
     }
 
+    public static function next()
+    {
+        return static::max('id') + 1;
+    }
+
 }
