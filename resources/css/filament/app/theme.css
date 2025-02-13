@@ -1,15 +1,14 @@
-@import '/vendor/filament/filament/resources/css/theme.css';
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
 
-/*@import url('https://fonts.googleapis.com/css2?family=Bruno+Ace+SC:wght@400;700&display=swap');*/
+@config 'tailwind.config.js';
+
 
 @font-face {
     font-family: 'Bruno Ace SC';
-    src: url('/fonts/BrunoAceSC-Regular.ttf') format('truetype');
+    src: url('/public/fonts/BrunoAceSC-Regular.ttf') format('truetype');
     font-weight: 400;
     font-style: normal;
 }
-
-@config 'tailwind.config.js';
 
 @layer components {
 
@@ -121,6 +120,3 @@ a.fi-logo {
     background-color: #a8d4ea !important;
     color: #ffffff;
 }
-/*input:checked+.\[input\:checked\+\&\]\:bg-custom-600 {*/
-/*    border-color: #a52aae !important;*/
-/*}*/
