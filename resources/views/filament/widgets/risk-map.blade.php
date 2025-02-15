@@ -4,8 +4,9 @@
 
 <x-filament-widgets::widget>
     <x-filament::card>
-        <div class="bg-red-200 bg-red-500 bg-orange-200 bg-orange-500"></div>
-        <div class="bg-green-200 bg-green-500 bg-yellow-200 bg-yellow-500"></div>
+        <div class="bg-grcblue-200 bg-red-200 bg-red-500 bg-orange-200 bg-orange-500"></div>
+        <div class="bg-grcblue-500 bg-green-200 bg-green-500 bg-yellow-200 bg-yellow-500"></div>
+        <div class="bg-grcblue-500"></div>
         <header class="fi-section-header flex flex-col gap-3 px-6 py-3.5">
             <div class="flex items-center gap-3">
                 <div class="grid flex-1 gap-y-1">
