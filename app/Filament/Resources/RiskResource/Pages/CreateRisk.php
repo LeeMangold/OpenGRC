@@ -19,17 +19,6 @@ class CreateRisk extends CreateRecord
 
     protected static string $resource = RiskResource::class;
 
-//    protected function afterSave(): \Illuminate\Http\RedirectResponse
-//    {
-//        $inherant_risk = $this->record->inherent_likelihood * $this->record->inherent_impact;
-//        $residual_risk = $this->record->residual_likelihood * $this->record->residual_impact;
-//        $this->record->inherent_risk = $inherant_risk;
-//        $this->record->residual_risk = $residual_risk;
-//        $this->record->save();
-//
-//        return redirect()->route('filament.app.resources.risks.index');
-//    }
-
     protected function mutateFormDataBeforeCreate(array $data): array
     {
 
@@ -72,28 +61,33 @@ class CreateRisk extends CreateRecord
                         ->columnSpanFull()
                         ->helperText('Provide a description of the risk that will help others understand it'),
                 ]),
+
             Step::make('Inherent Risk')
                 ->columns(2)
                 ->schema([
 
-                    Section::make('Inherent Likelihood')
-                        ->columns(1)
-                        ->columnSpan(1)
-                        ->schema([
+                    Placeholder::make('InherentRisk')
+                        ->hiddenLabel(true)
+                        ->columnSpanFull()
+                        ->content('Inherent risk is the risk that exists before you apply any controls. 
+                        Use your best judgement to answer the following questions.'),
 
-                            Placeholder::make('InherentLikelihoodText')
+                    Section::make('How likely is this risk to occur if no action is taken?')
+                        ->columnSpan(1)
+                        ->columns(1)
+                        ->schema([
+                            Placeholder::make('InherentLikelihood')
                                 ->hiddenLabel(true)
                                 ->columnSpanFull()
                                 ->content('Inherent likelihood is the likelihood of the risk occurring if no 
                                 action is taken. Use your best judgement to determine the likelihood of this risk 
-                                occurring before you applied any controls.'),
-                            Placeholder::make('InherentTable')
-                                ->label('Inherent Risk Assessment')
+                                occurring BEFORE you have applied any safeguards.'),
+                            Placeholder::make('InherentImpactTable')
                                 ->columnSpanFull()
                                 ->view('components.misc.inherent_likelihood'),
                             ToggleButtons::make('inherent_likelihood')
+                                ->columnSpanFull()
                                 ->label('Inherent Likelihood Score')
-                                ->helperText('How likely is it that this risk will impact us if we do nothing?')
                                 ->options([
                                     1 => 'Very Low',
                                     2 => 'Low',
@@ -115,23 +109,22 @@ class CreateRisk extends CreateRecord
                                 ->required(),
                         ]),
 
-                    Section::make('Inherent Impact')
+                    Section::make('If this risk does occur, how severe will the impact be?')
                         ->columns(1)
                         ->columnSpan(1)
                         ->schema([
-
                             Placeholder::make('InherentImpact')
                                 ->hiddenLabel(true)
                                 ->columnSpanFull()
-                                ->content('Inherent impact is the damage that will occur if the risk does occur.
-                                Use your best judgement to determine the impact of this risk occurring before you applied 
-                                any controls.'),
+                                ->content('Inherent impact is the damage that would occur if the risk event happens.
+                                Use your best judgement to determine the impact of this risk occurring BEFORE you applied 
+                                implementations.'),
                             Placeholder::make('InherentImpactTable')
                                 ->columnSpanFull()
                                 ->view('components.misc.inherent_impact'),
                             ToggleButtons::make('inherent_impact')
+                                ->columnSpanFull()
                                 ->label('Inherent Impact Score')
-                                ->helperText('If this risk does occur, how severe will the impact be?')
                                 ->options([
                                     1 => 'Very Low',
                                     2 => 'Low',
@@ -153,17 +146,13 @@ class CreateRisk extends CreateRecord
                                 ->required(),
                         ]),
 
-
-
                 ]),
+
             Step::make('Residual Risk')
                 ->columns(2)
                 ->schema([
 
-
-
-
-                    Section::make('Residual Likelihood')
+                    Section::make('How likely is this risk to occur after your current safeguards?')
                         ->columns(1)
                         ->columnSpan(1)
                         ->schema([
@@ -201,14 +190,7 @@ class CreateRisk extends CreateRecord
                                 ->required(),
                         ]),
 
-
-
-
-
-
-
-
-                    Section::make('Residual Impact')
+                    Section::make('If this risk does occur, how severe will the impact be with your current safeguards?')
                         ->columnSpan(1)
                         ->columns(1)
                         ->schema([
@@ -261,13 +243,9 @@ class CreateRisk extends CreateRecord
                                 ->relationship('implementations', 'title')
                                 ->multiple(),
 
-                            ]),
+                        ]),
 
                 ]),
-
-
-
-
 
         ];
     }
