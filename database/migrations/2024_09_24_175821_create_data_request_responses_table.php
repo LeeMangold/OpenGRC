@@ -20,6 +20,7 @@ return new class extends Migration
 
             $table->enum('status', array_column(ResponseStatus::cases(), 'value'))->default(ResponseStatus::PENDING->value);
             $table->text('response')->nullable();
+            $table->timestamp('due_at')->nullable();
             $table->timestamps();
         });
     }
