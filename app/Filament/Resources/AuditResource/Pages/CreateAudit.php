@@ -69,7 +69,6 @@ class CreateAudit extends CreateRecord
                         ->options([
                             'standards' => 'Standards Audit',
                             'implementations' => 'Implementations Audit',
-                            //                            'custom' => 'Custom Audit',
                         ])
                         ->native(false)
                         ->live(),

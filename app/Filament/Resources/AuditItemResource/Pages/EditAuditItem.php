@@ -8,6 +8,7 @@ use App\Enums\ResponseStatus;
 use App\Enums\WorkflowStatus;
 use App\Filament\Resources\AuditItemResource;
 use App\Filament\Resources\DataRequestResource;
+use App\Http\Controllers\HelperController;
 use App\Mail\EvidenceRequestMail;
 use App\Models\AuditItem;
 use App\Models\DataRequest;
@@ -27,7 +28,7 @@ class EditAuditItem extends EditRecord
 {
     public static ?string $title = 'Assess Audit Item';
 
-    //set title to Assess Audit Item
+    // set title to Assess Audit Item
     protected static string $resource = AuditItemResource::class;
 
     public function getRedirectUrl(): string
@@ -57,7 +58,7 @@ class EditAuditItem extends EditRecord
 
                     if ($data['send_email']) {
                         $user = User::find($dataRequest->assigned_to_id);
-                        $data = [
+                        $data += [
                             'email' => $user->email,
                             'name' => $user->name,
                         ];
@@ -72,7 +73,7 @@ class EditAuditItem extends EditRecord
                         }
                     }
 
-                    DataRequestResource::createResponses($dataRequest);
+                    DataRequestResource::createResponses($dataRequest, $data['due_at']);
 
                 })
                 ->after(function () {
@@ -83,16 +84,27 @@ class EditAuditItem extends EditRecord
                         ->send();
                 })
                 ->form([
-                    Forms\Components\Select::make('user_id')
-                        ->label('Assigned To')
-                        ->options(User::pluck('name', 'id'))
-                        ->searchable(),
-                    Forms\Components\Textarea::make('details')
-                        ->label('Request Details')
-                        ->required(),
-                    Forms\Components\Checkbox::make('send_email')
-                        ->label('Send Email Notification')
-                        ->default(true),
+                    Forms\Components\Group::make()
+                        ->columns(2)
+                        ->schema([
+                            Forms\Components\Select::make('user_id')
+                                ->label('Assigned To')
+                                ->options(User::pluck('name', 'id'))
+                                ->default($this->record->audit->manager_id)
+                                ->required()
+                                ->searchable(),
+                            Forms\Components\DatePicker::make('due_at')
+                                ->label('Due Date')
+                                ->default(HelperController::getEndDate($this->record->audit->end_date, 5))
+                                ->required(),
+                            Forms\Components\Textarea::make('details')
+                                ->label('Request Details')
+                                ->columnSpanFull()
+                                ->required(),
+                            Forms\Components\Checkbox::make('send_email')
+                                ->label('Send Email Notification')
+                                ->default(true),
+                        ]),
                 ])
                 ->modalHeading('Request Evidence')
                 ->modalSubmitActionLabel('Submit')
@@ -147,7 +159,7 @@ class EditAuditItem extends EditRecord
 
                 Forms\Components\Section::make('Audit Evidence')
                     ->schema([
-                        //Todo: This can be replaced with a Repeater component when nested relationships are
+                        // Todo: This can be replaced with a Repeater component when nested relationships are
                         // supported in Filament - potentially in v4.x. Or, maybe do a footer widget.
                         Placeholder::make('control.implementations')
                             ->hidden($this->record->audit->audit_type == 'implementations')

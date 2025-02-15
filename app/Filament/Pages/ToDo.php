@@ -25,7 +25,7 @@ class ToDo extends Page implements Tables\Contracts\HasTable
 
         if ($count > 99) {
             return '99+';
-        } else if ($count > 0) {
+        } elseif ($count > 0) {
             return $count;
         }
 
@@ -44,7 +44,7 @@ class ToDo extends Page implements Tables\Contracts\HasTable
             TextColumn::make('id')->label('ID')->sortable(),
             TextColumn::make('dataRequest.audit.title')->label('Audit'),
             TextColumn::make('dataRequest.details')->label('Requested Information')->html()->limit(100),
-            TextColumn::make('due_at')->label('Due At'),
+            TextColumn::make('due_at')->label('Due Date')->date(),
             TextColumn::make('status')->label('Status'),
         ];
     }

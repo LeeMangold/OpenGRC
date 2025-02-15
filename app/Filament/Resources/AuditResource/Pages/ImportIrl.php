@@ -19,6 +19,7 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Pages\Concerns\InteractsWithRecord;
 use Filament\Resources\Pages\Page;
 use Filament\Support\Exceptions\Halt;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\HtmlString;
 use Illuminate\Validation\ValidationException;
 use League\Csv\Reader;
@@ -74,6 +75,7 @@ class ImportIrl extends Page implements HasForms
         $this->currentDataRequests = DataRequest::query()->where('audit_id', $this->record->id)->get();
         $this->auditItems = $this->record->auditItems()->with('control')->get();
         $this->controlCodes = $this->auditItems->pluck('auditable.code')->toArray();
+        $template_url = Storage::url('irl-template.csv');
 
         return $form
             ->schema([
@@ -89,7 +91,8 @@ class ImportIrl extends Page implements HasForms
                                 ->content(new HtmlString("<p>An Information Request List (IRL), sometimes called a Prepared by Client (PBC) list, is a detailed document outlining 
                                                                 the specific records, evidence, and data that auditors require to conduct an effective audit. If you have received an 
                                                                 IRL from your auditor, you can upload it here to create or update data requests for this audit. Make sure your IRL 
-                                                                uses the template provided to ensure a successful import.</p><p class='mt-3'><a class='underline text-grcblue-400' href=''>IRL Template Download</a></p>")),
+                                                                uses the template provided to ensure a successful import.</p>
+                                                                <p class='mt-3'><a class='underline text-grcblue-400' href='$template_url'>IRL Template Download</a></p>")),
                             FileUpload::make('irl_file')
                                 ->required()
                                 ->label('IRL File')
@@ -284,7 +287,6 @@ class ImportIrl extends Page implements HasForms
                 $dataRequest->details = $row['Details'];
                 $dataRequest->assigned_to_id = array_search($row['Assigned To'], $this->users);
                 $dataRequest->created_by_id = auth()->id();
-                //                $dataRequest->due_on = $row['Due On'];
                 $dataRequest->save();
 
                 // Create a Matching DataRequestResponse
@@ -292,19 +294,20 @@ class ImportIrl extends Page implements HasForms
                 $dataRequestResponse->data_request_id = $dataRequest->id;
                 $dataRequestResponse->requester_id = auth()->id();
                 $dataRequestResponse->requestee_id = $dataRequest->assigned_to_id;
+                $dataRequestResponse->due_at = $row['Due On'];
                 $dataRequestResponse->save();
 
             } elseif ($row['_ACTION'] == 'UPDATE') {
                 $dataRequest = DataRequest::find($row['Request ID']);
                 $dataRequest->details = $row['Details'];
                 $dataRequest->assigned_to_id = array_search($row['Assigned To'], $this->users);
-                //                $dataRequest->due_on = $row['Due On'];
                 $dataRequest->save();
 
                 $dataRequestResponse = $dataRequest->responses()->first();
                 if ($dataRequestResponse) {
                     $dataRequestResponse->data_request_id = $dataRequest->id;
                     $dataRequestResponse->requestee_id = $dataRequest->assigned_to_id;
+                    $dataRequestResponse->due_at = $row['Due On'];
                     $dataRequestResponse->save();
                 }
 
