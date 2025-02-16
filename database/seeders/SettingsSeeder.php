@@ -72,6 +72,10 @@ class SettingsSeeder extends Seeder
                 'key' => 'mail.templates.evidence_request_body',
                 'value' => '<h1>OpenGRC Evidence Requested</h1><p>Hello, {{ $name }}!</p><p>An auditor has requested evidence from you. Please login to OpenGRC to view the request and provide the necessary evidence.</p><p><strong>URL:</strong> {{ $url }}</p><p>Thank you for your cooperation.</p><p><br></p><p><br></p>',
             ],
+            [
+                'key' => 'security.session_timeout',
+                'value' => '15',
+            ],
         ];
 
         foreach ($settings as $setting) {

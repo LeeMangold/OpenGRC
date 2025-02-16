@@ -1,0 +1,8 @@
+---
+description: Set the sofware context for all  files in opengrc
+globs: 
+---
+- Application is called OpenGRC
+- OpenGRC is developed using Laravel 11
+- OpenGRC uses Filament 3 on top of Laravel 11
+- UI elements prefer Filament 3 and Livewire
