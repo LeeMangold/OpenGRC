@@ -20,11 +20,39 @@ use Jeffgreco13\FilamentBreezy\BreezyCore;
 use JibayMcs\FilamentTour\FilamentTourPlugin;
 use Leandrocfe\FilamentApexCharts\FilamentApexChartsPlugin;
 use Outerweb\FilamentSettings\Filament\Plugins\FilamentSettingsPlugin;
+use DutchCodingCompany\FilamentSocialite\FilamentSocialitePlugin;
+use App\Models\User;
 
 class AppPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
+        $socialProviders = [];
+        
+        if (setting('auth.okta.enabled')) {
+            $socialProviders['okta'] = [
+                'label' => 'Okta',
+                'icon' => 'heroicon-o-lock-closed',
+                'color' => 'primary',
+            ];
+        }
+        
+        if (setting('auth.microsoft.enabled')) {
+            $socialProviders['microsoft'] = [
+                'label' => 'Microsoft',
+                'icon' => 'heroicon-o-window',
+                'color' => 'primary',
+            ];
+        }
+        
+        if (setting('auth.azure.enabled')) {
+            $socialProviders['azure'] = [
+                'label' => 'Azure AD',
+                'icon' => 'heroicon-o-cloud',
+                'color' => 'primary',
+            ];
+        }
+
         return $panel
             ->default()
             ->id('app')
@@ -66,7 +94,8 @@ class AppPanelProvider extends PanelProvider
                     ->passwordUpdateRules(
                         rules: [Password::default()->mixedCase()->uncompromised(3)->min(12)],
                     ),
-
+                FilamentSocialitePlugin::make()
+                    ->setProviders($socialProviders),
             ],
 
             )

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a121731cc90ca5f9ac15506821ec3911",
+    "content-hash": "c9f5fba991241a2fad4446069d831b5a",
     "packages": [
         {
             "name": "amidesfahani/filament-tinyeditor",
@@ -6729,6 +6729,231 @@
                 "source": "https://github.com/MyIntervals/PHP-CSS-Parser/tree/v8.7.0"
             },
             "time": "2024-10-27T17:38:32+00:00"
+        },
+        {
+            "name": "socialiteproviders/manager",
+            "version": "v4.8.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/SocialiteProviders/Manager.git",
+                "reference": "e93acc38f8464cc775a2b8bf09df311d1fdfefcb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/SocialiteProviders/Manager/zipball/e93acc38f8464cc775a2b8bf09df311d1fdfefcb",
+                "reference": "e93acc38f8464cc775a2b8bf09df311d1fdfefcb",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "^8.0 || ^9.0 || ^10.0 || ^11.0",
+                "laravel/socialite": "^5.5",
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.2",
+                "phpunit/phpunit": "^9.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "SocialiteProviders\\Manager\\ServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "SocialiteProviders\\Manager\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Andy Wendt",
+                    "email": "andy@awendt.com"
+                },
+                {
+                    "name": "Anton Komarev",
+                    "email": "a.komarev@cybercog.su"
+                },
+                {
+                    "name": "Miguel Piedrafita",
+                    "email": "soy@miguelpiedrafita.com"
+                },
+                {
+                    "name": "atymic",
+                    "email": "atymicq@gmail.com",
+                    "homepage": "https://atymic.dev"
+                }
+            ],
+            "description": "Easily add new or override built-in providers in Laravel Socialite.",
+            "homepage": "https://socialiteproviders.com",
+            "keywords": [
+                "laravel",
+                "manager",
+                "oauth",
+                "providers",
+                "socialite"
+            ],
+            "support": {
+                "issues": "https://github.com/socialiteproviders/manager/issues",
+                "source": "https://github.com/socialiteproviders/manager"
+            },
+            "time": "2025-01-03T09:40:37+00:00"
+        },
+        {
+            "name": "socialiteproviders/microsoft",
+            "version": "4.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/SocialiteProviders/Microsoft.git",
+                "reference": "76d51308ef53d1425a5ce3c3b094b0925cd82951"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/SocialiteProviders/Microsoft/zipball/76d51308ef53d1425a5ce3c3b094b0925cd82951",
+                "reference": "76d51308ef53d1425a5ce3c3b094b0925cd82951",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": "^8.0",
+                "socialiteproviders/manager": "^4.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "SocialiteProviders\\Microsoft\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Brian Faust",
+                    "email": "hello@brianfaust.de"
+                }
+            ],
+            "description": "Microsoft OAuth2 Provider for Laravel Socialite",
+            "keywords": [
+                "laravel",
+                "microsoft",
+                "oauth",
+                "provider",
+                "socialite"
+            ],
+            "support": {
+                "docs": "https://socialiteproviders.com/microsoft",
+                "issues": "https://github.com/socialiteproviders/providers/issues",
+                "source": "https://github.com/socialiteproviders/providers"
+            },
+            "time": "2024-11-07T21:57:40+00:00"
+        },
+        {
+            "name": "socialiteproviders/microsoft-azure",
+            "version": "5.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/SocialiteProviders/Microsoft-Azure.git",
+                "reference": "453d62c9d7e3b3b76e94c913fb46e68a33347b16"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/SocialiteProviders/Microsoft-Azure/zipball/453d62c9d7e3b3b76e94c913fb46e68a33347b16",
+                "reference": "453d62c9d7e3b3b76e94c913fb46e68a33347b16",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": "^8.0",
+                "socialiteproviders/manager": "^4.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "SocialiteProviders\\Azure\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Chris Hemmings",
+                    "email": "chris@hemmin.gs"
+                }
+            ],
+            "description": "Microsoft Azure OAuth2 Provider for Laravel Socialite",
+            "keywords": [
+                "azure",
+                "laravel",
+                "microsoft",
+                "oauth",
+                "provider",
+                "socialite"
+            ],
+            "support": {
+                "docs": "https://socialiteproviders.com/microsoft-azure",
+                "issues": "https://github.com/socialiteproviders/providers/issues",
+                "source": "https://github.com/socialiteproviders/providers"
+            },
+            "time": "2024-03-15T03:02:10+00:00"
+        },
+        {
+            "name": "socialiteproviders/okta",
+            "version": "4.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/SocialiteProviders/Okta.git",
+                "reference": "5e47cd7b4c19da94ecafbd91fa430e4151c09806"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/SocialiteProviders/Okta/zipball/5e47cd7b4c19da94ecafbd91fa430e4151c09806",
+                "reference": "5e47cd7b4c19da94ecafbd91fa430e4151c09806",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": "^8.0",
+                "socialiteproviders/manager": "^4.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "SocialiteProviders\\Okta\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Chase Coney",
+                    "email": "chase.coney@gmail.com"
+                }
+            ],
+            "description": "Okta OAuth2 Provider for Laravel Socialite",
+            "keywords": [
+                "laravel",
+                "oauth",
+                "okta",
+                "provider",
+                "socialite"
+            ],
+            "support": {
+                "docs": "https://socialiteproviders.com/okta",
+                "issues": "https://github.com/socialiteproviders/providers/issues",
+                "source": "https://github.com/socialiteproviders/providers"
+            },
+            "time": "2023-12-12T01:59:17+00:00"
         },
         {
             "name": "spatie/color",
