@@ -15,7 +15,20 @@ class AuthController extends Controller
     public function handleProviderCallback($provider)
     {
         $socialiteUser = \Socialite::driver($provider)->user();
+        // Find or create user
+        $user = \App\Models\User::firstOrCreate(
+            ['email' => $socialiteUser->getEmail()],
+            [
+                'name' => $socialiteUser->getName(),
+                'password' => bcrypt(Str::random(16)),
+                'email_verified_at' => now(),
+            ]
+        );
 
-        dd($socialiteUser);
+        // Log the user in
+        \Auth::login($user);
+
+        // Redirect to the dashboard
+        return redirect()->to('/app');
     }
 }
