@@ -23,7 +23,7 @@ class RolePermissionSeeder extends Seeder
 
         //-----------------------------------------------------------------------------------------
         // Create Resource Permissions
-        $entities = ['Standards', 'Controls', 'Implementations', 'Audits'];
+        $entities = ['Standards', 'Controls', 'Implementations', 'Audits', 'Risks'];
         $actions = ['List', 'Create', 'Read', 'Update', 'Delete'];
 
         foreach ($entities as $entity) {
@@ -63,7 +63,7 @@ class RolePermissionSeeder extends Seeder
 
         // Assign specific Permissions to Security Admin
         foreach ($entities as $entity) {
-            foreach (['List', 'Create', 'Read'] as $action) {
+            foreach (['List', 'Create', 'Read', 'Update'] as $action) {
                 $securityAdmin->givePermissionTo("{$action} {$entity}");
             }
         }
