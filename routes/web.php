@@ -25,12 +25,14 @@ Route::middleware(['auth'])->group(function () {
 
 
 // Add Socialite routes
-Route::get('/auth/{provider}/redirect', function (string $provider) {
-    return Socialite::driver($provider)->redirect();
-})->name('socialite.redirect');
+// Route::get('/auth/{provider}/redirect', function (string $provider) {
+//     return Socialite::driver($provider)->redirect();
+// })->name('socialite.redirect');
 
-Route::get('/auth/{provider}', 'Auth\AuthController@redirectToProvider');
-Route::get('/auth/{provider}/callback', 'Auth\AuthController@handleProviderCallback');
+
+Route::get('/auth/{provider}/redirect', '\App\Http\Controllers\Auth\AuthController@redirectToProvider')->name('socialite.redirect');
+Route::get('/auth/{provider}/callback', '\App\Http\Controllers\Auth\AuthController@handleProviderCallback')->name('socialite.callback');
+
 
 
 // Route::get('/auth/{provider}/callback', function (string $provider) {
