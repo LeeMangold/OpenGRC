@@ -19,7 +19,8 @@ return [
         \Illuminate\View\Middleware\ShareErrorsFromSession::class,
     ],
 
-    'login_route' => 'socialite.redirect',
+    // 'login_route' => 'socialite.redirect',
+    'login_route' => 'socialite.app.oauth.redirect',
     'callback_route' => 'socialite.callback',
     'user_model' => \App\Models\User::class,
     

@@ -220,6 +220,7 @@ class Settings extends BaseSettings
                                                 ->required(fn ($get) => $get('auth.azure.enabled')),
                                             Placeholder::make('auth.azure.redirect')
                                                 ->label('Redirect URL')
+                                                ->visible(fn ($get) => $get('auth.azure.enabled'))
                                                 ->content(config('app.url') . '/auth/azure/callback'),
                                         ]),
                                 ]),
