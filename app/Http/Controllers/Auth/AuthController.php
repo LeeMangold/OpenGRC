@@ -20,8 +20,9 @@ class AuthController extends Controller
             ['email' => $socialiteUser->getEmail()],
             [
                 'name' => $socialiteUser->getName(),
-                'password' => bcrypt(Str::random(16)),
+                'password' => bcrypt(\Str::random(16)),
                 'email_verified_at' => now(),
+                'password_reset_required' => false,                
             ]
         );
 
