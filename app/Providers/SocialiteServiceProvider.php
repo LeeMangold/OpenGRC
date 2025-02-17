@@ -27,6 +27,18 @@ class SocialiteServiceProvider extends ServiceProvider
                 ]);
             }
 
+            // Configure Google
+            if (setting('auth.google.enabled')) {
+                $clientSecret = setting('auth.google.client_secret');
+                config([
+                    'services.google' => [
+                        'client_id' => setting('auth.google.client_id'),
+                        'client_secret' => $clientSecret ? Crypt::decryptString($clientSecret) : null,
+                        'redirect' => "{$baseUrl}/auth/google/callback",
+                    ],
+                ]);
+            }
+
             // Configure Azure
             if (setting('auth.azure.enabled')) {
                 $clientSecret = setting('auth.azure.client_secret');

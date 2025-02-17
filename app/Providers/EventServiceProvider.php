@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Event;
 use SocialiteProviders\Manager\SocialiteWasCalled;
 use SocialiteProviders\Okta\OktaExtendSocialite;
 use SocialiteProviders\Azure\AzureExtendSocialite;
+use SocialiteProviders\Google\GoogleExtendSocialite;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -24,6 +25,7 @@ class EventServiceProvider extends ServiceProvider
         SocialiteWasCalled::class => [
             OktaExtendSocialite::class.'@handle',
             AzureExtendSocialite::class.'@handle',
+            GoogleExtendSocialite::class.'@handle',
         ],
     ];
 

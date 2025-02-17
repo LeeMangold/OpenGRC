@@ -53,6 +53,14 @@ class AppPanelProvider extends PanelProvider
             ];
         }
 
+        if (setting('auth.google.enabled')) {
+            $socialProviders['google'] = [
+                'label' => 'Google',
+                'icon' => 'heroicon-o-globe-alt',
+                'color' => 'primary',
+            ];
+        }
+
         return $panel
             ->default()
             ->id('app')
