@@ -29,6 +29,7 @@
         "lucasgiovanny/filament-multiselect-two-sides": "^2.1.2",
         "outerweb/filament-settings": "^1.2.0",
         "outerweb/settings": "^1.0.3",
+        "socialiteproviders/google": "^4.1",
         "socialiteproviders/microsoft-azure": "^5.2",
         "socialiteproviders/okta": "^4.4",
         "spatie/laravel-permission": "^6.13.0"
