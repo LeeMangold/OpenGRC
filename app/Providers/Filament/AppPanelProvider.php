@@ -61,6 +61,14 @@ class AppPanelProvider extends PanelProvider
             ];
         }
 
+        if (setting('auth.auth0.enabled')) {
+            $socialProviders['auth0'] = [
+                'label' => 'Auth0',
+                'icon' => 'heroicon-o-lock-closed',
+                'color' => 'primary',
+            ];
+        }
+
         return $panel
             ->default()
             ->id('app')

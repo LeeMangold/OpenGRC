@@ -51,6 +51,19 @@ class SocialiteServiceProvider extends ServiceProvider
                     ],
                 ]);
             }
+
+            // Configure Auth0
+            if (setting('auth.auth0.enabled')) {
+                $clientSecret = setting('auth.auth0.client_secret');
+                config([
+                    'services.auth0' => [
+                        'client_id' => setting('auth.auth0.client_id'),
+                        'client_secret' => $clientSecret ? Crypt::decryptString($clientSecret) : null,
+                        'domain' => setting('auth.auth0.domain'),
+                        'redirect' => "{$baseUrl}/auth/auth0/callback",
+                    ],
+                ]);
+            }
         }
     }
 } 

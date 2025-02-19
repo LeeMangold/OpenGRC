@@ -10,6 +10,7 @@ use SocialiteProviders\Manager\SocialiteWasCalled;
 use SocialiteProviders\Okta\OktaExtendSocialite;
 use SocialiteProviders\Azure\AzureExtendSocialite;
 use SocialiteProviders\Google\GoogleExtendSocialite;
+use SocialiteProviders\Auth0\Auth0ExtendSocialite;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -26,6 +27,7 @@ class EventServiceProvider extends ServiceProvider
             OktaExtendSocialite::class.'@handle',
             AzureExtendSocialite::class.'@handle',
             GoogleExtendSocialite::class.'@handle',
+            Auth0ExtendSocialite::class.'@handle',
         ],
     ];
 

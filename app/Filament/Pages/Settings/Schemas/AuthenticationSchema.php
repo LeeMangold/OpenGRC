@@ -154,7 +154,52 @@ class AuthenticationSchema
                         ]),
                 ]),
 
-            
+            // Auth0 Authentication
+            Section::make('Auth0 Authentication')
+                ->schema([
+                    Toggle::make('auth.auth0.enabled')
+                        ->label('Enable Auth0 Authentication')
+                        ->default(false)
+                        ->live(),
+                    Grid::make(2)
+                        ->schema([
+                            TextInput::make('auth.auth0.client_id')
+                                ->label('Client ID')
+                                ->visible(fn ($get) => $get('auth.auth0.enabled'))
+                                ->required(fn ($get) => $get('auth.auth0.enabled')),
+                            TextInput::make('auth.auth0.client_secret')
+                                ->label('Client Secret')
+                                ->password()
+                                ->visible(fn ($get) => $get('auth.auth0.enabled'))
+                                ->required(fn ($get) => $get('auth.auth0.enabled'))
+                                ->dehydrateStateUsing(fn ($state) => filled($state) ? Crypt::encryptString($state) : null)
+                                ->afterStateHydrated(function (TextInput $component, $state) {
+                                    if (filled($state)) {
+                                        $component->state(Crypt::decryptString($state));
+                                    }
+                                }),
+                            TextInput::make('auth.auth0.domain')
+                                ->label('Domain')
+                                ->visible(fn ($get) => $get('auth.auth0.enabled'))
+                                ->required(fn ($get) => $get('auth.auth0.enabled')),
+                            Placeholder::make('auth.auth0.redirect')
+                                ->label('Redirect URL')
+                                ->visible(fn ($get) => $get('auth.auth0.enabled'))
+                                ->content(config('app.url') . '/auth/auth0/callback'),
+                            Toggle::make('auth.auth0.auto_provision')
+                                ->live()
+                                ->label('Auto Provision Users')
+                                ->default(false)
+                                ->visible(fn ($get) => $get('auth.auth0.enabled'))
+                                ->helperText('If enabled, users will be automatically provisioned in the system when they login via Auth0.'),
+                            Select::make('auth.auth0.role')
+                                ->label('Role')
+                                ->options(Role::all()->pluck('name', 'id'))
+                                ->visible(fn ($get) => $get('auth.auth0.enabled') && $get('auth.auth0.auto_provision'))
+                                ->required(fn ($get) => $get('auth.auth0.enabled') && $get('auth.auth0.auto_provision'))
+                                ->helperText('The role to assign to users when they are auto-provisioned.'),
+                        ]),
+                ]),
         ];
     }
 } 
