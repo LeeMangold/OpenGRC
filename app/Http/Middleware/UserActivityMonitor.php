@@ -20,8 +20,8 @@ class UserActivityMonitor
         $response = $next($request);
 
         // If the user is authenticated, update their last activity timestamp
-        if (Auth::id() !== null) {
-            Auth::user()->update(['last_activity' => now()]);
+        if ($user = Auth::user()) {
+            $user->update(['last_activity' => now()]);
         }
 
         return $response;
