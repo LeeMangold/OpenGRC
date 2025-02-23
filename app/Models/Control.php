@@ -162,4 +162,9 @@ class Control extends Model
 
         return $latestAuditItem ? $latestAuditItem->updated_at->isoFormat('MMM D, YYYY') : 'Never';
     }
+
+    public function programs(): BelongsToMany
+    {
+        return $this->belongsToMany(Program::class);
+    }
 }

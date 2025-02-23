@@ -74,5 +74,8 @@ class User extends Authenticatable implements FilamentUser
             ->orWhere('status', ResponseStatus::REJECTED);
     }
 
-
+    public function managedPrograms(): HasMany
+    {
+        return $this->hasMany(Program::class, 'program_manager_id');
+    }
 }

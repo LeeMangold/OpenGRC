@@ -29,6 +29,11 @@ class Risk extends Model
         return $this->BelongsToMany(Implementation::class);
     }
 
+    public function programs(): BelongsToMany
+    {
+        return $this->belongsToMany(Program::class);
+    }
+
     /**
      * Get the name of the index associated with the model.
      */

@@ -57,7 +57,14 @@ class Audit extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['title', 'description', 'status', 'start_date', 'end_date'];
+    protected $fillable = [
+        'title', 
+        'description', 
+        'status', 
+        'start_date', 
+        'end_date',
+        'program_id',
+    ];
 
     /**
      * The attributes that should be cast.
@@ -116,4 +123,10 @@ class Audit extends Model
     {
         return $this->belongsTo(Standard::class);
     }
+
+    public function program(): BelongsTo
+    {
+        return $this->belongsTo(Program::class);
+    }
 }
+

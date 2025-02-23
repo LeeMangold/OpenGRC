@@ -10,6 +10,7 @@ use App\Models\Standard;
 use App\Models\User;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Button;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Section;
@@ -21,6 +22,8 @@ use Filament\Forms\Get;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\HtmlString;
 use LucasGiovanny\FilamentMultiselectTwoSides\Forms\Components\Fields\MultiselectTwoSides;
+use App\Models\Program;
+use Filament\Forms\Set;
 
 class CreateAudit extends CreateRecord
 {
@@ -31,7 +34,6 @@ class CreateAudit extends CreateRecord
     public function getSteps(): array
     {
         return [
-
             Step::make('Audit Type')
                 ->columns(2)
                 ->schema([
@@ -69,7 +71,7 @@ class CreateAudit extends CreateRecord
                         ->options([
                             'standards' => 'Standards Audit',
                             'implementations' => 'Implementations Audit',
-                            //                            'custom' => 'Custom Audit',
+                            'program' => 'Program Audit',
                         ])
                         ->native(false)
                         ->live(),
@@ -81,6 +83,12 @@ class CreateAudit extends CreateRecord
                         ->searchable()
                         ->native(false)
                         ->visible(fn (Get $get) => $get('audit_type') == 'standards'),
+                    Select::make('program_id')
+                        ->label('Program to Audit')
+                        ->relationship('program', 'name')
+                        ->searchable()
+                        ->preload()
+                        ->visible(fn (Get $get) => $get('audit_type') == 'program'),
                 ]),
 
             Step::make('Basic Information')
@@ -125,9 +133,28 @@ class CreateAudit extends CreateRecord
 
                                 if ($audit_type == 'standards') {
                                     $controls = Control::where('standard_id', '=', $standard_id)
-                                        ->pluck('title', 'id');
+                                        ->get()
+                                        ->mapWithKeys(function ($control) {
+                                            return [$control->id => $control->code . ' - ' . $control->title];
+                                        });
                                 } elseif ($audit_type == 'implementations') {
-                                    $controls = Implementation::query()->pluck('title', 'id')->toArray();
+                                    $controls = Implementation::query()
+                                        ->get()
+                                        ->mapWithKeys(function ($implementation) {
+                                            return [$implementation->id => $implementation->code . ' - ' . $implementation->title];
+                                        })
+                                        ->toArray();
+                                } elseif ($audit_type == 'program') {
+                                    $program_id = $get('program_id');
+                                    if ($program_id) {
+                                        $program = Program::find($program_id);
+                                        $controls = $program->getAllControls()
+                                            ->mapWithKeys(function ($control) {
+                                                return [$control->id => $control->code . ' - ' . $control->title];
+                                            });
+                                    } else {
+                                        $controls = [];
+                                    }
                                 } else {
                                     $controls = [];
                                 }
@@ -165,6 +192,9 @@ class CreateAudit extends CreateRecord
                         break;
                     case 'implementations':
                         $audit_item->auditable()->associate(Implementation::find($control));
+                        break;
+                    case 'program':
+                        $audit_item->auditable()->associate(Control::find($control));
                         break;
                 }
                 $audit_item->save();
