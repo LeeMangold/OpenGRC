@@ -16,11 +16,4 @@ class ListControls extends ListRecords
             Actions\CreateAction::make(),
         ];
     }
-
-    protected function getHeaderWidgets(): array
-    {
-        return [
-            ControlResource\Widgets\ControlsHeader::class,
-        ];
-    }
 }

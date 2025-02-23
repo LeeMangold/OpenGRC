@@ -16,7 +16,7 @@ class ProgramResource extends Resource
 {
     protected static ?string $model = Program::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-building-office';
 
     protected static ?string $navigationGroup = 'Foundations';
 
@@ -25,6 +25,7 @@ class ProgramResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
+                    ->columnSpanFull()
                     ->required()
                     ->maxLength(255),
                 Forms\Components\Textarea::make('description')
@@ -36,7 +37,6 @@ class ProgramResource extends Resource
                     ->searchable()
                     ->preload()
                     ->required(),
-                Forms\Components\DatePicker::make('last_audit_date'),
                 Forms\Components\Select::make('scope_status')
                     ->options([
                         'In Scope' => 'In Scope',
@@ -50,6 +50,22 @@ class ProgramResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->description(new class implements \Illuminate\Contracts\Support\Htmlable {
+                public function toHtml()
+                {
+                    return "<div class='fi-section-content p-6'>
+                        Programs serve as comprehensive frameworks that unite security standards and controls into cohesive, manageable
+                        initiatives within an organization. They represent structured approaches to achieving specific security objectives
+                        by combining relevant standards (which define 'what' needs to be done) with appropriate controls (which specify
+                        'how' to do it). Each program typically addresses a distinct area of compliance, risk management, or security
+                        enhancement, making it easier to track progress, measure effectiveness, and ensure accountability. For example,
+                        a Data Privacy Program might incorporate standards from GDPR and CCPA, implementing specific controls like
+                        data encryption, access management, and regular audits to meet these requirements. By organizing security
+                        measures into programs, organizations can better coordinate their security efforts, allocate resources
+                        effectively, and maintain clear oversight of their security posture across different domains and objectives.
+                        </div>";
+                }
+            })
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
@@ -100,4 +116,4 @@ class ProgramResource extends Resource
             'edit' => Pages\EditProgram::route('/{record}/edit'),
         ];
     }
-} 
+}

@@ -89,6 +89,20 @@ class ControlResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->description(new class implements \Illuminate\Contracts\Support\Htmlable {
+                public function toHtml()
+                {
+                    return "<div class='fi-section-content p-6'>
+                        Controls are the 'how' of security implementation - they are the specific mechanisms, policies, procedures, 
+                        and tools used to enforce standards and protect assets. Controls can be technical (like firewalls or 
+                        encryption), administrative (like policies or training), or physical (like security cameras or door locks). 
+                        Each control should be designed to address specific risks and meet particular security requirements defined 
+                        by standards. For instance, to meet a standard requiring secure data transmission, a control might specify 
+                        the use of TLS 1.2 or higher for all external communications. Controls are the practical manifestation of 
+                        security standards and form the backbone of an organization's security infrastructure.
+                        </div>";
+                }
+            })
             ->emptyStateHeading('No Controls Added Yet')
             ->emptyStateDescription(new HtmlString("There are no controls to display. Try adding new controls to your existing 
             standards. You can also import standards and controls with using <a class='text-blue-500' href='" . route("filament.app.resources.bundles.index") . "'>Content Bundles</a>."))

@@ -69,7 +69,7 @@ class ImplementationResource extends Resource
                     ->searchable()
                     ->multiple()
                     ->placeholder('Select related controls') // Optional: Adds a placeholder
-                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'All implementations should relate to a control. If you don’t have a relevant control in place, consider creating a new one first.'),
+                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: "All implementations should relate to a control. If you don't have a relevant control in place, consider creating a new one first."),
                 Forms\Components\TextInput::make('title')
                     ->maxLength(255)
                     ->required()
@@ -95,6 +95,21 @@ class ImplementationResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->description(new class implements \Illuminate\Contracts\Support\Htmlable {
+                public function toHtml()
+                {
+                    return "<div class='fi-section-content p-6'>
+                        Implementations represent the actual deployment and operation of security controls within an organization. 
+                        They are the specific instances of how controls are put into practice, including the tools, configurations, 
+                        processes, and procedures used. Each implementation should be documented with sufficient detail to understand 
+                        how the control is operating, who is responsible for maintaining it, and how its effectiveness can be verified. 
+                        For example, while a control might specify the need for access reviews, an implementation would detail the 
+                        exact process, including which tool is used, who conducts the reviews, how often they occur, and what 
+                        documentation is maintained. Implementations bridge the gap between theoretical security controls and their 
+                        practical application in the organization.
+                        </div>";
+                }
+            })
             ->emptyStateHeading('No implementations found')
             ->emptyStateDescription('Try creating a new implementation by clicking the "Create Implementation" button above.')
             ->columns([

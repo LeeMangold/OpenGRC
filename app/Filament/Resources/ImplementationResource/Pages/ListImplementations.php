@@ -18,11 +18,4 @@ class ListImplementations extends ListRecords
             ->label('Create Implementation'),
         ];
     }
-
-    protected function getHeaderWidgets(): array
-    {
-        return [
-            ImplementationsHeader::class,
-        ];
-    }
 }

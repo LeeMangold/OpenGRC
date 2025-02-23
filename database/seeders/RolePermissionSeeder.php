@@ -23,7 +23,7 @@ class RolePermissionSeeder extends Seeder
 
         //-----------------------------------------------------------------------------------------
         // Create Resource Permissions
-        $entities = ['Standards', 'Controls', 'Implementations', 'Audits'];
+        $entities = ['Standards', 'Controls', 'Implementations', 'Audits', 'Programs'];
         $actions = ['List', 'Create', 'Read', 'Update', 'Delete'];
 
         foreach ($entities as $entity) {
@@ -71,18 +71,21 @@ class RolePermissionSeeder extends Seeder
         $securityAdmin->givePermissionTo('View Bundles');
 
         // Assign specific Permissions to Internal Auditor
-        $internalAuditor->givePermissionTo('List Audits');
-        $internalAuditor->givePermissionTo('Read Audits');
-        $internalAuditor->givePermissionTo('List Standards');
-        $internalAuditor->givePermissionTo('Read Standards');
-        $internalAuditor->givePermissionTo('List Controls');
-        $internalAuditor->givePermissionTo('Read Controls');
-        $internalAuditor->givePermissionTo('List Implementations');
-        $internalAuditor->givePermissionTo('Read Implementations');
-        $internalAuditor->givePermissionTo('List Audits');
-        $internalAuditor->givePermissionTo('Create Audits');
-        $internalAuditor->givePermissionTo('Read Audits');
-
+        $internalAuditor->givePermissionTo([
+            'List Audits',
+            'Read Audits',
+            'List Standards',
+            'Read Standards',
+            'List Controls',
+            'Read Controls',
+            'List Implementations',
+            'Read Implementations',
+            'List Programs',
+            'Read Programs',
+            'List Audits',
+            'Create Audits',
+            'Read Audits'
+        ]);
 
         //-----------------------------------------------------------------------------------------
         // Assign users with ID 1 Super Admin

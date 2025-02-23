@@ -89,6 +89,21 @@ class StandardResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->description(new class implements \Illuminate\Contracts\Support\Htmlable {
+                public function toHtml()
+                {
+                    return "<div class='fi-section-content p-6'>
+                        Standards define the 'what' in security and compliance by establishing specific requirements, guidelines, 
+                        or best practices that need to be followed. They serve as benchmarks against which an organization's 
+                        security posture can be measured. Standards can originate from various sources, including regulatory 
+                        bodies (like HIPAA or GDPR), industry frameworks (such as ISO 27001 or NIST), or internal organizational 
+                        policies. Each standard typically outlines specific criteria that must be met to achieve compliance or 
+                        maintain security. For example, a password standard might specify minimum length requirements, complexity 
+                        rules, and expiration periods. Standards provide the foundation for controls, which then implement these 
+                        requirements in practical ways.
+                        </div>";
+                }
+            })
             ->columns([
                 Tables\Columns\TextColumn::make('code')
                     ->searchable()

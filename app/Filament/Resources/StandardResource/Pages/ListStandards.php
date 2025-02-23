@@ -16,11 +16,4 @@ class ListStandards extends ListRecords
             Actions\CreateAction::make(),
         ];
     }
-
-    protected function getHeaderWidgets(): array
-    {
-        return [
-            StandardResource\Widgets\StandardsHeader::class,
-        ];
-    }
 }
