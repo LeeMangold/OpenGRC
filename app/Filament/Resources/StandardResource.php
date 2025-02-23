@@ -184,13 +184,6 @@ class StandardResource extends Resource
                 "'>OpenGRC Bundle</a>"));
     }
 
-    public static function getWidgets(): array
-    {
-        return [
-            StandardResource\Widgets\StandardsHeader::class,
-        ];
-    }
-
     public static function getRelations(): array
     {
         return [
