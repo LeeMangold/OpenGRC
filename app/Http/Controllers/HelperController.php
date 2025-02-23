@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
+
 class HelperController extends Controller
 {
     /**
@@ -16,7 +18,7 @@ class HelperController extends Controller
      * @return string The converted text with each line wrapped in a paragraph tag.
      *                If classes are provided, each paragraph tag will include them.
      */
-    public static function linesToParagraphs($text, $classes = null): string
+    public static function linesToParagraphs(string $text, ?string $classes = null): string
     {
         $lines = explode("\n", trim($text));
         $paragraphs = array_map(function ($line) use ($classes) {
@@ -26,5 +28,24 @@ class HelperController extends Controller
         }, $lines);
 
         return implode('', $paragraphs);
+    }
+
+    /**
+     * Returns the end date of a given period.
+     *
+     * This function calculates the end date of a period based on the latest date
+     * and the number of days from today. If the calculated end date is greater
+     * than the latest date, the latest date is returned instead.
+     *
+     * @param  string  $latestDate  The latest date of the period.
+     * @param  int  $numDaysFromToday  The number of days from today to calculate the end date.
+     * @return Carbon The end date of the period.
+     */
+    public static function getEndDate($latestDate, $numDaysFromToday): Carbon
+    {
+        $latestDate = Carbon::parse($latestDate);
+        $end = now()->addDays($numDaysFromToday);
+
+        return $end->greaterThan($latestDate) ? $latestDate : $end;
     }
 }

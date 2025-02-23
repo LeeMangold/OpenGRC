@@ -195,9 +195,9 @@ class RiskResource extends Resource
         return ['name', 'description'];
     }
 
-    //Mentioning the following classes to prevent them from being removed.
-    //bg-grcblue-200 bg-red-200 bg-orange-200 bg-yellow-200 bg-green-200
-    //bg-grcblue-500 bg-red-500 bg-orange-500 bg-yellow-500 bg-green-500
+    // Mentioning the following classes to prevent them from being removed.
+    // bg-grcblue-200 bg-red-200 bg-orange-200 bg-yellow-200 bg-green-200
+    // bg-grcblue-500 bg-red-500 bg-orange-500 bg-yellow-500 bg-green-500
 
     public static function getRiskColor(int $likelihood, int $impact, int $weight = 200): string
     {

@@ -132,37 +132,6 @@ class ViewAudit extends ViewRecord
                         $livewire->redirectRoute('filament.app.resources.audits.view', $record);
                     }),
 
-//                        foreach ($record->auditItems as $auditItem) {
-//                            // If the audit item is not completed, mark it as completed
-//                            $auditItem->update(['status' => WorkflowStatus::COMPLETED]);
-//
-//                            // We don't want to overwrite the effectiveness if it's already set AND we're not assessing
-//                            if ($auditItem->effectiveness !== Effectiveness::UNKNOWN) {
-//
-//                                $updateData = ['effectiveness' => $auditItem->effectiveness->value];
-//
-//                                if ($auditItem->auditable_type == 'App\Models\Control') {
-//                                    $updateData['applicability'] = $auditItem->applicability->value;
-//                                }
-//
-//                                $auditItem->auditable->update($updateData);
-//                            }
-//                        }
-//
-//                        // Save the final audit report
-//                        $auditItems = $record->auditItems;
-//                        $reportTemplate = 'reports.audit';
-//                        if ($record->audit_type == 'implementations') {
-//                            $reportTemplate = 'reports.implementation-report';
-//                        }
-//                        $filepath = "app/private/audit_reports/AuditReport-{$record->id}.pdf";
-//                        $pdf = Pdf::loadView($reportTemplate, ['audit' => $record, 'auditItems' => $auditItems]);
-//                        $pdf->save(storage_path($filepath));
-//
-//                        // Mark the audit as completed
-//                        $record->update(['status' => WorkflowStatus::COMPLETED]);
-//                        $livewire->redirectRoute('filament.app.resources.audits.view', $record);
-//                    }),
             ])
                 ->label('Workflow')
                 ->icon('heroicon-m-ellipsis-vertical')

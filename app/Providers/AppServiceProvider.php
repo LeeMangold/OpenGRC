@@ -45,6 +45,9 @@ class AppServiceProvider extends ServiceProvider
                         'name' => setting('general.name'),
                     ],
                 ]));
+
+                // Set session lifetime from settings
+                Config::set('session.lifetime', setting('security.session_timeout', 15));
             } else {
                 // if table "settings" does not exist
                 // Error that app was not installed properly

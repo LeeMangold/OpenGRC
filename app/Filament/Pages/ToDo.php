@@ -25,7 +25,7 @@ class ToDo extends Page implements Tables\Contracts\HasTable
 
         if ($count > 99) {
             return '99+';
-        } else if ($count > 0) {
+        } elseif ($count > 0) {
             return $count;
         }
 

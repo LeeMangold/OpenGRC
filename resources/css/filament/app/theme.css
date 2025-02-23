@@ -32,6 +32,10 @@
         background-color: #d4e7ef !important;
     }
 
+    .bg-grcblue-500 {
+        background-color: #1375a0 !important;
+    }
+
     .control-description-text ul {
         /* Force bullet styling */
         list-style-type: disc !important; /* or circle, square, etc. */
@@ -119,4 +123,8 @@ a.fi-logo {
 .fi-color-grcblue:hover {
     background-color: #a8d4ea !important;
     color: #ffffff;
+}
+.fi-color-bg-grcblue-200 {
+    background-color: #d4e7ef !important;
+    color: #000000;
 }

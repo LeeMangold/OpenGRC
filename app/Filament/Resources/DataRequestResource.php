@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Enums\ResponseStatus;
 use App\Filament\Resources\DataRequestResource\Pages;
+use App\Http\Controllers\HelperController;
 use App\Models\Audit;
 use App\Models\DataRequest;
 use App\Models\User;
@@ -117,12 +118,13 @@ class DataRequestResource extends Resource
             ]);
     }
 
-    public static function createResponses(DataRequest $record): void
+    public static function createResponses(DataRequest $record, ?string $dueDate = null): void
     {
         $record->responses()->create([
             'requester_id' => $record->created_by_id,
             'requestee_id' => $record->assigned_to_id,
             'data_request_id' => $record->id,
+            'due_at' => $dueDate,
             'status' => ResponseStatus::PENDING,
         ]);
     }
@@ -167,6 +169,9 @@ class DataRequestResource extends Resource
                                     ->options(ResponseStatus::class)
                                     ->default(ResponseStatus::PENDING)
                                     ->grouped()
+                                    ->required(),
+                                Forms\Components\DatePicker::make('due_at')
+                                    ->label('Due Date')
                                     ->required(),
                                 Placeholder::make('response')
                                     ->label('Text Response')

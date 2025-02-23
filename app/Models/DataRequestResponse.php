@@ -14,6 +14,11 @@ class DataRequestResponse extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        'status' => ResponseStatus::class,
+        'due_at' => 'datetime',
+    ];
+
     protected function casts(): array
     {
         return [

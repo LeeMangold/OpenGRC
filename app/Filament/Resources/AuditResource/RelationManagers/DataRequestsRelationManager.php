@@ -11,7 +11,6 @@ use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
-
 class DataRequestsRelationManager extends RelationManager
 {
     protected static string $relationship = 'DataRequest';
@@ -21,6 +20,9 @@ class DataRequestsRelationManager extends RelationManager
         return DataRequestResource::getEditForm($form);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function table(Table $table): Table
     {
         return $table
@@ -29,6 +31,8 @@ class DataRequestsRelationManager extends RelationManager
                     ->toggleable()
                     ->toggledHiddenByDefault()
                     ->label('ID'),
+                TextColumn::make('auditItem.auditable.code')
+                    ->label('Audit Item'),
                 TextColumn::make('details')
                     ->label('Request Details')
                     ->wrap(),
@@ -36,8 +40,12 @@ class DataRequestsRelationManager extends RelationManager
                     ->label('Responses')
                     ->badge(),
                 TextColumn::make('assignedTo.name'),
-                TextColumn::make('created_at'),
-                //                TextColumn::make('status')->badge(),
+                TextColumn::make('responses')
+                    ->label('Due Date')
+                    ->date()
+                    ->state(function (DataRequest $record) {
+                        return $record->responses->sortByDesc('due_at')->first()?->due_at;
+                    }),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('status')

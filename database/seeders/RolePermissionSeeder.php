@@ -2,11 +2,9 @@
 
 namespace Database\Seeders;
 
-//use App\Models\Permission;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
-//use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class RolePermissionSeeder extends Seeder
@@ -63,7 +61,7 @@ class RolePermissionSeeder extends Seeder
 
         // Assign specific Permissions to Security Admin
         foreach ($entities as $entity) {
-            foreach (['List', 'Create', 'Read'] as $action) {
+            foreach (['List', 'Create', 'Read', 'Update'] as $action) {
                 $securityAdmin->givePermissionTo("{$action} {$entity}");
             }
         }

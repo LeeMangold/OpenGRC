@@ -3,7 +3,6 @@
 namespace App\Filament\Widgets;
 
 use App\Models\DataRequestResponse;
-use Filament\Resources\Components\Tab;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
@@ -17,7 +16,7 @@ class ToDoListWidget extends BaseWidget
     {
         return $table
             ->query(
-                DataRequestResponse::query()->where('requestee_id', auth()->id())
+                DataRequestResponse::query()->where('requestee_id', auth()->id())->take(5)
             )
             ->heading('My ToDo List (Top-5)')
             ->emptyStateHeading(new HtmlString("You're all caught up!"))
@@ -38,10 +37,10 @@ class ToDoListWidget extends BaseWidget
                     ->label('Due Date'),
             ])
             ->actions([
-                Tables\Actions\Action::make("view")
+                Tables\Actions\Action::make('view')
                     ->label('View')
                     ->url(fn (DataRequestResponse $record): string => route('filament.app.resources.data-request-responses.edit', $record)),
-        ])
+            ])
             ->headerActions([
                 Tables\Actions\Action::make('create')
                     ->label("View All My ToDo's")
@@ -52,12 +51,12 @@ class ToDoListWidget extends BaseWidget
             ->paginated(false);
     }
 
-//    protected function getEmptyState(): bool
-//    {
-//        if ( auth()->user()->openTodos()->count() === 0 ) {
-//            return true;
-//        }
-//
-//        return false;
-//    }
+    //    protected function getEmptyState(): bool
+    //    {
+    //        if ( auth()->user()->openTodos()->count() === 0 ) {
+    //            return true;
+    //        }
+    //
+    //        return false;
+    //    }
 }

@@ -4,13 +4,23 @@ namespace App\Filament\Pages\Settings;
 
 use Closure;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Section;
 use Illuminate\Support\Facades\Crypt;
 use Outerweb\FilamentSettings\Filament\Pages\Settings as BaseSettings;
+use App\Filament\Pages\Settings\Schemas\GeneralSchema;
+use App\Filament\Pages\Settings\Schemas\MailSchema;
+use App\Filament\Pages\Settings\Schemas\MailTemplatesSchema;
+use App\Filament\Pages\Settings\Schemas\AiSchema;
+use App\Filament\Pages\Settings\Schemas\ReportSchema;
+use App\Filament\Pages\Settings\Schemas\SecuritySchema;
+use App\Filament\Pages\Settings\Schemas\AuthenticationSchema;
 
 class Settings extends BaseSettings
 {
@@ -39,91 +49,21 @@ class Settings extends BaseSettings
                 ->columns(2)
                 ->schema([
                     Tabs\Tab::make('General')
-                        ->schema([
-                            TextInput::make('general.name')
-                                ->default('ets')
-                                ->minLength(2)
-                                ->maxLength(16)
-                                ->label('Application Name')
-                                ->helperText('The name of your application')
-                                ->required(),
-                            TextInput::make('general.url')
-                                ->default('http://localhost')
-                                ->url()
-                                ->label('Application URL')
-                                ->helperText('The URL of your application')
-                                ->required(),
-                            TextInput::make('general.repo')
-                                ->default('https://repo.opengrc.com')
-                                ->url()
-                                ->label('Update Repository URL')
-                                ->helperText('The URL of the repository to check for content updates')
-                                ->required(),
-                        ]),
+                        ->schema(GeneralSchema::schema()),
                     Tabs\Tab::make('Mail')
                         ->columns(3)
                         ->label('Mail Settings')
-                        ->schema([
-                            TextInput::make('mail.host'),
-                            TextInput::make('mail.port')
-                                ->type('number'),
-                            Select::make('mail.encryption')
-                                ->options([
-                                    'TLS' => 'TLS',
-                                    'STARTTLS' => 'STARTTLS',
-                                    'none' => 'None',
-                                ]),
-                            TextInput::make('mail.username'),
-                            TextInput::make('mail.password')
-                                ->password(),
-                            TextInput::make('mail.from')
-                                ->label('From Address')
-                                ->email()
-                                ->helperText('The email address to send emails from'),
-                        ]),
+                        ->schema(MailSchema::schema()),
                     Tabs\Tab::make('Mail Templates')
-                        ->schema([
-                            TextInput::make('mail.templates.password_reset_subject')
-                                ->label('Password Reset Subject')
-                                ->columnSpanFull(),
-                            RichEditor::make('mail.templates.password_reset_body')
-                                ->label('Password Reset Body')
-                                ->columnSpanFull(),
-                            TextInput::make('mail.templates.new_account_subject')
-                                ->label('New Account Subject')
-                                ->columnSpanFull(),
-                            RichEditor::make('mail.templates.new_account_body')
-                                ->label('New Account Body')
-                                ->columnSpanFull(),
-                            TextInput::make('mail.templates.evidence_request_subject')
-                                ->label('Evidence Request Subject')
-                                ->columnSpanFull(),
-                            RichEditor::make('mail.templates.evidence_request_body')
-                                ->label('Evidence Request Body')
-                                ->columnSpanFull(),
-                        ]),
+                        ->schema(MailTemplatesSchema::schema()),
                     Tabs\Tab::make('AI Settings')
-                        ->schema([
-                            Toggle::make('ai.enabled')
-                                ->label('Enable AI Suggestions')
-                                ->default(false),
-                            TextInput::make('ai.openai_key')
-                                ->label('OpenAI API Key (Optional)')
-                                ->password()
-                                ->helperText('The API key for OpenAI')
-                                ->default(fn ($state) => filled($state) ? Crypt::decryptString($state) : null)
-                                ->dehydrateStateUsing(fn ($state) => filled($state) ? Crypt::encryptString($state) : null),
-                        ]),
+                        ->schema(AiSchema::schema()),
                     Tabs\Tab::make('Report Settings')
-                        ->schema([
-                            FileUpload::make('report.logo')
-                                ->label('Report Logo')
-                                ->helperText('The logo to display on reports. Be sure to upload a file that is at least 512px wide.')
-                                ->acceptedFileTypes(['image/*'])
-                                ->disk('public')
-                                ->maxFiles(1)
-                                ->imagePreviewHeight('150px'),
-                        ]),
+                        ->schema(ReportSchema::schema()),
+                    Tabs\Tab::make('Security')
+                        ->schema(SecuritySchema::schema()),
+                    Tabs\Tab::make('Authentication')
+                        ->schema(AuthenticationSchema::schema()),
                 ]),
         ];
     }
