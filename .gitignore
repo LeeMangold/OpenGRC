@@ -29,3 +29,4 @@ yarn-error.log
 !/storage/framework/views/.gitkeep
 !/storage/framework/cache/.gitkeep
 
+.DS_Store

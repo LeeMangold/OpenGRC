@@ -1,48 +1,89 @@
-FROM php:8.3-apache
+FROM php:8.3-apache AS base
 
-RUN apt-get update && apt-get install -y git unzip curl sqlite3 libonig-dev libzip-dev libicu-dev
+# --------------
+# Install needed Debian/Ubuntu packages
+# ------------------------------------------------
+RUN apt-get clean && apt-get update && apt-get install -y \
+    libpng-dev \
+    libzip-dev \
+    libicu-dev \
+    zip \
+    unzip 
+
 RUN docker-php-ext-install pdo pdo_mysql bcmath intl zip
 
-RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
-    && apt-get install -y nodejs
+##############################
+# 1) Stage: Build everything
+##############################
 
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+FROM base AS build
 
+# Install nodejs and npm
+RUN apt-get update && apt-get install -y nodejs npm
+
+# Copy Composer from official image
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Set the working directory
 WORKDIR /var/www/html
+
+# Copy application code
 COPY . .
-RUN npm install && npm run build
-RUN mkdir -p /var/www/html/storage/framework/cache/data && mkdir -p /var/www/html/bootstrap/cache
-RUN sed -i 's/Listen 80/Listen 0.0.0.0:80/' /etc/apache2/ports.conf
-RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
-EXPOSE 80
 
-ENV DB_CONNECTION=sqlite \
-    DB_HOST=localhost \
-    DB_PORT= \
-    DB_DATABASE=/var/www/html/storage/opengrc.sqlite \
-    DB_USERNAME= \
-    DB_PASSWORD=
+# Install Composer dependencies (including dev dependencies) and run initial setup
+RUN composer update && php artisan opengrc:install --unattended
 
-RUN cp .env.example .env && \
-    echo "DB_CONNECTION=${DB_CONNECTION}" >> .env && \
-    echo "DB_HOST=${DB_HOST}" >> .env && \
-    echo "DB_PORT=${DB_PORT}" >> .env && \
-    echo "DB_DATABASE=${DB_DATABASE}" >> .env && \
-    echo "DB_USERNAME=${DB_USERNAME}" >> .env && \
-    echo "DB_PASSWORD=${DB_PASSWORD}" >> .env
+########################################
+# 2) Stage: Final - Production runtime
+########################################
+FROM base AS production
 
-RUN git config --global --add safe.directory /var/www/html
-RUN touch /var/www/html/storage/opengrc.sqlite
-RUN composer install --no-interaction --optimize-autoloader --no-dev
-RUN php artisan key:generate
-RUN php artisan migrate
-RUN php artisan db:seed
-ENV APP_ENV=local \
-    APP_DEBUG=false
-RUN echo "APP_ENV=${APP_ENV}" >> .env && \
-    echo "APP_DEBUG=${APP_DEBUG}" >> .env
-RUN php artisan config:clear
+# Copy Composer binary (needed to remove dev dependencies and cache)
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+# Set working directory
+WORKDIR /var/www/html
+
+# Copy entire Laravel app (including vendor) from build stage
+COPY --from=build /var/www/html .
+
+# Remove PHP development dependencies and clear Composer cache
+RUN composer install --no-dev --optimize-autoloader && \
+    composer clear-cache && \
+    rm -rf /root/.composer/cache
+
+# Remove node_modules
+RUN rm -rf /var/www/html/node_modules
+
+# Make sure storage and bootstrap/cache are writable
+RUN mkdir -p storage/framework/cache/data bootstrap/cache \
+    && chown -R www-data:www-data storage bootstrap/cache /var/www/html \
+    && chmod -R 775 storage bootstrap/cache /var/www/html
+    
+# Ensure there's a sqlite file
+RUN touch /var/www/html/database/opengrc.sqlite
+
+# Enable Apache mod_rewrite
 RUN a2enmod rewrite
+
+# Listen on port 8080 instead of 80
+RUN sed -i 's/Listen 80/Listen 8080/' /etc/apache2/ports.conf
+EXPOSE 8080
+
+# Update the default vhost to point to /var/www/html/public
+RUN sed -i 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/000-default.conf
+
+# Replace the VirtualHost port in 000-default.conf
+RUN sed -i 's/80/8080/g' /etc/apache2/sites-available/000-default.conf
+
+# Allow .htaccess overrides and full access
+RUN echo "<Directory /var/www/html/public>\n\
+    AllowOverride All\n\
+    Require all granted\n\
+</Directory>\n" >> /etc/apache2/apache2.conf
+
+# Set a server name
+RUN echo "ServerName 0.0.0.0" >> /etc/apache2/apache2.conf
+
+# Run Apache in the foreground
 CMD ["apache2-foreground"]
