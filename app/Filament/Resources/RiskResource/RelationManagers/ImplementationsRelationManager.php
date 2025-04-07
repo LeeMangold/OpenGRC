@@ -23,6 +23,7 @@ class ImplementationsRelationManager extends RelationManager
         $table->actions([
             Tables\Actions\ViewAction::make()->hidden(),
         ]);
+
         return $table;
     }
 }

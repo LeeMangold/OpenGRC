@@ -19,4 +19,4 @@ class SecuritySchema
                 ->helperText('Number of minutes before an inactive session expires. Default: 15 minutes'),
         ];
     }
-} 
+}

@@ -11,7 +11,7 @@ class RolePermissionSeeder extends Seeder
 {
     public function run(): void
     {
-        //-----------------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------
         // Create Roles
         $none = Role::create(['name' => 'None']);
         $regular = Role::create(['name' => 'Regular User', 'description' => 'Read-Only-Responder User']);
@@ -19,7 +19,7 @@ class RolePermissionSeeder extends Seeder
         $securityAdmin = Role::create(['name' => 'Security Admin', 'description' => 'Able to Edit all data and run Audits but not manage users']);
         $internalAuditor = Role::create(['name' => 'Internal Auditor', 'description' => 'Able to run Audits but not edit other foundational data']);
 
-        //-----------------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------
         // Create Resource Permissions
         $entities = ['Standards', 'Controls', 'Implementations', 'Audits', 'Programs'];
         $actions = ['List', 'Create', 'Read', 'Update', 'Delete'];
@@ -30,7 +30,7 @@ class RolePermissionSeeder extends Seeder
             }
         }
 
-        //-----------------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------
         // Create Additional Permissions
         $additionalPermissions = [
             'Configure Authentication',
@@ -43,14 +43,13 @@ class RolePermissionSeeder extends Seeder
             Permission::firstOrCreate(['name' => $permission, 'category' => 'other']);
         }
 
-        //Bundle Permissions
+        // Bundle Permissions
         Permission::firstOrCreate(['name' => 'Manage Bundles', 'category' => 'Bundles']);
         Permission::firstOrCreate(['name' => 'View Bundles', 'category' => 'Bundles']);
 
-        //-----------------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------
         // Assign Permissions to Super Admin
         $superAdmin->givePermissionTo(Permission::all());
-
 
         // Assign Resource Permissions to Regular Users
         foreach ($entities as $entity) {
@@ -82,10 +81,10 @@ class RolePermissionSeeder extends Seeder
             'Read Programs',
             'List Audits',
             'Create Audits',
-            'Read Audits'
+            'Read Audits',
         ]);
 
-        //-----------------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------
         // Assign users with ID 1 Super Admin
         User::find(1)->assignRole($superAdmin);
 

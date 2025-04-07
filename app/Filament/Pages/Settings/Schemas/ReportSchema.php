@@ -18,4 +18,4 @@ class ReportSchema
                 ->imagePreviewHeight('150px'),
         ];
     }
-} 
+}

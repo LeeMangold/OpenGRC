@@ -50,7 +50,7 @@ class AuditResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('audit_type')
                     ->sortable()
-                    ->formatStateUsing(fn($state) => ucfirst($state))
+                    ->formatStateUsing(fn ($state) => ucfirst($state))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('status')
                     ->sortable()
@@ -122,7 +122,7 @@ class AuditResource extends Resource
 
     public static function getRelations(): array
     {
-        if (!request()->routeIs('filament.app.resources.audits.edit')) {
+        if (! request()->routeIs('filament.app.resources.audits.edit')) {
             return [
                 RelationManagers\AuditItemRelationManager::class,
                 RelationManagers\DataRequestsRelationManager::class,
@@ -170,7 +170,7 @@ class AuditResource extends Resource
 
                 $updateData = ['effectiveness' => $auditItem->effectiveness->value];
 
-                if ($auditItem->auditable_type == 'App\Models\Control') {
+                if ($auditItem->auditable_type == \App\Models\Control::class) {
                     $updateData['applicability'] = $auditItem->applicability->value;
                 }
 

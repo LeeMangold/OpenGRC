@@ -14,8 +14,7 @@ class ViewImplementations extends ViewRecord
     {
         return [
             Actions\EditAction::make('Update Implementation')
-                ->slideOver()
+                ->slideOver(),
         ];
     }
-
 }

@@ -23,7 +23,7 @@ return [
     'login_route' => 'socialite.app.oauth.redirect',
     'callback_route' => 'socialite.callback',
     'user_model' => \App\Models\User::class,
-    
+
     'providers' => [
         'okta' => [
             'label' => 'Okta',

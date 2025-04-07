@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Enums\ControlCategory;
 use App\Enums\ControlEnforcementCategory;
 use App\Enums\ControlType;
-use App\Http\Controllers\HelperController;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use League\Csv\Reader;
@@ -29,7 +28,6 @@ class SP800218Seeder extends Seeder
             information systems and organizations.',
         ]);
 
-
         $csv = Reader::createFromPath(resource_path('data/sp800-218.csv'), 'r');
         $csv->setHeaderOffset(0);
         $records = $csv->getRecords();
@@ -46,8 +44,8 @@ class SP800218Seeder extends Seeder
                 'category' => $record['Category'] ?? ControlCategory::UNKNOWN,
                 'enforcement' => $record['Enforcement'] ?? ControlEnforcementCategory::MANDATORY,
                 'discussion' => '',
-                'description' => $record['Description'],                
+                'description' => $record['Description'],
             ]);
         }
     }
-} 
+}

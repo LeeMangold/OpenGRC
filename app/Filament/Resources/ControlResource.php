@@ -89,7 +89,8 @@ class ControlResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->description(new class implements \Illuminate\Contracts\Support\Htmlable {
+            ->description(new class implements \Illuminate\Contracts\Support\Htmlable
+            {
                 public function toHtml()
                 {
                     return "<div class='fi-section-content p-6'>
@@ -105,7 +106,7 @@ class ControlResource extends Resource
             })
             ->emptyStateHeading('No Controls Added Yet')
             ->emptyStateDescription(new HtmlString("There are no controls to display. Try adding new controls to your existing 
-            standards. You can also import standards and controls with using <a class='text-blue-500' href='" . route("filament.app.resources.bundles.index") . "'>Content Bundles</a>."))
+            standards. You can also import standards and controls with using <a class='text-blue-500' href='".route('filament.app.resources.bundles.index')."'>Content Bundles</a>."))
             ->columns([
                 Tables\Columns\TextColumn::make('code')
                     ->sortable()

@@ -4,8 +4,6 @@ namespace App\Policies;
 
 use App\Models\Bundle;
 use App\Models\User;
-use Illuminate\Support\Str;
-use Spatie\Permission\Models\Role;
 
 class BundlePolicy
 {

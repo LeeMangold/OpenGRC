@@ -48,7 +48,7 @@ class DataRequestResponseResource extends Resource
                                 return $record->dataRequest->auditItem->auditable->title ?? 'No audit name available';
                             })
                             ->label(function ($record) {
-                                return $record->dataRequest->auditItem->auditable_type === 'App\Models\Control' ? 'Control Name' : 'Implementation Name';
+                                return $record->dataRequest->auditItem->auditable_type === \App\Models\Control::class ? 'Control Name' : 'Implementation Name';
                             }),
                         Placeholder::make('request.dataRequest.auditItem.audit.description')
                             ->content(function ($record) {

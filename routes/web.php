@@ -1,12 +1,12 @@
 <?php
 
 use App\Livewire\PasswordResetPage;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Storage;
-use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Laravel\Socialite\Facades\Socialite;
 
 Route::get('/', function () {
     return view('welcome');
@@ -22,25 +22,20 @@ Route::middleware(['auth'])->group(function () {
 
 });
 
-
-
 // Add Socialite routes
 // Route::get('/auth/{provider}/redirect', function (string $provider) {
 //     return Socialite::driver($provider)->redirect();
 // })->name('socialite.redirect');
 
-
 Route::get('/auth/{provider}/redirect', '\App\Http\Controllers\Auth\AuthController@redirectToProvider')->name('socialite.redirect');
 Route::get('/auth/{provider}/callback', '\App\Http\Controllers\Auth\AuthController@handleProviderCallback')->name('socialite.callback');
-
-
 
 // Route::get('/auth/{provider}/callback', function (string $provider) {
 //     try {
 //         $socialiteUser = Socialite::driver($provider)->user();
 
 //         dd($socialiteUser);
-        
+
 //         // Find or create user
 //         $user = User::firstOrCreate(
 //             ['email' => $socialiteUser->getEmail()],

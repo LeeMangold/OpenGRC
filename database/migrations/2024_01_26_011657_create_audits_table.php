@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->longText('description')->nullable();
-            //todo: make enum
+            // todo: make enum
             $table->string('status')->default('Not Started');
             $table->string('audit_type');
             $table->string('sid')->nullable();

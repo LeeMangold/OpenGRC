@@ -2,10 +2,9 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
-use Laravel\Socialite\Facades\Socialite;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\ServiceProvider;
 
 class SocialiteServiceProvider extends ServiceProvider
 {
@@ -13,7 +12,7 @@ class SocialiteServiceProvider extends ServiceProvider
     {
         if (! app()->runningInConsole() && Schema::hasTable('settings')) {
             $baseUrl = config('app.url');
-            
+
             // Configure Okta
             if (setting('auth.okta.enabled')) {
                 $clientSecret = setting('auth.okta.client_secret');
@@ -66,4 +65,4 @@ class SocialiteServiceProvider extends ServiceProvider
             }
         }
     }
-} 
+}

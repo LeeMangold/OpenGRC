@@ -6,7 +6,6 @@ use JibayMcs\FilamentTour\Tour\HasTour;
 use JibayMcs\FilamentTour\Tour\Step;
 use JibayMcs\FilamentTour\Tour\Tour;
 
-
 class Dashboard extends \Filament\Pages\Dashboard
 {
     use HasTour;
@@ -23,7 +22,7 @@ class Dashboard extends \Filament\Pages\Dashboard
             \App\Filament\Widgets\ControlsStatsWidget::class,
             //            \App\Filament\Widgets\IntroWidget::class,
             \App\Filament\Widgets\AuditListWidget::class,
-                        \App\Filament\Widgets\ImplementationsStatsWidget::class,
+            \App\Filament\Widgets\ImplementationsStatsWidget::class,
             \App\Filament\Widgets\ToDoListWidget::class,
 
         ];

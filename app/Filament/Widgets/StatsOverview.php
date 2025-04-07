@@ -45,7 +45,7 @@ class StatsOverview extends BaseWidget
             Stat::make('Audits in Progress', $audits_in_progress),
             Stat::make('Audits Completed', $audits_performed),
             Stat::make('Controls in Scope', $controls_in_scope_count)
-//            ->description('Controls that are part of in-scope standards and not determined to be Not-Applicable already')
+            //            ->description('Controls that are part of in-scope standards and not determined to be Not-Applicable already')
             ,
             //            Stat::make('Controls Tested', $controls_in_scope_tested_count),
             Stat::make('Implementations', $implementations),

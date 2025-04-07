@@ -58,10 +58,10 @@ class Audit extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'title', 
-        'description', 
-        'status', 
-        'start_date', 
+        'title',
+        'description',
+        'status',
+        'start_date',
         'end_date',
         'program_id',
     ];
@@ -129,4 +129,3 @@ class Audit extends Model
         return $this->belongsTo(Program::class);
     }
 }
-

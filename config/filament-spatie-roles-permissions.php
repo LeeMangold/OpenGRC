@@ -9,7 +9,7 @@ return [
     //    'navigation_section_group' => 'filament-spatie-roles-permissions::filament-spatie.section.roles_and_permissions', // Default uses language constant
     'navigation_section_group' => 'Settings', // Default uses language constant
 
-    //'team_model' => \App\Models\Team::class,
+    // 'team_model' => \App\Models\Team::class,
 
     /*
      * Set as false to remove from navigation.
@@ -80,8 +80,8 @@ return [
             /*
              * Additional Resource Permissions
              */
-            //'replicate',
-            //'reorder',
+            // 'replicate',
+            // 'reorder',
         ],
 
         /*
@@ -106,7 +106,7 @@ return [
          */
         'model_directories' => [
             app_path('Models'),
-            //app_path('Domains/Forum')
+            // app_path('Domains/Forum')
         ],
 
         /*
@@ -131,7 +131,7 @@ return [
          * Define any other permission that should be synced with the DB
          */
         'custom_permissions' => [
-            //'view-log'
+            // 'view-log'
         ],
 
         'user_model' => \App\Models\User::class,

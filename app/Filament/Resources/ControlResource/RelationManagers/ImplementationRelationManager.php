@@ -71,7 +71,7 @@ class ImplementationRelationManager extends RelationManager
                     ->sortable(),
                 Tables\Columns\TextColumn::make('last_assessed')
                     ->label('Last Audit')
-                    ->getStateUsing(fn ($record) => $record->getEffectivenessDate() ? $record->getEffectivenessDate() : "Not yet audited")
+                    ->getStateUsing(fn ($record) => $record->getEffectivenessDate() ? $record->getEffectivenessDate() : 'Not yet audited')
                     ->sortable(true)
                     ->badge(),
             ])
@@ -94,8 +94,8 @@ class ImplementationRelationManager extends RelationManager
                     ->recordSelectSearchColumns(['code', 'title']),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make()
-//                    ->url(fn ($record) => route('filament.app.resources.implementations.view', $record)),
+                Tables\Actions\ViewAction::make(),
+                //                    ->url(fn ($record) => route('filament.app.resources.implementations.view', $record)),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

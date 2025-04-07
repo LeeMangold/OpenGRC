@@ -48,4 +48,4 @@ class RisksRelationManager extends RelationManager
                 ]),
             ]);
     }
-} 
+}

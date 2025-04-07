@@ -42,5 +42,4 @@ class InherentRisk extends Widget
 
         return $grid;
     }
-
 }

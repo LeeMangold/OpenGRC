@@ -73,6 +73,7 @@ class DataRequestPolicy
         }
 
         $audit = Audit::find($audit_id);
+
         return $audit->members->contains(auth()->id());
     }
 }

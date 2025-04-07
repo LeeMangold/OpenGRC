@@ -13,11 +13,11 @@ class ProgramFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->company() . ' Program',
+            'name' => $this->faker->company().' Program',
             'description' => $this->faker->paragraph(),
             'program_manager_id' => User::factory(),
             'last_audit_date' => $this->faker->date(),
             'scope_status' => $this->faker->randomElement(['In Scope', 'Out of Scope', 'Pending Review']),
         ];
     }
-} 
+}

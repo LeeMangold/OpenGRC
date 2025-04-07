@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Bundle;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class BundleSeeder extends Seeder
@@ -91,7 +90,7 @@ class BundleSeeder extends Seeder
             'image' => 'soc2_type2.jpg',
         ]);
 
-        //Bundle::factory()->count(10)->create();
+        // Bundle::factory()->count(10)->create();
 
     }
 }

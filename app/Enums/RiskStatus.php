@@ -8,7 +8,6 @@ use Filament\Support\Contracts\HasLabel;
 
 enum RiskStatus: string implements hasColor, hasDescription, hasLabel
 {
-
     case NOT_ASSESSED = 'Not Assessed';
     case IN_PROGRESS = 'In Progress';
     case ASSESSED = 'Assessed';

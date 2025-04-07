@@ -32,8 +32,9 @@ class ResetUserPassword extends Command
         $email = $this->argument('email');
         $user = User::where('email', $email)->first();
 
-        if (!$user) {
+        if (! $user) {
             $this->components->error("User with email {$email} not found.");
+
             return;
         }
 
@@ -45,6 +46,7 @@ class ResetUserPassword extends Command
 
             if ($password !== $confirmation) {
                 $this->components->error('Passwords do not match.');
+
                 return;
             }
         }
@@ -59,4 +61,4 @@ class ResetUserPassword extends Command
             $this->components->info('Password has been reset successfully.');
         }
     }
-} 
+}

@@ -58,7 +58,7 @@ class ControlsRelationManager extends RelationManager
             ]);
     }
 
-    //Don't allow creating new controls from the implementation resource
+    // Don't allow creating new controls from the implementation resource
     public function canCreate(): bool
     {
         return false;

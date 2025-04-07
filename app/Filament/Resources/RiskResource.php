@@ -16,7 +16,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class RiskResource extends Resource
 {
-
     protected static ?string $model = Risk::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-fire';

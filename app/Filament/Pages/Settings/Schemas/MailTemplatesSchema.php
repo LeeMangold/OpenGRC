@@ -2,8 +2,8 @@
 
 namespace App\Filament\Pages\Settings\Schemas;
 
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\TextInput;
 
 class MailTemplatesSchema
 {
@@ -30,4 +30,4 @@ class MailTemplatesSchema
                 ->columnSpanFull(),
         ];
     }
-} 
+}

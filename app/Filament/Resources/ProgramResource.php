@@ -5,7 +5,6 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\ProgramResource\Pages;
 use App\Filament\Resources\ProgramResource\RelationManagers;
 use App\Models\Program;
-use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -50,7 +49,8 @@ class ProgramResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->description(new class implements \Illuminate\Contracts\Support\Htmlable {
+            ->description(new class implements \Illuminate\Contracts\Support\Htmlable
+            {
                 public function toHtml()
                 {
                     return "<div class='fi-section-content p-6'>

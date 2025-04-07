@@ -31,5 +31,4 @@ enum Effectiveness: string implements hasColor, hasLabel
             self::UNKNOWN => 'primary',
         };
     }
-
 }

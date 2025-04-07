@@ -22,4 +22,4 @@ class AiSchema
                 ->dehydrateStateUsing(fn ($state) => filled($state) ? Crypt::encryptString($state) : null),
         ];
     }
-} 
+}

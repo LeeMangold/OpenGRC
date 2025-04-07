@@ -34,4 +34,4 @@ class ProgramPolicy
     {
         return $user->can('Delete '.Str::plural(class_basename($this->model)));
     }
-} 
+}

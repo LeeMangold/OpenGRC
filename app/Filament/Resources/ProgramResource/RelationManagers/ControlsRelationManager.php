@@ -48,4 +48,4 @@ class ControlsRelationManager extends RelationManager
                 ]),
             ]);
     }
-} 
+}

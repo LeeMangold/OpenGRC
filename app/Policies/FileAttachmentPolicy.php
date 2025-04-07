@@ -29,7 +29,8 @@ class FileAttachmentPolicy
             return true;
         }
 
-        return false;    }
+        return false;
+    }
 
     public function create(User $user): bool
     {
@@ -72,6 +73,7 @@ class FileAttachmentPolicy
         }
 
         $audit = Audit::find($audit_id);
+
         return $audit->members->contains(auth()->id());
     }
 }

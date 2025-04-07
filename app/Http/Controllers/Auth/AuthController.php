@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
@@ -18,16 +17,16 @@ class AuthController extends Controller
 
         // Check if auto-provisioning is enabled for the provider
         $autoProvision = setting("auth.{$provider}.auto_provision", false);
-        
+
         // Find existing user
         $user = \App\Models\User::where('email', $socialiteUser->getEmail())->first();
-        
-        if (!$user && !$autoProvision) {
+
+        if (! $user && ! $autoProvision) {
             // User doesn't exist and auto-provisioning is disabled
             abort(401, 'No account exists for this email address and auto-provisioning is disabled.');
         }
 
-        if (!$user && $autoProvision) {
+        if (! $user && $autoProvision) {
             // Create new user since auto-provisioning is enabled
             $user = \App\Models\User::create([
                 'name' => $socialiteUser->getName(),
