@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\ImplementationResource\Pages;
 
 use App\Filament\Resources\ImplementationResource;
-use App\Filament\Resources\ImplementationResource\Widgets\ImplementationsHeader;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
@@ -15,7 +14,7 @@ class ListImplementations extends ListRecords
     {
         return [
             Actions\CreateAction::make()
-            ->label('Create Implementation'),
+                ->label('Create Implementation'),
         ];
     }
 }

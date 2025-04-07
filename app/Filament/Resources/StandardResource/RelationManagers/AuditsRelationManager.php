@@ -8,7 +8,7 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
 
-class   AuditsRelationManager extends RelationManager
+class AuditsRelationManager extends RelationManager
 {
     protected static string $relationship = 'audits';
 
@@ -33,7 +33,7 @@ class   AuditsRelationManager extends RelationManager
             ])
             ->actions([
                 Tables\Actions\ViewAction::make()->hiddenLabel()
-                    ->url(fn($record) => route('filament.app.resources.audits.view', $record)),
+                    ->url(fn ($record) => route('filament.app.resources.audits.view', $record)),
             ]);
     }
 }

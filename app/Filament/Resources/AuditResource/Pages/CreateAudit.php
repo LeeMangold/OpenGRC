@@ -6,11 +6,11 @@ use App\Enums\WorkflowStatus;
 use App\Filament\Resources\AuditResource;
 use App\Models\Control;
 use App\Models\Implementation;
+use App\Models\Program;
 use App\Models\Standard;
 use App\Models\User;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Grid;
-use Filament\Forms\Components\Button;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Section;
@@ -22,8 +22,6 @@ use Filament\Forms\Get;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\HtmlString;
 use LucasGiovanny\FilamentMultiselectTwoSides\Forms\Components\Fields\MultiselectTwoSides;
-use App\Models\Program;
-use Filament\Forms\Set;
 
 class CreateAudit extends CreateRecord
 {
@@ -135,13 +133,13 @@ class CreateAudit extends CreateRecord
                                     $controls = Control::where('standard_id', '=', $standard_id)
                                         ->get()
                                         ->mapWithKeys(function ($control) {
-                                            return [$control->id => $control->code . ' - ' . $control->title];
+                                            return [$control->id => $control->code.' - '.$control->title];
                                         });
                                 } elseif ($audit_type == 'implementations') {
                                     $controls = Implementation::query()
                                         ->get()
                                         ->mapWithKeys(function ($implementation) {
-                                            return [$implementation->id => $implementation->code . ' - ' . $implementation->title];
+                                            return [$implementation->id => $implementation->code.' - '.$implementation->title];
                                         })
                                         ->toArray();
                                 } elseif ($audit_type == 'program') {
@@ -150,7 +148,7 @@ class CreateAudit extends CreateRecord
                                         $program = Program::find($program_id);
                                         $controls = $program->getAllControls()
                                             ->mapWithKeys(function ($control) {
-                                                return [$control->id => $control->code . ' - ' . $control->title];
+                                                return [$control->id => $control->code.' - '.$control->title];
                                             });
                                     } else {
                                         $controls = [];

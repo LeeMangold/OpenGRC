@@ -53,7 +53,7 @@ class ControlsRelationManager extends RelationManager
             ->recordTitleAttribute('title')
             ->columns([
                 Tables\Columns\TextColumn::make('code')
-                ->sortable(),
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('title')
                     ->wrap()
                     ->html()

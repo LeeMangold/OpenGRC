@@ -2,25 +2,16 @@
 
 namespace App\Filament\Pages\Settings;
 
-use Closure;
-use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Placeholder;
-use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Tabs;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
-use Filament\Forms\Components\Grid;
-use Filament\Forms\Components\Section;
-use Illuminate\Support\Facades\Crypt;
-use Outerweb\FilamentSettings\Filament\Pages\Settings as BaseSettings;
+use App\Filament\Pages\Settings\Schemas\AiSchema;
+use App\Filament\Pages\Settings\Schemas\AuthenticationSchema;
 use App\Filament\Pages\Settings\Schemas\GeneralSchema;
 use App\Filament\Pages\Settings\Schemas\MailSchema;
 use App\Filament\Pages\Settings\Schemas\MailTemplatesSchema;
-use App\Filament\Pages\Settings\Schemas\AiSchema;
 use App\Filament\Pages\Settings\Schemas\ReportSchema;
 use App\Filament\Pages\Settings\Schemas\SecuritySchema;
-use App\Filament\Pages\Settings\Schemas\AuthenticationSchema;
+use Closure;
+use Filament\Forms\Components\Tabs;
+use Outerweb\FilamentSettings\Filament\Pages\Settings as BaseSettings;
 
 class Settings extends BaseSettings
 {

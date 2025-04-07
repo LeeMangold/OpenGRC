@@ -88,7 +88,7 @@ class AttachmentsRelationManager extends RelationManager
                                 fn () => print ($pdf->stream()),
                                 "DRAFT-AuditReport-{$audit->id}.pdf");
                         }),
-                    //Button to download final report
+                    // Button to download final report
                     Tables\Actions\Action::make('DownloadReport')
                         ->label('Download Final Report')
                         ->icon('heroicon-o-document')
@@ -98,7 +98,7 @@ class AttachmentsRelationManager extends RelationManager
                             if (file_exists(storage_path($filepath)) && is_readable(storage_path($filepath))) {
                                 return response()->download(storage_path($filepath));
                             } else {
-                                //If the final audit report is not available, show an error message
+                                // If the final audit report is not available, show an error message
                                 return Notification::make()
                                     ->title('Error')
                                     ->body('The final audit report is not available until the audit has been completed.')

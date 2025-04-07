@@ -30,4 +30,4 @@ class GeneralSchema
                 ->required(),
         ];
     }
-} 
+}

@@ -18,7 +18,7 @@ class AuditListWidget extends BaseWidget
             ->query(
                 Audit::query()->latest('updated_at')->take(5)
             )
-            ->emptyStateHeading(new HtmlString("No Audits to Show"))
+            ->emptyStateHeading(new HtmlString('No Audits to Show'))
             ->emptyStateDescription('You have not created any audits yet. Create an Audit to get started.')
             ->emptyStateIcon('heroicon-o-check-circle')
             ->columns([

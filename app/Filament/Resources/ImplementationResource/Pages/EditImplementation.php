@@ -38,6 +38,4 @@ class EditImplementation extends EditRecord
             $this->redirect($this->getResource()::getUrl('view', ['record' => $this->record]));
         }
     }
-
-
 }

@@ -75,7 +75,7 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('last_activity')
                     ->dateTime()
                     ->sortable(),
-                //Roles
+                // Roles
                 Tables\Columns\TextColumn::make('roles')
                     ->searchable()
                     ->label('Roles')

@@ -2,13 +2,9 @@
 
 namespace App\Filament\Resources\ImplementationResource\RelationManagers;
 
-use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class RisksRelationManager extends RelationManager
 {
@@ -29,16 +25,16 @@ class RisksRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-//                Tables\Actions\CreateAction::make(),
-            //Attach to Risk
+                //                Tables\Actions\CreateAction::make(),
+                // Attach to Risk
                 Tables\Actions\AttachAction::make()
                     ->label('Associate to Risk')
-                    ->modalHeading('Associate to Risk')
+                    ->modalHeading('Associate to Risk'),
 
             ])
             ->actions([
-//                Tables\Actions\EditAction::make(),
-//                Tables\Actions\DeleteAction::make(),
+                //                Tables\Actions\EditAction::make(),
+                //                Tables\Actions\DeleteAction::make(),
             ]);
     }
 }

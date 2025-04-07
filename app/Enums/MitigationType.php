@@ -34,5 +34,4 @@ enum MitigationType: string implements hasColor, hasLabel
             self::ACCEPT => 'primary',
         };
     }
-
 }

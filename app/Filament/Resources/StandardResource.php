@@ -89,7 +89,8 @@ class StandardResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->description(new class implements \Illuminate\Contracts\Support\Htmlable {
+            ->description(new class implements \Illuminate\Contracts\Support\Htmlable
+            {
                 public function toHtml()
                 {
                     return "<div class='fi-section-content p-6'>
@@ -149,8 +150,7 @@ class StandardResource extends Resource
                         ->hidden(
                             fn ($record) => $record->status === StandardStatus::IN_SCOPE
                         )
-                        ->action(fn ($record) => $record->update(['status' => StandardStatus::IN_SCOPE]))
-                    ,
+                        ->action(fn ($record) => $record->update(['status' => StandardStatus::IN_SCOPE])),
                     Tables\Actions\Action::make('set_out_scope')
                         ->label('Remove from Scope')
                         ->icon('heroicon-o-check-circle')
@@ -163,8 +163,7 @@ class StandardResource extends Resource
                         ->hidden(
                             fn ($record) => $record->status !== StandardStatus::IN_SCOPE
                         )
-                        ->action(fn ($record) => $record->update(['status' => StandardStatus::DRAFT]))
-                    ,
+                        ->action(fn ($record) => $record->update(['status' => StandardStatus::DRAFT])),
                     Tables\Actions\EditAction::make(),
                     Tables\Actions\DeleteAction::make(),
                     Tables\Actions\RestoreAction::make(),
@@ -180,7 +179,7 @@ class StandardResource extends Resource
             ->emptyStateHeading(new HtmlString('No Standards Found'))
             ->emptyStateDescription(
                 new HtmlString("Try creating a new standard or adding one from an <a style='text-decoration: underline' href='"
-                . route('filament.app.resources.bundles.index') .
+                .route('filament.app.resources.bundles.index').
                 "'>OpenGRC Bundle</a>"));
     }
 
@@ -188,7 +187,7 @@ class StandardResource extends Resource
     {
         return [
             RelationManagers\ControlsRelationManager::class,
-            RelationManagers\AuditsRelationManager::class
+            RelationManagers\AuditsRelationManager::class,
         ];
     }
 

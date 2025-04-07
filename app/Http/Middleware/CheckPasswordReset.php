@@ -19,7 +19,7 @@ class CheckPasswordReset
     public function handle(Request $request, Closure $next)
     {
 
-        //This is necessary for Livewire. There may be a better way to do this...
+        // This is necessary for Livewire. There may be a better way to do this...
         if (Str::contains($request->session()->previousUrl(), 'app/reset-password')) {
             return $next($request);
         }

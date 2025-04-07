@@ -2,8 +2,8 @@
 
 namespace App\Filament\Pages\Settings\Schemas;
 
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 
 class MailSchema
 {
@@ -28,4 +28,4 @@ class MailSchema
                 ->helperText('The email address to send emails from'),
         ];
     }
-} 
+}

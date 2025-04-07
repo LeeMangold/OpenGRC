@@ -95,7 +95,8 @@ class ImplementationResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->description(new class implements \Illuminate\Contracts\Support\Htmlable {
+            ->description(new class implements \Illuminate\Contracts\Support\Htmlable
+            {
                 public function toHtml()
                 {
                     return "<div class='fi-section-content p-6'>
@@ -122,12 +123,12 @@ class ImplementationResource extends Resource
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('effectiveness')
-                    ->getStateUsing(fn($record) => $record->getEffectiveness())
+                    ->getStateUsing(fn ($record) => $record->getEffectiveness())
                     ->sortable()
                     ->badge(),
                 Tables\Columns\TextColumn::make('last_assessed')
                     ->label('Last Audit')
-                    ->getStateUsing(fn($record) => $record->getEffectivenessDate() ? $record->getEffectivenessDate() : "Not yet audited")
+                    ->getStateUsing(fn ($record) => $record->getEffectivenessDate() ? $record->getEffectivenessDate() : 'Not yet audited')
                     ->sortable()
                     ->badge(),
                 Tables\Columns\TextColumn::make('status')
@@ -148,7 +149,7 @@ class ImplementationResource extends Resource
                 SelectFilter::make('effectiveness')
                     ->options(Effectiveness::class)
                     ->query(function (Builder $query, array $data) {
-                        if (!isset($data['value'])) {
+                        if (! isset($data['value'])) {
                             return $query;
                         }
 
@@ -159,7 +160,7 @@ class ImplementationResource extends Resource
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
-//                Tables\Actions\EditAction::make(),
+                //                Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -178,10 +179,10 @@ class ImplementationResource extends Resource
                     ->schema([
                         TextEntry::make('code')
                             ->columnSpan(2)
-                            ->getStateUsing(fn($record) => "$record->code - $record->title")
+                            ->getStateUsing(fn ($record) => "$record->code - $record->title")
                             ->label('Title'),
                         TextEntry::make('effectiveness')
-                            ->getStateUsing(fn($record) => $record->getEffectiveness())
+                            ->getStateUsing(fn ($record) => $record->getEffectiveness())
                             ->badge(),
                         TextEntry::make('status')->badge(),
                         TextEntry::make('details')
@@ -223,7 +224,7 @@ class ImplementationResource extends Resource
     }
 
     /**
-     * @param Implementation $record
+     * @param  Implementation  $record
      */
     public static function getGlobalSearchResultTitle(Model $record): string|Htmlable
     {
@@ -231,7 +232,7 @@ class ImplementationResource extends Resource
     }
 
     /**
-     * @param Implementation $record
+     * @param  Implementation  $record
      */
     public static function getGlobalSearchResultUrl(Model $record): string
     {
@@ -239,7 +240,7 @@ class ImplementationResource extends Resource
     }
 
     /**
-     * @param Implementation $record
+     * @param  Implementation  $record
      */
     public static function getGlobalSearchResultDetails(Model $record): array
     {
@@ -289,7 +290,6 @@ class ImplementationResource extends Resource
             ]);
     }
 
-
     public static function getTable(Table $table): Table
     {
         return $table
@@ -310,7 +310,7 @@ class ImplementationResource extends Resource
                     ->badge(),
                 Tables\Columns\TextColumn::make('last_assessed')
                     ->label('Last Audit')
-                    ->getStateUsing(fn($record) => $record->getEffectivenessDate() ? $record->getEffectivenessDate() : "Not yet audited")
+                    ->getStateUsing(fn ($record) => $record->getEffectivenessDate() ? $record->getEffectivenessDate() : 'Not yet audited')
                     ->badge(),
                 Tables\Columns\TextColumn::make('status')
                     ->toggleable()
@@ -330,7 +330,7 @@ class ImplementationResource extends Resource
                 SelectFilter::make('effectiveness')
                     ->options(Effectiveness::class)
                     ->query(function (Builder $query, array $data) {
-                        if (!isset($data['value'])) {
+                        if (! isset($data['value'])) {
                             return $query;
                         }
 
@@ -351,5 +351,4 @@ class ImplementationResource extends Resource
                 ]),
             ]);
     }
-
 }

@@ -48,4 +48,4 @@ class StandardsRelationManager extends RelationManager
                 ]),
             ]);
     }
-} 
+}

@@ -20,4 +20,4 @@ return new class extends Migration
             $table->dropColumn('program_id');
         });
     }
-}; 
+};

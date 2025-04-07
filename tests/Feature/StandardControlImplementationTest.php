@@ -10,6 +10,7 @@ use App\Enums\Effectiveness;
 use App\Enums\ImplementationStatus;
 use App\Enums\StandardStatus;
 use App\Enums\WorkflowStatus;
+use App\Filament\Resources\AuditResource;
 use App\Models\Audit;
 use App\Models\AuditItem;
 use App\Models\Control;
@@ -18,7 +19,6 @@ use App\Models\Standard;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use App\Filament\Resources\AuditResource;
 
 class StandardControlImplementationTest extends TestCase
 {
@@ -131,7 +131,7 @@ class StandardControlImplementationTest extends TestCase
                 'start_date' => Carbon::now(),
                 'end_date' => Carbon::now()->addDays(30),
                 'manager_id' => 1,
-                'controls' => $standard->controls->pluck('id')->toArray()
+                'controls' => $standard->controls->pluck('id')->toArray(),
             ]);
 
             $this->assertDatabaseHas('audits', [
@@ -188,7 +188,7 @@ class StandardControlImplementationTest extends TestCase
         $audits = Audit::with('auditItems')->get();
         foreach ($audits as $audit) {
             $this->assertEquals(10, $audit->auditItems->count());
-            $this->assertTrue($audit->auditItems->every(fn($item) => $item->status === WorkflowStatus::COMPLETED));
+            $this->assertTrue($audit->auditItems->every(fn ($item) => $item->status === WorkflowStatus::COMPLETED));
         }
     }
 
@@ -198,6 +198,7 @@ class StandardControlImplementationTest extends TestCase
     private function getRandomEnum(string $enumClass): mixed
     {
         $cases = $enumClass::cases();
+
         return $cases[array_rand($cases)];
     }
 }

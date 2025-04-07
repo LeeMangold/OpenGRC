@@ -57,6 +57,7 @@ class AuditItemPolicy
         }
 
         $audit = Audit::find($audit_id);
+
         return $audit->manager_id === auth()->id();
     }
 
@@ -71,6 +72,7 @@ class AuditItemPolicy
         }
 
         $audit = Audit::find($audit_id);
+
         return $audit->members->contains(auth()->id());
     }
 }
