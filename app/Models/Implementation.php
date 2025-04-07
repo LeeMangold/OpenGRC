@@ -114,7 +114,7 @@ class Implementation extends Model
     public function auditItems(): MorphMany
     {
         return $this->morphMany(AuditItem::class, 'auditable')
-            ->where('auditable_type', '=', 'App\Models\Implementation');
+            ->where('auditable_type', '=', \App\Models\Implementation::class);
     }
 
     /**
@@ -124,7 +124,7 @@ class Implementation extends Model
     {
         return $this->morphMany(AuditItem::class, 'auditable')
             ->where('status', '=', 'Completed')
-            ->where('auditable_type', '=', 'App\Models\Implementation');
+            ->where('auditable_type', '=', \App\Models\Implementation::class);
     }
 
     /**

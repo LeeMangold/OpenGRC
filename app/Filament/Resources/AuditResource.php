@@ -170,7 +170,7 @@ class AuditResource extends Resource
 
                 $updateData = ['effectiveness' => $auditItem->effectiveness->value];
 
-                if ($auditItem->auditable_type == 'App\Models\Control') {
+                if ($auditItem->auditable_type == \App\Models\Control::class) {
                     $updateData['applicability'] = $auditItem->applicability->value;
                 }
 
