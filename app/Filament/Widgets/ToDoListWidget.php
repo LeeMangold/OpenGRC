@@ -18,32 +18,32 @@ class ToDoListWidget extends BaseWidget
             ->query(
                 DataRequestResponse::query()->where('requestee_id', auth()->id())->take(5)
             )
-            ->heading('My ToDo List (Top-5)')
-            ->emptyStateHeading(new HtmlString("You're all caught up!"))
-            ->emptyStateDescription('You have no pending ToDo items.')
+            ->heading(trans('widgets.todo.heading'))
+            ->emptyStateHeading(new HtmlString(trans('widgets.todo.empty_heading')))
+            ->emptyStateDescription(trans('widgets.todo.empty_description'))
             ->emptyStateIcon('heroicon-o-check-circle')
             ->columns([
                 Tables\Columns\TextColumn::make('dataRequest.audit.title')
-                    ->label('Audit'),
+                    ->label(trans('widgets.todo.audit')),
                 Tables\Columns\TextColumn::make('dataRequest.details')
-                    ->label('Request Details')
+                    ->label(trans('widgets.todo.request_details'))
                     ->url(fn (DataRequestResponse $record) => route('filament.app.resources.data-request-responses.edit', $record))
                     ->limit(100),
                 Tables\Columns\TextColumn::make('status')
-                    ->label('Status')
+                    ->label(trans('widgets.todo.status'))
                     ->badge()
                     ->wrap(),
                 Tables\Columns\TextColumn::make('due_at')
-                    ->label('Due Date'),
+                    ->label(trans('widgets.todo.due_date')),
             ])
             ->actions([
                 Tables\Actions\Action::make('view')
-                    ->label('View')
+                    ->label(trans('widgets.todo.view'))
                     ->url(fn (DataRequestResponse $record): string => route('filament.app.resources.data-request-responses.edit', $record)),
             ])
             ->headerActions([
                 Tables\Actions\Action::make('create')
-                    ->label("View All My ToDo's")
+                    ->label(trans('widgets.todo.view_all'))
                     ->url(route('filament.app.pages.to-do'))
                     ->color('primary')
                     ->size('xs'),

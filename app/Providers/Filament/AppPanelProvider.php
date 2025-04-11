@@ -24,6 +24,7 @@ use JibayMcs\FilamentTour\FilamentTourPlugin;
 use Leandrocfe\FilamentApexCharts\FilamentApexChartsPlugin;
 use Outerweb\FilamentSettings\Filament\Plugins\FilamentSettingsPlugin;
 
+
 class AppPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
@@ -101,9 +102,9 @@ class AppPanelProvider extends PanelProvider
                 FilamentApexChartsPlugin::make(),
                 //                FilamentTourPlugin::make(),
                 FilamentSettingsPlugin::make()
-                    ->pages([
-                        \App\Filament\Pages\Settings\Settings::class,
-                    ]),
+                ->pages([
+                    \App\Filament\Pages\Settings\Settings::class,
+                ]),
                 BreezyCore::make()
                     ->myProfile(
                         shouldRegisterUserMenu: true,

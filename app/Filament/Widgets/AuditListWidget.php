@@ -18,14 +18,14 @@ class AuditListWidget extends BaseWidget
             ->query(
                 Audit::query()->latest('updated_at')->take(5)
             )
-            ->emptyStateHeading(new HtmlString('No Audits to Show'))
-            ->emptyStateDescription('You have not created any audits yet. Create an Audit to get started.')
+            ->emptyStateHeading(new HtmlString(trans('widgets.audit_list.empty_heading')))
+            ->emptyStateDescription(trans('widgets.audit_list.empty_description'))
             ->emptyStateIcon('heroicon-o-check-circle')
             ->columns([
                 Tables\Columns\TextColumn::make('title')
                     ->url(fn (Audit $audit) => route('filament.app.resources.audits.view', $audit)),
                 Tables\Columns\TextColumn::make('manager_id')
-                    ->label('Manager')
+                    ->label(trans('widgets.audit_list.manager'))
                     ->state(fn (Audit $audit) => $audit->manager->name),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
@@ -34,7 +34,7 @@ class AuditListWidget extends BaseWidget
             ->paginated(false)
             ->headerActions([
                 Tables\Actions\Action::make('create')
-                    ->label('View All Audits')
+                    ->label(trans('widgets.audit_list.view_all'))
                     ->url(route('filament.app.resources.audits.index'))
                     ->color('primary')
                     ->size('xs'),

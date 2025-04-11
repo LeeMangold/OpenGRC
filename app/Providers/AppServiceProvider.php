@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Schema;
+use BezhanSalleh\FilamentLanguageSwitch\LanguageSwitch;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -57,6 +59,11 @@ class AppServiceProvider extends ServiceProvider
 
         Gate::before(function (User $user, string $ability) {
             return $user->isSuperAdmin() ? true : null;
+        });
+
+        LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
+            $switch
+                ->locales(['en','es','fr','hr']); 
         });
 
         FilamentColor::register([

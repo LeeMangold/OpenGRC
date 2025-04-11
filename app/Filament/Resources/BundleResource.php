@@ -22,9 +22,21 @@ class BundleResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-arrow-down-on-square-stack';
 
-    protected static ?string $navigationGroup = 'Settings';
+    protected static ?string $navigationLabel = null;
+
+    protected static ?string $navigationGroup = null;
 
     protected static ?int $navigationSort = 5;
+
+    public static function getNavigationLabel(): string
+    {
+        return __('navigation.resources.bundle');
+    }
+
+    public static function getNavigationGroup(): string
+    {
+        return __('navigation.groups.settings');
+    }
 
     /**
      * @throws \Exception

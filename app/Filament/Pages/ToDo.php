@@ -19,6 +19,11 @@ class ToDo extends Page implements Tables\Contracts\HasTable
 
     protected static string $view = 'filament.pages.to-do';
 
+    public static function getNavigationLabel(): string
+    {
+        return __('navigation.menu.todo');
+    }
+
     public static function getNavigationBadge(): ?string
     {
         $count = auth()->user()->openTodos()->count();

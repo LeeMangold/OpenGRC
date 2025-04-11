@@ -29,9 +29,21 @@ class StandardResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationGroup = 'Foundations';
+    protected static ?string $navigationLabel = null;
+
+    protected static ?string $navigationGroup = null;
 
     protected static ?int $navigationSort = 10;
+
+    public static function getNavigationLabel(): string
+    {
+        return __('navigation.resources.standard');
+    }
+
+    public static function getNavigationGroup(): string
+    {
+        return __('navigation.groups.foundations');
+    }
 
     public static function form(Form $form): Form
     {

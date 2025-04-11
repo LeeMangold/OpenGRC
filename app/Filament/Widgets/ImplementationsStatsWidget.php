@@ -8,13 +8,18 @@ use Filament\Widgets\ChartWidget;
 
 class ImplementationsStatsWidget extends ChartWidget
 {
-    protected static ?string $heading = 'Implementation Effectiveness';
+    protected static ?string $heading = null;
 
     protected static ?string $maxHeight = '250px';
 
     protected int|string|array $columnSpan = '1';
 
     protected static ?int $sort = 2;
+
+    public function getHeading(): ?string
+    {
+        return __('widgets.implementations_stats.heading');
+    }
 
     protected function getData(): array
     {
@@ -24,7 +29,12 @@ class ImplementationsStatsWidget extends ChartWidget
         $unknown = Implementation::where('effectiveness', Effectiveness::UNKNOWN)->count();
 
         return [
-            'labels' => ['Effective', 'Partially Effective', 'Ineffective', 'Not Assessed'],
+            'labels' => [
+                __('widgets.implementations_stats.effective'),
+                __('widgets.implementations_stats.partially_effective'),
+                __('widgets.implementations_stats.ineffective'),
+                __('widgets.implementations_stats.not_assessed')
+            ],
             'datasets' => [
                 [
                     'data' => [$effective, $partial, $ineffective, $unknown],

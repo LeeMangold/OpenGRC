@@ -33,11 +33,23 @@ class ControlResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-stop-circle';
 
-    protected static ?string $recordTitleAttribute = 'title';
+    protected static ?string $navigationLabel = null;
 
-    protected static ?string $navigationGroup = 'Foundations';
+    protected static ?string $navigationGroup = null;
 
     protected static ?int $navigationSort = 20;
+
+    public static function getNavigationLabel(): string
+    {
+        return __('navigation.resources.control');
+    }
+
+    public static function getNavigationGroup(): string
+    {
+        return __('navigation.groups.foundations');
+    }
+
+    protected static ?string $recordTitleAttribute = 'title';
 
     public static function form(Form $form): Form
     {

@@ -12,5 +12,10 @@ class IntroWidget extends Widget
 
     protected int|string|array $columnSpan = '2';
 
-    protected static ?string $title = 'Welcome to the Dashboard';
+    protected static ?string $title = null;
+
+    public static function getTitle(): string
+    {
+        return __('widgets.intro.title');
+    }
 }

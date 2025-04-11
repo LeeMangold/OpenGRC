@@ -10,7 +10,7 @@ use Filament\Widgets\ChartWidget;
 
 class ControlsStatsWidget extends ChartWidget
 {
-    protected static ?string $heading = 'Control Effectiveness';
+    protected static ?string $heading = null;
 
     protected static ?string $maxHeight = '250px';
 
@@ -18,9 +18,13 @@ class ControlsStatsWidget extends ChartWidget
 
     protected static ?int $sort = 2;
 
+    public function getHeading(): ?string
+    {
+        return __('widgets.controls_stats.heading');
+    }
+
     protected function getData(): array
     {
-
         $in_scope_standards = Standard::where('status', 'In Scope')->get();
 
         $effective = Control::where('effectiveness', Effectiveness::EFFECTIVE)
@@ -41,7 +45,12 @@ class ControlsStatsWidget extends ChartWidget
             ->count() ?: 0;
 
         return [
-            'labels' => ['Effective', 'Partially Effective', 'Ineffective', 'Not Assessed'],
+            'labels' => [
+                __('widgets.controls_stats.effective'),
+                __('widgets.controls_stats.partially_effective'),
+                __('widgets.controls_stats.ineffective'),
+                __('widgets.controls_stats.not_assessed')
+            ],
             'datasets' => [
                 [
                     'data' => [$effective, $partial, $ineffective, $unknown],
