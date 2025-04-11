@@ -5,7 +5,7 @@ namespace App\Enums;
 use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasLabel;
 
-enum Effectiveness: string implements hasColor, hasLabel
+enum Effectiveness: string implements HasColor, HasLabel
 {
     case EFFECTIVE = 'Effective';
     case PARTIAL = 'Partially Effective';
@@ -15,10 +15,10 @@ enum Effectiveness: string implements hasColor, hasLabel
     public function getLabel(): ?string
     {
         return match ($this) {
-            self::EFFECTIVE => 'Effective',
-            self::PARTIAL => 'Partially Effective',
-            self::INEFFECTIVE => 'Not Effective',
-            self::UNKNOWN => 'Not Assessed',
+            self::EFFECTIVE => __('enums.effectiveness.effective'),
+            self::PARTIAL => __('enums.effectiveness.partial'),
+            self::INEFFECTIVE => __('enums.effectiveness.ineffective'),
+            self::UNKNOWN => __('enums.effectiveness.unknown'),
         };
     }
 
@@ -28,7 +28,7 @@ enum Effectiveness: string implements hasColor, hasLabel
             self::EFFECTIVE => 'success',
             self::PARTIAL => 'warning',
             self::INEFFECTIVE => 'danger',
-            self::UNKNOWN => 'primary',
+            self::UNKNOWN => 'gray',
         };
     }
 }

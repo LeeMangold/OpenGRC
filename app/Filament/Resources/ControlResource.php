@@ -41,12 +41,22 @@ class ControlResource extends Resource
 
     public static function getNavigationLabel(): string
     {
-        return __('navigation.resources.control');
+        return __('control.navigation.label');
     }
 
     public static function getNavigationGroup(): string
     {
-        return __('navigation.groups.foundations');
+        return __('control.navigation.group');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('control.model.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('control.model.plural_label');
     }
 
     protected static ?string $recordTitleAttribute = 'title';
@@ -58,7 +68,7 @@ class ControlResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('code')
                     ->required()
-                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Enter a unique code for this control. This code will be used to identify this control in the system.')
+                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('control.form.code.tooltip'))
                     ->maxLength(255)
                     ->unique(Control::class, 'code', ignoreRecord: true)
                     ->live()
@@ -66,31 +76,31 @@ class ControlResource extends Resource
                         $livewire->validateOnly($component->getStatePath());
                     }),
                 Forms\Components\Select::make('standard_id')
-                    ->label('Standard')
+                    ->label(__('control.form.standard.label'))
                     ->searchable()
                     ->options(Standard::pluck('name', 'id')->toArray())
-                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'All controls must belong to a standard. If you dont have a standard to relate this control to, consider creating a new one first.')
+                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('control.form.standard.tooltip'))
                     ->required(),
                 Forms\Components\Select::make('enforcement')
                     ->options(ControlEnforcementCategory::class)
-                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Select an enforcement category for this control. This will help determine how this control is enforced.')
+                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('control.form.enforcement.tooltip'))
                     ->required(),
                 Forms\Components\TextInput::make('title')
                     ->required()
                     ->columnSpanFull()
-                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Enter a title for this control.')
+                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('control.form.title.tooltip'))
                     ->maxLength(1024),
                 TinyEditor::make('description')
                     ->required()
-                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Enter a description for this control. This should describe, in detail, the requirements for this this control.')
+                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('control.form.description.tooltip'))
                     ->extraInputAttributes(['class' => 'filament-forms-rich-editor-unfiltered'])
                     ->columnSpanFull(),
                 TinyEditor::make('discussion')
-                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Optional: Provide any context or additional information about this control that would help someone determine how to implement it.')
+                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('control.form.discussion.tooltip'))
                     ->columnSpanFull(),
                 TinyEditor::make('test')
-                    ->label('Test Plan')
-                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Optional: How do you plan to test that this control is in place and effective?')
+                    ->label(__('control.form.test.label'))
+                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('control.form.test.tooltip'))
                     ->columnSpanFull(),
             ]);
     }
@@ -105,60 +115,62 @@ class ControlResource extends Resource
             {
                 public function toHtml()
                 {
-                    return "<div class='fi-section-content p-6'>
-                        Controls are the 'how' of security implementation - they are the specific mechanisms, policies, procedures, 
-                        and tools used to enforce standards and protect assets. Controls can be technical (like firewalls or 
-                        encryption), administrative (like policies or training), or physical (like security cameras or door locks). 
-                        Each control should be designed to address specific risks and meet particular security requirements defined 
-                        by standards. For instance, to meet a standard requiring secure data transmission, a control might specify 
-                        the use of TLS 1.2 or higher for all external communications. Controls are the practical manifestation of 
-                        security standards and form the backbone of an organization's security infrastructure.
-                        </div>";
+                    return "<div class='fi-section-content p-6'>" . 
+                        __('control.table.description') . 
+                        "</div>";
                 }
             })
-            ->emptyStateHeading('No Controls Added Yet')
-            ->emptyStateDescription(new HtmlString("There are no controls to display. Try adding new controls to your existing 
-            standards. You can also import standards and controls with using <a class='text-blue-500' href='".route('filament.app.resources.bundles.index')."'>Content Bundles</a>."))
+            ->emptyStateHeading(__('control.table.empty_state.heading'))
+            ->emptyStateDescription(new HtmlString(__('control.table.empty_state.description', [
+                'url' => route('filament.app.resources.bundles.index')
+            ])))
             ->columns([
                 Tables\Columns\TextColumn::make('code')
+                    ->label(__('control.table.columns.code'))
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('title')
+                    ->label(__('control.table.columns.title'))
                     ->sortable()
                     ->searchable()
                     ->wrap(),
                 Tables\Columns\TextColumn::make('standard.name')
-                    ->label('Standard')
+                    ->label(__('control.table.columns.standard'))
                     ->wrap()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('type')
+                    ->label(__('control.table.columns.type'))
                     ->sortable(),
                 Tables\Columns\TextColumn::make('category')
+                    ->label(__('control.table.columns.category'))
                     ->sortable(),
                 Tables\Columns\TextColumn::make('enforcement')
+                    ->label(__('control.table.columns.enforcement'))
                     ->sortable(),
                 Tables\Columns\TextColumn::make('LatestAuditEffectiveness')
-                    ->label('Effectiveness')
+                    ->label(__('control.table.columns.effectiveness'))
                     ->badge()
                     ->sortable()
                     ->default(function (Control $record) {
                         return $record->getEffectiveness();
                     }),
                 Tables\Columns\TextColumn::make('applicability')
-                    ->label('Applicability')
+                    ->label(__('control.table.columns.applicability'))
                     ->sortable()
                     ->badge(),
                 Tables\Columns\TextColumn::make('LatestAuditDate')
-                    ->label('Assessed')
+                    ->label(__('control.table.columns.assessed'))
                     ->sortable()
                     ->default(function (Control $record) {
                         return $record->getEffectivenessDate();
                     }),
                 Tables\Columns\TextColumn::make('created_at')
+                    ->label(__('control.table.columns.created_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
+                    ->label(__('control.table.columns.updated_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -167,22 +179,22 @@ class ControlResource extends Resource
                 Tables\Filters\SelectFilter::make('standard_id')
                     ->options(Standard::pluck('name', 'id')->toArray())
                     ->multiple()
-                    ->label('Standard'),
+                    ->label(__('control.table.filters.standard')),
                 Tables\Filters\SelectFilter::make('effectiveness')
                     ->options(Effectiveness::class)
-                    ->label('Effectiveness'),
+                    ->label(__('control.table.filters.effectiveness')),
                 Tables\Filters\SelectFilter::make('type')
                     ->options(ControlType::class)
-                    ->label('Type'),
+                    ->label(__('control.table.filters.type')),
                 Tables\Filters\SelectFilter::make('category')
                     ->options(ControlCategory::class)
-                    ->label('Category'),
+                    ->label(__('control.table.filters.category')),
                 Tables\Filters\SelectFilter::make('enforcement')
                     ->options(ControlEnforcementCategory::class)
-                    ->label('Enforcement'),
+                    ->label(__('control.table.filters.enforcement')),
                 Tables\Filters\SelectFilter::make('applicability')
                     ->options(Applicability::class)
-                    ->label('Applicability'),
+                    ->label(__('control.table.filters.applicability')),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -223,7 +235,7 @@ class ControlResource extends Resource
     {
         return $infolist
             ->schema([
-                Section::make('Control Details')
+                Section::make(__('control.infolist.section_title'))
                     ->columns(3)
                     ->schema([
                         TextEntry::make('title')->columnSpanFull(),
@@ -248,7 +260,7 @@ class ControlResource extends Resource
                             ->hidden(fn (Control $record) => ! $record->discussion)
                             ->html(),
                         TextEntry::make('test')
-                            ->label('Test Plan')
+                            ->label(__('control.infolist.test_plan'))
                             ->columnSpanFull()
                             ->hidden(fn (Control $record) => ! $record->discussion)
                             ->html(),

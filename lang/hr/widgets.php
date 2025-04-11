@@ -24,6 +24,7 @@ return [
 
     // Audit List Widget
     'audit_list' => [
+        'heading' => 'Popis Revizija (Top-5)',
         'empty_heading' => 'Nema Revizija za Prikaz',
         'empty_description' => 'Još niste stvorili nijednu reviziju. Stvorite Reviziju za početak.',
         'manager' => 'Voditelj',

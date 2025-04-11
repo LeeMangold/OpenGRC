@@ -15,10 +15,10 @@ enum WorkflowStatus: string implements hasColor, hasLabel
     public function getLabel(): ?string
     {
         return match ($this) {
-            self::NOTSTARTED => 'Not Started',
-            self::INPROGRESS => 'In Progress',
-            self::COMPLETED => 'Completed',
-            self::UNKNOWN => 'Unknown',
+            self::NOTSTARTED => __('enums.workflow_status.not_started'),
+            self::INPROGRESS => __('enums.workflow_status.in_progress'),
+            self::COMPLETED => __('enums.workflow_status.completed'),
+            self::UNKNOWN => __('enums.workflow_status.unknown'),
         };
     }
 

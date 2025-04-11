@@ -39,12 +39,12 @@ class ImplementationResource extends Resource
 
     public static function getNavigationLabel(): string
     {
-        return __('navigation.resources.implementation');
+        return __('implementation.navigation.label');
     }
 
     public static function getNavigationGroup(): string
     {
-        return __('navigation.groups.foundations');
+        return __('implementation.navigation.group');
     }
 
     public static function form(Form $form): Form
@@ -111,47 +111,46 @@ class ImplementationResource extends Resource
             {
                 public function toHtml()
                 {
-                    return "<div class='fi-section-content p-6'>
-                        Implementations represent the actual deployment and operation of security controls within an organization. 
-                        They are the specific instances of how controls are put into practice, including the tools, configurations, 
-                        processes, and procedures used. Each implementation should be documented with sufficient detail to understand 
-                        how the control is operating, who is responsible for maintaining it, and how its effectiveness can be verified. 
-                        For example, while a control might specify the need for access reviews, an implementation would detail the 
-                        exact process, including which tool is used, who conducts the reviews, how often they occur, and what 
-                        documentation is maintained. Implementations bridge the gap between theoretical security controls and their 
-                        practical application in the organization.
-                        </div>";
+                    return "<div class='fi-section-content p-6'>" . 
+                        __('implementation.table.description') . 
+                        "</div>";
                 }
             })
-            ->emptyStateHeading('No implementations found')
-            ->emptyStateDescription('Try creating a new implementation by clicking the "Create Implementation" button above.')
+            ->emptyStateHeading(__('implementation.table.empty_state.heading'))
+            ->emptyStateDescription(__('implementation.table.empty_state.description'))
             ->columns([
                 Tables\Columns\TextColumn::make('code')
+                    ->label(__('implementation.table.columns.code'))
                     ->toggleable()
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('title')
+                    ->label(__('implementation.table.columns.title'))
                     ->toggleable()
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('effectiveness')
+                    ->label(__('implementation.table.columns.effectiveness'))
                     ->getStateUsing(fn ($record) => $record->getEffectiveness())
                     ->sortable()
                     ->badge(),
                 Tables\Columns\TextColumn::make('last_assessed')
-                    ->label('Last Audit')
+                    ->label(__('implementation.table.columns.last_assessed'))
                     ->getStateUsing(fn ($record) => $record->getEffectivenessDate() ? $record->getEffectivenessDate() : 'Not yet audited')
                     ->sortable()
                     ->badge(),
                 Tables\Columns\TextColumn::make('status')
+                    ->label(__('implementation.table.columns.status'))
                     ->toggleable()
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
+                    ->label(__('implementation.table.columns.created_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
+                    ->label(__('implementation.table.columns.updated_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

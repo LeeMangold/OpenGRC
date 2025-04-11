@@ -5,9 +5,9 @@ namespace App\Enums;
 use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasLabel;
 
-enum ControlCategory: string implements hasColor, hasLabel
+enum ControlCategory: string implements HasColor, HasLabel
 {
-    case PREVENTATIVE = 'Preventative';
+    case PREVENTIVE = 'Preventive';
     case DETECTIVE = 'Detective';
     case CORRECTIVE = 'Corrective';
     case DETERRENT = 'Deterrent';
@@ -19,24 +19,24 @@ enum ControlCategory: string implements hasColor, hasLabel
     public function getLabel(): ?string
     {
         return match ($this) {
-            self::PREVENTATIVE => 'Preventative',
-            self::DETECTIVE => 'Detective',
-            self::CORRECTIVE => 'Corrective',
-            self::DETERRENT => 'Deterrent',
-            self::COMPENSATING => 'Compensating',
-            self::RECOVERY => 'Recovery',
-            self::OTHER => 'Other',
-            self::UNKNOWN => 'Unknown',
+            self::PREVENTIVE => __('enums.control_category.preventive'),
+            self::DETECTIVE => __('enums.control_category.detective'),
+            self::CORRECTIVE => __('enums.control_category.corrective'),
+            self::DETERRENT => __('enums.control_category.deterrent'),
+            self::COMPENSATING => __('enums.control_category.compensating'),
+            self::RECOVERY => __('enums.control_category.recovery'),
+            self::OTHER => __('enums.control_category.other'),
+            self::UNKNOWN => __('enums.control_category.unknown'),
         };
     }
 
     public function getColor(): string|array|null
     {
         return match ($this) {
-            self::PREVENTATIVE => 'primary',
-            self::DETECTIVE => 'primary',
-            self::CORRECTIVE => 'primary',
-            self::DETERRENT => 'primary',
+            self::PREVENTIVE => 'success',
+            self::DETECTIVE => 'warning',
+            self::CORRECTIVE => 'danger',
+            self::DETERRENT => 'info',
             self::COMPENSATING => 'primary',
             self::RECOVERY => 'primary',
             self::OTHER => 'primary',

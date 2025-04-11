@@ -14,7 +14,7 @@ class ListImplementations extends ListRecords
     {
         return [
             Actions\CreateAction::make()
-                ->label('Create Implementation'),
+                ->label(__('implementation.actions.create')),
         ];
     }
 }

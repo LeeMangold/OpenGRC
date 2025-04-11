@@ -38,12 +38,12 @@ class AuditResource extends Resource
 
     public static function getNavigationLabel(): string
     {
-        return __('navigation.resources.audit');
+        return __('audit.navigation.label');
     }
 
     public static function getNavigationGroup(): string
     {
-        return __('navigation.groups.foundations');
+        return __('audit.navigation.group');
     }
 
     public static function form(Form $form): Form
@@ -54,35 +54,42 @@ class AuditResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->emptyStateHeading('No Audits Created')
-            ->emptyStateDescription('Try creating a new audit by clicking the "Create an Audit" button above to get started!')
+            ->emptyStateHeading(__('audit.table.empty_state.heading'))
+            ->emptyStateDescription(__('audit.table.empty_state.description'))
             ->columns([
                 Tables\Columns\TextColumn::make('title')
+                    ->label(__('audit.table.columns.title'))
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('audit_type')
+                    ->label(__('audit.table.columns.audit_type'))
                     ->sortable()
                     ->formatStateUsing(fn ($state) => ucfirst($state))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('status')
+                    ->label(__('audit.table.columns.status'))
                     ->sortable()
                     ->badge()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('manager.name')
-                    ->label('Manager')
+                    ->label(__('audit.table.columns.manager'))
                     ->default('Unassigned')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('start_date')
+                    ->label(__('audit.table.columns.start_date'))
                     ->date()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('end_date')
+                    ->label(__('audit.table.columns.end_date'))
                     ->date()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
+                    ->label(__('audit.table.columns.created_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
+                    ->label(__('audit.table.columns.updated_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -116,15 +123,20 @@ class AuditResource extends Resource
     {
         return $infolist
             ->schema([
-                Section::make('Audit Details')
+                Section::make(__('audit.infolist.section.title'))
                     ->columns(3)
                     ->schema([
-                        TextEntry::make('title'),
+                        TextEntry::make('title')
+                            ->label(__('audit.table.columns.title')),
                         TextEntry::make('status')
+                            ->label(__('audit.table.columns.status'))
                             ->badge(),
-                        TextEntry::make('manager.name'),
-                        TextEntry::make('start_date'),
-                        TextEntry::make('end_date'),
+                        TextEntry::make('manager.name')
+                            ->label(__('audit.table.columns.manager')),
+                        TextEntry::make('start_date')
+                            ->label(__('audit.table.columns.start_date')),
+                        TextEntry::make('end_date')
+                            ->label(__('audit.table.columns.end_date')),
                         TextEntry::make('description')
                             ->columnSpanFull()
                             ->html(),

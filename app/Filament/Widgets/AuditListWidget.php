@@ -18,6 +18,7 @@ class AuditListWidget extends BaseWidget
             ->query(
                 Audit::query()->latest('updated_at')->take(5)
             )
+            ->heading(trans('widgets.audit_list.heading'))
             ->emptyStateHeading(new HtmlString(trans('widgets.audit_list.empty_heading')))
             ->emptyStateDescription(trans('widgets.audit_list.empty_description'))
             ->emptyStateIcon('heroicon-o-check-circle')

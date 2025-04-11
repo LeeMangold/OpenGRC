@@ -15,10 +15,10 @@ enum ControlEnforcementCategory: string implements hasColor, hasLabel
     public function getLabel(): ?string
     {
         return match ($this) {
-            self::MANDATORY => 'Mandatory',
-            self::ADDRESSABLE => 'Addressable',
-            self::OPTIONAL => 'Optional',
-            self::OTHER => 'Other',
+            self::MANDATORY => __('enums.control_enforcement_category.mandatory'),
+            self::ADDRESSABLE => __('enums.control_enforcement_category.addressable'),
+            self::OPTIONAL => __('enums.control_enforcement_category.optional'),
+            self::OTHER => __('enums.control_enforcement_category.other'),
         };
     }
 
@@ -28,8 +28,7 @@ enum ControlEnforcementCategory: string implements hasColor, hasLabel
             self::MANDATORY => 'danger',
             self::ADDRESSABLE => 'warning',
             self::OPTIONAL => 'primary',
-            self::OTHER => 'primary',
-            self::UNKNOWN => 'primary',
+            self::OTHER => 'primary'
         };
     }
 

@@ -16,11 +16,11 @@ enum ControlType: string implements hasColor, hasLabel
     public function getLabel(): ?string
     {
         return match ($this) {
-            self::ADMINISTRATIVE => 'Administrative',
-            self::TECHNICAL => 'Technical',
-            self::PHYSICAL => 'Physical',
-            self::OPERATIONAL => 'Operational',
-            self::OTHER => 'Other',
+            self::ADMINISTRATIVE => __('enums.control_type.administrative'),
+            self::TECHNICAL => __('enums.control_type.technical'),
+            self::PHYSICAL => __('enums.control_type.physical'),
+            self::OPERATIONAL => __('enums.control_type.operational'),
+            self::OTHER => __('enums.control_type.other'),
         };
     }
 

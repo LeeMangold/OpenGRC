@@ -31,28 +31,41 @@ class ProgramResource extends Resource
         return __('navigation.groups.foundations');
     }
 
+    public static function getModelLabel(): string
+    {
+        return __('programs.labels.singular');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('programs.labels.plural');
+    }
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
+                    ->label(__('programs.form.name'))
                     ->columnSpanFull()
                     ->required()
                     ->maxLength(255),
                 Forms\Components\Textarea::make('description')
+                    ->label(__('programs.form.description'))
                     ->maxLength(65535)
                     ->columnSpanFull(),
                 Forms\Components\Select::make('program_manager_id')
-                    ->label('Program Manager')
+                    ->label(__('programs.form.program_manager'))
                     ->relationship('programManager', 'name')
                     ->searchable()
                     ->preload()
                     ->required(),
                 Forms\Components\Select::make('scope_status')
+                    ->label(__('programs.form.scope_status'))
                     ->options([
-                        'In Scope' => 'In Scope',
-                        'Out of Scope' => 'Out of Scope',
-                        'Pending Review' => 'Pending Review',
+                        'In Scope' => __('programs.scope_status.in_scope'),
+                        'Out of Scope' => __('programs.scope_status.out_of_scope'),
+                        'Pending Review' => __('programs.scope_status.pending_review'),
                     ])
                     ->required(),
             ]);
@@ -65,35 +78,30 @@ class ProgramResource extends Resource
             {
                 public function toHtml()
                 {
-                    return "<div class='fi-section-content p-6'>
-                        Programs serve as comprehensive frameworks that unite security standards and controls into cohesive, manageable
-                        initiatives within an organization. They represent structured approaches to achieving specific security objectives
-                        by combining relevant standards (which define 'what' needs to be done) with appropriate controls (which specify
-                        'how' to do it). Each program typically addresses a distinct area of compliance, risk management, or security
-                        enhancement, making it easier to track progress, measure effectiveness, and ensure accountability. For example,
-                        a Data Privacy Program might incorporate standards from GDPR and CCPA, implementing specific controls like
-                        data encryption, access management, and regular audits to meet these requirements. By organizing security
-                        measures into programs, organizations can better coordinate their security efforts, allocate resources
-                        effectively, and maintain clear oversight of their security posture across different domains and objectives.
-                        </div>";
+                    return "<div class='fi-section-content p-6'>" . __('programs.description') . "</div>";
                 }
             })
             ->columns([
                 Tables\Columns\TextColumn::make('name')
+                    ->label(__('programs.table.name'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('programManager.name')
-                    ->label('Program Manager')
+                    ->label(__('programs.table.program_manager'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('last_audit_date')
+                    ->label(__('programs.table.last_audit_date'))
                     ->date()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('scope_status')
+                    ->label(__('programs.table.scope_status'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
+                    ->label(__('programs.table.created_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
+                    ->label(__('programs.table.updated_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

@@ -5,18 +5,18 @@ namespace App\Enums;
 use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasLabel;
 
-enum Applicability: string implements hasColor, hasLabel
+enum Applicability: string implements HasColor, HasLabel
 {
     case APPLICABLE = 'Applicable';
     case NOTAPPLICABLE = 'Not Applicable';
-    case UNKNOWN = 'Unknown';
+    case PARTIALLYAPPLICABLE = 'Partially Applicable';
 
     public function getLabel(): ?string
     {
         return match ($this) {
-            self::APPLICABLE => 'Applicable',
-            self::NOTAPPLICABLE => 'Not Applicable',
-            self::UNKNOWN => 'Not Assessed',
+            self::APPLICABLE => __('enums.applicability.applicable'),
+            self::NOTAPPLICABLE => __('enums.applicability.not_applicable'),
+            self::PARTIALLYAPPLICABLE => __('enums.applicability.partially_applicable'),
         };
     }
 
@@ -24,8 +24,8 @@ enum Applicability: string implements hasColor, hasLabel
     {
         return match ($this) {
             self::APPLICABLE => 'success',
-            self::NOTAPPLICABLE => 'primary',
-            self::UNKNOWN => 'warning',
+            self::NOTAPPLICABLE => 'danger',
+            self::PARTIALLYAPPLICABLE => 'warning',
         };
     }
 }

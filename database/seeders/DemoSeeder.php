@@ -290,7 +290,7 @@ class DemoSeeder extends Seeder
                     'auditor_notes' => 'Audit performed on this standard.',
                     'status' => array_rand([WorkflowStatus::COMPLETED->value => WorkflowStatus::COMPLETED, WorkflowStatus::INPROGRESS->value => WorkflowStatus::INPROGRESS, WorkflowStatus::NOTSTARTED->value => WorkflowStatus::NOTSTARTED], 1),
                     'effectiveness' => array_rand([Effectiveness::EFFECTIVE->value => Effectiveness::EFFECTIVE, Effectiveness::PARTIAL->value => Effectiveness::PARTIAL, Effectiveness::INEFFECTIVE->value => Effectiveness::INEFFECTIVE, Effectiveness::UNKNOWN->value => Effectiveness::UNKNOWN], 1),
-                    'applicability' => array_rand([Applicability::UNKNOWN->value => Applicability::UNKNOWN, Applicability::NOTAPPLICABLE->value => Applicability::NOTAPPLICABLE, Applicability::APPLICABLE->value => Applicability::APPLICABLE], 1),
+                    'applicability' => array_rand([Applicability::NOTAPPLICABLE->value => Applicability::UNKNOWN, Applicability::NOTAPPLICABLE->value => Applicability::NOTAPPLICABLE, Applicability::APPLICABLE->value => Applicability::APPLICABLE], 1),
                     'auditable_type' => Control::class,
                     'auditable_id' => $ctl->id,
                 ]

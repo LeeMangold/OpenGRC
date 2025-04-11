@@ -24,6 +24,7 @@ return [
 
     // Audit List Widget
     'audit_list' => [
+        'heading' => 'Audit List (Top-5)',
         'empty_heading' => 'No Audits to Show',
         'empty_description' => 'You have not created any audits yet. Create an Audit to get started.',
         'manager' => 'Manager',

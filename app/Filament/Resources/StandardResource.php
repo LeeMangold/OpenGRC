@@ -37,12 +37,22 @@ class StandardResource extends Resource
 
     public static function getNavigationLabel(): string
     {
-        return __('navigation.resources.standard');
+        return __('standard.navigation.label');
     }
 
     public static function getNavigationGroup(): string
     {
-        return __('navigation.groups.foundations');
+        return __('standard.navigation.group');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('standard.model.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('standard.model.plural_label');
     }
 
     public static function form(Form $form): Form
@@ -55,14 +65,14 @@ class StandardResource extends Resource
                     ->columnSpanFull()
                     ->required()
                     ->maxLength(255)
-                    ->placeholder('e.g. Critical Security Controls, Version 8')
-                    ->hint('Enter the name of the standard.')
-                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Need some more information?'),
+                    ->placeholder(__('standard.form.name.placeholder'))
+                    ->hint(__('standard.form.name.hint'))
+                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('standard.form.name.tooltip')),
                 TextInput::make('code')
                     ->required()
                     ->maxLength(255)
-                    ->placeholder('e.g. CSCv8')
-                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Give the standard a unique ID or Code.')
+                    ->placeholder(__('standard.form.code.placeholder'))
+                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('standard.form.code.tooltip'))
                     ->unique(Standard::class, 'code', ignoreRecord: true)
                     ->live()
                     ->afterStateUpdated(function ($livewire, $component) {
@@ -71,27 +81,27 @@ class StandardResource extends Resource
                 TextInput::make('authority')
                     ->required()
                     ->maxLength(255)
-                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Enter the name of the organization that maintains the standard.')
-                    ->placeholder('e.g. Center for Internet Security'),
+                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('standard.form.authority.tooltip'))
+                    ->placeholder(__('standard.form.authority.placeholder')),
                 Select::make('status')
                     ->default(StandardStatus::DRAFT)
                     ->required()
                     ->enum(StandardStatus::class)
                     ->options(StandardStatus::class)
-                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Select the relevance of this standard to your organization.')
+                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('standard.form.status.tooltip'))
                     ->native(false),
                 TextInput::make('reference_url')
                     ->columnSpanFull()
                     ->maxLength(255)
                     ->url()
-                    ->placeholder('e.g. https://www.cisecurity.org/controls/')
-                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Enter the URL of the official standard document.'),
+                    ->placeholder(__('standard.form.reference_url.placeholder'))
+                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('standard.form.reference_url.tooltip')),
                 RichEditor::make('description')
                     ->columnSpanFull()
                     ->maxLength(65535)
                     ->required()
-                    ->hint('Describe the purpose and scope of the standard.')
-                    ->placeholder('Description'),
+                    ->hint(__('standard.form.description.hint'))
+                    ->placeholder(__('standard.form.description.placeholder')),
             ]);
     }
 
@@ -105,73 +115,65 @@ class StandardResource extends Resource
             {
                 public function toHtml()
                 {
-                    return "<div class='fi-section-content p-6'>
-                        Standards define the 'what' in security and compliance by establishing specific requirements, guidelines, 
-                        or best practices that need to be followed. They serve as benchmarks against which an organization's 
-                        security posture can be measured. Standards can originate from various sources, including regulatory 
-                        bodies (like HIPAA or GDPR), industry frameworks (such as ISO 27001 or NIST), or internal organizational 
-                        policies. Each standard typically outlines specific criteria that must be met to achieve compliance or 
-                        maintain security. For example, a password standard might specify minimum length requirements, complexity 
-                        rules, and expiration periods. Standards provide the foundation for controls, which then implement these 
-                        requirements in practical ways.
-                        </div>";
+                    return "<div class='fi-section-content p-6'>" . 
+                        __('standard.table.description') . 
+                        "</div>";
                 }
             })
             ->columns([
                 Tables\Columns\TextColumn::make('code')
+                    ->label(__('standard.table.columns.code'))
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('name')
+                    ->label(__('standard.table.columns.name'))
                     ->searchable()
                     ->sortable()
                     ->wrap(true),
                 Tables\Columns\TextColumn::make('description')
+                    ->label(__('standard.table.columns.description'))
                     ->html()
                     ->searchable()
                     ->sortable()
                     ->wrap(true)
                     ->limit(250),
                 Tables\Columns\TextColumn::make('authority')
+                    ->label(__('standard.table.columns.authority'))
                     ->searchable()
                     ->sortable()
                     ->wrap(true),
                 Tables\Columns\TextColumn::make('status')
+                    ->label(__('standard.table.columns.status'))
                     ->badge()
                     ->sortable(),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('status')
                     ->options(StandardStatus::class)
-                    ->label('Status'),
+                    ->label(__('standard.table.filters.status')),
                 Tables\Filters\SelectFilter::make('authority')
                     ->options(Standard::pluck('authority', 'authority')->toArray())
-                    ->label('Authority'),
+                    ->label(__('standard.table.filters.authority')),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make()->hiddenLabel(),
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\Action::make('set_in_scope')
-                        ->label('Set In Scope')
+                        ->label(__('standard.table.actions.set_in_scope.label'))
                         ->icon('heroicon-o-check-circle')
-                        ->modalHeading('Set Standard In Scope')
-                        ->modalContent(new HtmlString('Setting a Standard as "in-scope" will allow you to track and 
-                        audit to this standard. However, it will also show up in your dashboards and metrics. You can 
-                        undo this action with minimal disruption.<br><br>
-                        Are you sure you want to set this standard in scope?'))
-                        ->modalSubmitActionLabel('Set In Scope')
+                        ->modalHeading(__('standard.table.actions.set_in_scope.modal_heading'))
+                        ->modalContent(new HtmlString(__('standard.table.actions.set_in_scope.modal_content')))
+                        ->modalSubmitActionLabel(__('standard.table.actions.set_in_scope.submit_label'))
                         ->hidden(
                             fn ($record) => $record->status === StandardStatus::IN_SCOPE
                         )
                         ->action(fn ($record) => $record->update(['status' => StandardStatus::IN_SCOPE])),
                     Tables\Actions\Action::make('set_out_scope')
-                        ->label('Remove from Scope')
+                        ->label(__('standard.table.actions.set_out_scope.label'))
                         ->icon('heroicon-o-check-circle')
-                        ->modalHeading('Remove from Scope')
-                        ->modalContent(new HtmlString('If you remove this standard from scope, it will no longer
-                        appear in your dashboards and metrics. You will also not be able to audit the standard until 
-                        you set it back in-scope. No data will be modified as a result - this can be undone.<br><br>
-                        Are you sure you want to set this standard in scope?'))
-                        ->modalSubmitActionLabel('Remove from Scope')
+                        ->modalHeading(__('standard.table.actions.set_out_scope.modal_heading'))
+                        ->modalContent(new HtmlString(__('standard.table.actions.set_out_scope.modal_content')))
+                        ->modalSubmitActionLabel(__('standard.table.actions.set_out_scope.submit_label'))
                         ->hidden(
                             fn ($record) => $record->status !== StandardStatus::IN_SCOPE
                         )
@@ -179,7 +181,7 @@ class StandardResource extends Resource
                     Tables\Actions\EditAction::make(),
                     Tables\Actions\DeleteAction::make(),
                     Tables\Actions\RestoreAction::make(),
-                ])->label('Actions'),
+                ])->label(__('standard.table.actions.group_label')),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -188,11 +190,12 @@ class StandardResource extends Resource
                     Tables\Actions\RestoreBulkAction::make(),
                 ]),
             ])
-            ->emptyStateHeading(new HtmlString('No Standards Found'))
+            ->emptyStateHeading(new HtmlString(__('standard.table.empty_state.heading')))
             ->emptyStateDescription(
-                new HtmlString("Try creating a new standard or adding one from an <a style='text-decoration: underline' href='"
-                .route('filament.app.resources.bundles.index').
-                "'>OpenGRC Bundle</a>"));
+                new HtmlString(__('standard.table.empty_state.description', [
+                    'url' => route('filament.app.resources.bundles.index')
+                ]))
+            );
     }
 
     public static function getRelations(): array
@@ -226,7 +229,7 @@ class StandardResource extends Resource
     {
         return $infolist
             ->schema([
-                Section::make('Standard Details')
+                Section::make(__('standard.infolist.section_title'))
                     ->columns(4)
                     ->schema([
                         TextEntry::make('name'),

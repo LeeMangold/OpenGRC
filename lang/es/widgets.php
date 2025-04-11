@@ -24,6 +24,7 @@ return [
 
     // Audit List Widget
     'audit_list' => [
+        'heading' => 'Lista de Auditorías (Top-5)',
         'empty_heading' => 'No Hay Auditorías para Mostrar',
         'empty_description' => 'No has creado ninguna auditoría todavía. Crea una Auditoría para comenzar.',
         'manager' => 'Gerente',

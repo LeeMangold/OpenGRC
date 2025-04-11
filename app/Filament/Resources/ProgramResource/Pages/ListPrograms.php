@@ -10,6 +10,11 @@ class ListPrograms extends ListRecords
 {
     protected static string $resource = ProgramResource::class;
 
+    public function getHeading(): string
+    {
+        return __('programs.heading');
+    }
+
     protected function getHeaderActions(): array
     {
         return [

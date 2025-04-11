@@ -15,7 +15,7 @@ class ListAudits extends ListRecords
     {
         return [
             Actions\CreateAction::make()
-                ->label('Create an Audit'),
+                ->label(__('audit.actions.create')),
         ];
     }
 
