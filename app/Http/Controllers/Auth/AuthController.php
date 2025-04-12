@@ -3,17 +3,20 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Log;
+use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
 {
     public function redirectToProvider($provider)
     {
-        return \Socialite::driver($provider)->redirect();
+        return Socialite::driver($provider)->redirect();
     }
 
     public function handleProviderCallback($provider)
     {
-        $socialiteUser = \Socialite::driver($provider)->user();
+
+        $socialiteUser = Socialite::driver($provider)->user();
 
         // Check if auto-provisioning is enabled for the provider
         $autoProvision = setting("auth.{$provider}.auto_provision", false);
@@ -48,6 +51,7 @@ class AuthController extends Controller
 
         // Log the user in
         \Auth::login($user);
+        $user->updateLastActivity();
 
         // Redirect to the dashboard
         return redirect()->to('/app');

@@ -5,20 +5,26 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 
 class SessionTimeout
 {
     public function handle(Request $request, Closure $next)
     {
+        Log::debug('SessionTimeout middleware');
+        if (!Auth::check()) {
+            return $next($request);
+        }
 
         $timeout = 15 * 60; // Default timeout in seconds
-        Session::has('last_activity') || Session::put('last_activity', now()->timestamp);
+        $user = auth()->user();
 
-        // Ignore non-interactive Livewire requests
-        if (! str_contains($request->path(), 'livewire/update')) {
-            Session::put('last_activity', now()->timestamp);
-        }
+        // Get current last_activity directly from database
+        $currentActivity = DB::table('users')
+            ->where('id', $user->id)
+            ->value('last_activity');
 
         // If session_timeout is set, use it.
         if (setting('security.session_timeout')) {
@@ -26,11 +32,15 @@ class SessionTimeout
         }
 
         // If the user has been inactive for longer than the timeout, log them out.
-        if (now()->timestamp - Session::get('last_activity', 0) > $timeout) {
+        if ($currentActivity && strtotime($currentActivity) + $timeout < now()->timestamp) {
+            // Prepare the redirect response before clearing the session
+            $redirect = redirect()->route('filament.app.auth.login')->with('error', 'Your session has expired due to inactivity.');
+            
+            // Now perform the logout operations
             Auth::logout();
             Session::flush();
-
-            return redirect()->route('filament.app.auth.login')->with('error', 'Your session has expired due to inactivity.');
+            
+            return $redirect;
         }
 
         return $next($request);

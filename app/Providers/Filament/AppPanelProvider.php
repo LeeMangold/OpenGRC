@@ -81,7 +81,7 @@ class AppPanelProvider extends PanelProvider
             ->default()
             ->id('app')
             ->path('app')
-            ->login()
+            ->login(\App\Filament\Pages\Auth\Login::class)
             ->loginRouteSlug('login')
             ->colors([
                 'primary' => Color::Slate,
@@ -138,6 +138,8 @@ class AppPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
+                \App\Http\Middleware\UserActivityMonitor::class,
+                \App\Http\Middleware\SessionTimeout::class,
             ])
             ->authGuard('web')
             ->authMiddleware([

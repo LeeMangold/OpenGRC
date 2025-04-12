@@ -12,9 +12,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Log;
 use Jeffgreco13\FilamentBreezy\Traits\TwoFactorAuthenticatable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable implements FilamentUser
 {
@@ -30,6 +32,16 @@ class User extends Authenticatable implements FilamentUser
         'email',
         'password',
     ];
+
+    /**
+     * The attributes that should be guarded from mass assignment.
+     *
+     * @var array<int, string>
+     */
+    protected $guarded = [
+        'last_activity'
+    ];
+
 
     /**
      * The attributes that should be hidden for serialization.
@@ -51,6 +63,45 @@ class User extends Authenticatable implements FilamentUser
         'last_activity' => 'datetime',
         'password' => 'hashed',
     ];
+
+    protected static function booted()
+    {
+        // static::saving(function ($user) {
+        //     if ($user->isDirty('last_activity')) {
+        //         Log::debug('Attempt to update last_activity through model save', [
+        //             'trace' => debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS),
+        //             'dirty' => $user->getDirty()
+        //         ]);
+        //         // Prevent the update of last_activity through normal model operations
+        //         $user->last_activity = $user->getOriginal('last_activity');
+        //     }
+        // });
+
+        // static::updating(function ($user) {
+        //     if ($user->isDirty('last_activity')) {
+        //         Log::debug('Attempt to update last_activity through model update', [
+        //             'trace' => debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS),
+        //             'dirty' => $user->getDirty()
+        //         ]);
+        //         // Prevent the update of last_activity through normal model operations
+        //         $user->last_activity = $user->getOriginal('last_activity');
+        //     }
+        // });
+    }
+
+    /**
+     * Update the user's last activity timestamp.
+     *
+     * @return bool
+     */
+    public function updateLastActivity(): void
+    {       
+        DB::table('users')
+            ->where('id', $this->id)
+            ->update(['last_activity' => now()]);
+
+        Log::debug('User Logged In');
+    }
 
     public function canAccessPanel(Panel $panel): bool
     {
