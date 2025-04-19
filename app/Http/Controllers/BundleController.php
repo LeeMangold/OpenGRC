@@ -27,7 +27,6 @@ class BundleController extends Controller
 
     public static function retrieve(): void
     {
-
         $repo = setting('general.repo', 'https://repo.opengrc.com');
 
         try {
@@ -48,6 +47,7 @@ class BundleController extends Controller
                         'authority' => $bundle->authority,
                         'description' => $bundle->description,
                         'repo_url' => $bundle->url,
+                        'type' => $bundle->type ?? 'Standard',
                     ]
                 );
             }
@@ -72,7 +72,6 @@ class BundleController extends Controller
             ->title('Repository Updated')
             ->body('Latest Repository content has been retrieved successfully!')
             ->send();
-
     }
 
     public static function importBundle(Bundle $bundle): void

@@ -25,6 +25,7 @@ class BundleFactory extends Factory
             'source_url' => $this->faker->url,
             'filename' => $this->faker->slug.'.zip',
             'image' => $this->faker->slug.'.jpg',
+            'type' => 'Standard',
         ];
     }
 }
