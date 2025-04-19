@@ -3,6 +3,7 @@
 find . -print0 | xargs --null sudo chown lmangold:www-data
 find . -type f -print0 | xargs --null sudo chmod 666
 find . -type d -print0 | xargs --null sudo chmod 775
+sudo chmod 770 install.sh 
 sudo chmod 770 set_permissions
 sudo chmod 770 artisan
 sudo chmod 777 vendor/bin/*

@@ -45,11 +45,16 @@ class Program extends Model
 
     public function getAllControls()
     {
-        return $this->standards()
+        $standardControls = $this->standards()
             ->with('controls')
             ->get()
             ->pluck('controls')
-            ->flatten()
-            ->unique('id');
+            ->flatten();
+
+        $directControls = $this->controls;
+
+        return $standardControls->concat($directControls)
+            ->unique('id')
+            ->values();
     }
 }
