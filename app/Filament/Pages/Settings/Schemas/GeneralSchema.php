@@ -66,9 +66,14 @@ class GeneralSchema
                             'private' => 'Local Private Storage',
                             's3' => 'Amazon S3'
                         ])
-                        ->default('local')
+                        ->default('private')
                         ->required()
-                        ->live(),
+                        ->live()
+                        ->afterStateUpdated(function ($state) {
+                            if ($state === 'private') {
+                                config()->set('filesystems.default', 'private');
+                            }
+                        }),
 
                     Grid::make(2)
                         ->schema([
@@ -79,7 +84,11 @@ class GeneralSchema
                                 ->dehydrateStateUsing(fn ($state) => filled($state) ? Crypt::encryptString($state) : null)
                                 ->afterStateHydrated(function (TextInput $component, $state) {
                                     if (filled($state)) {
-                                        $component->state(Crypt::decryptString($state));
+                                        try {
+                                            $component->state(Crypt::decryptString($state));
+                                        } catch (\Exception $e) {
+                                            $component->state('');
+                                        }
                                     }
                                 }),
 
@@ -91,7 +100,11 @@ class GeneralSchema
                                 ->dehydrateStateUsing(fn ($state) => filled($state) ? Crypt::encryptString($state) : null)
                                 ->afterStateHydrated(function (TextInput $component, $state) {
                                     if (filled($state)) {
-                                        $component->state(Crypt::decryptString($state));
+                                        try {
+                                            $component->state(Crypt::decryptString($state));
+                                        } catch (\Exception $e) {
+                                            $component->state('');
+                                        }
                                     }
                                 }),
 

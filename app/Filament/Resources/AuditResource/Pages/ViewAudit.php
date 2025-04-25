@@ -159,9 +159,13 @@ class ViewAudit extends ViewRecord
                             $storage = Storage::disk(config('filesystems.default'));
                             
                             if ($storage->exists($filepath)) {
+                                $fileContents = $storage->get($filepath);
                                 return response()->streamDownload(
-                                    fn () => $storage->get($filepath),
-                                    "AuditReport-{$audit->id}.pdf"
+                                    function () use ($fileContents) {
+                                        echo $fileContents;
+                                    },
+                                    "AuditReport-{$audit->id}.pdf",
+                                    ['Content-Type' => 'application/pdf']
                                 );
                             } else {
                                 return Notification::make()
@@ -179,8 +183,12 @@ class ViewAudit extends ViewRecord
                             $pdf = Pdf::loadView($reportTemplate, ['audit' => $audit, 'auditItems' => $auditItems]);
 
                             return response()->streamDownload(
-                                fn () => print ($pdf->stream()),
-                                "DRAFT-AuditReport-{$audit->id}.pdf");
+                                function () use ($pdf) {
+                                    echo $pdf->output();
+                                },
+                                "DRAFT-AuditReport-{$audit->id}.pdf",
+                                ['Content-Type' => 'application/pdf']
+                            );
                         }
                     }
                     ),

@@ -19,6 +19,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 use Log;
@@ -83,29 +84,19 @@ class DataRequestResponseResource extends Resource
                                     ->label('File')
                                     ->preserveFilenames()
                                     ->disk(config('filesystems.default'))
-                                    ->directory(function () {
-                                        return 'attachments/'.Carbon::now()->timestamp.'-'.Str::random(2);
-                                    })
+                                    ->directory('data-request-attachments')
                                     ->storeFileNamesIn('file_name')
                                     ->visibility('private')
+                                    ->downloadable()
                                     ->openable()
                                     ->deletable()
                                     ->reorderable()
-                                    ->afterStateUpdated(function ($state, $old) {
-                                        Log::debug(config(key: 'filesystems.default'));
-                                        if ($state instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile) {
-                                            $path = 'attachments/' . Carbon::now()->timestamp . '-' . Str::random(2);
-                                            $state->storeAs(
-                                                $path,
-                                                $state->getClientOriginalName(),
-                                                [
-                                                    'disk' => config('filesystems.default'),
-                                                    'visibility' => 'private'
-                                                ]
-                                            );
+                                    ->maxSize(10240) // 10MB max
+                                    ->deleteUploadedFileUsing(function ($state) {
+                                        if ($state) {
+                                            Storage::disk(config('filesystems.default'))->delete($state);
                                         }
-                                    })
-                                    ->maxSize(10240), // 10MB max
+                                    }),
 
                                 Hidden::make('uploaded_by')
                                     ->default(Auth::id()),
