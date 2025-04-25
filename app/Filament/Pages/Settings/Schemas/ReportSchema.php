@@ -3,6 +3,7 @@
 namespace App\Filament\Pages\Settings\Schemas;
 
 use Filament\Forms\Components\FileUpload;
+use Storage;
 
 class ReportSchema
 {
@@ -10,12 +11,20 @@ class ReportSchema
     {
         return [
             FileUpload::make('report.logo')
-                ->label('Report Logo')
+                ->label('Custom Report Logo (Optional)')
                 ->helperText('The logo to display on reports. Be sure to upload a file that is at least 512px wide.')
                 ->acceptedFileTypes(['image/*'])
-                ->disk('public')
+                ->directory('report-assets')
+                ->image()
+                ->disk(fn () => config('filesystems.default'))
+                ->visibility('private')
                 ->maxFiles(1)
-                ->imagePreviewHeight('150px'),
+                ->imagePreviewHeight('300px')
+                ->deleteUploadedFileUsing(function ($state) {
+                    if ($state) {
+                        Storage::disk(config('filesystems.default'))->delete($state);
+                    }
+                }),
         ];
     }
 }

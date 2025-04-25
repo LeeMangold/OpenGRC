@@ -1,4 +1,7 @@
 @extends('reports.layout')
+@php
+    use Illuminate\Support\Facades\Storage;
+@endphp
 @section('content')
 
     <div id="header">
@@ -35,9 +38,39 @@
 
         <br><br>
             @php
-                $logoPath = setting('report.logo')
-                    ? storage_path('app/public/' . setting('report.logo'))
-                    : public_path('img/logo.png');
+                $defaultLogoPath = public_path('img/logo.png');
+                $customLogo = setting('report.logo');
+                $tempPath = null;
+                
+                if ($customLogo && Storage::disk(config('filesystems.default'))->exists($customLogo)) {
+                    $storage = Storage::disk(config('filesystems.default'));
+                    
+                    // Create a temporary directory if it doesn't exist
+                    $tempDir = storage_path('app/temp');
+                    if (!file_exists($tempDir)) {
+                        mkdir($tempDir, 0755, true);
+                    }
+                    
+                    // Generate a unique temporary file name
+                    $tempPath = $tempDir . '/temp_logo_' . uniqid() . '_' . basename($customLogo);
+                    
+                    // Download and store the file temporarily
+                    $fileContents = $storage->get($customLogo);
+                    file_put_contents($tempPath, $fileContents);
+                    
+                    $logoPath = $tempPath;
+                } else {
+                    $logoPath = $defaultLogoPath;
+                }
+                
+                // Register a shutdown function to clean up the temporary file
+                if ($tempPath) {
+                    register_shutdown_function(function() use ($tempPath) {
+                        if (file_exists($tempPath)) {
+                            unlink($tempPath);
+                        }
+                    });
+                }
             @endphp
         <center>
         <img style="max-width: 350px" src="{{ $logoPath }}" alt="Report Logo">

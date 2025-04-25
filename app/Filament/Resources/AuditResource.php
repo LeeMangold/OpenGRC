@@ -21,6 +21,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Storage;
 
 class AuditResource extends Resource
 {
@@ -208,9 +209,11 @@ class AuditResource extends Resource
         if ($audit->audit_type == 'implementations') {
             $reportTemplate = 'reports.implementation-report';
         }
-        $filepath = "app/private/audit_reports/AuditReport-{$audit->id}.pdf";
+        $filepath = "audit_reports/AuditReport-{$audit->id}.pdf";
         $pdf = Pdf::loadView($reportTemplate, ['audit' => $audit, 'auditItems' => $auditItems]);
-        $pdf->save(storage_path($filepath));
+        Storage::disk(config('filesystems.default'))->put($filepath, $pdf->output(), [
+            'visibility' => 'private'
+        ]);
 
         // Mark the audit as completed
         $audit->update(['status' => WorkflowStatus::COMPLETED]);

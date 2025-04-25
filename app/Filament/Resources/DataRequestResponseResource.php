@@ -21,6 +21,7 @@ use Filament\Tables\Table;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
+use Log;
 
 class DataRequestResponseResource extends Resource
 {
@@ -32,6 +33,8 @@ class DataRequestResponseResource extends Resource
 
     public static function form(Form $form): Form
     {
+    //    dd(config(key: 'filesystems'));
+
         return $form
             ->schema([
                 Section::make('Evidence Requested')
@@ -79,7 +82,7 @@ class DataRequestResponseResource extends Resource
                                 FileUpload::make('file_path')
                                     ->label('File')
                                     ->preserveFilenames()
-                                    ->disk(env('FILESYSTEM_DISK'))
+                                    ->disk(config('filesystems.default'))
                                     ->directory(function () {
                                         return 'attachments/'.Carbon::now()->timestamp.'-'.Str::random(2);
                                     })
@@ -89,13 +92,14 @@ class DataRequestResponseResource extends Resource
                                     ->deletable()
                                     ->reorderable()
                                     ->afterStateUpdated(function ($state, $old) {
+                                        Log::debug(config(key: 'filesystems.default'));
                                         if ($state instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile) {
                                             $path = 'attachments/' . Carbon::now()->timestamp . '-' . Str::random(2);
                                             $state->storeAs(
                                                 $path,
                                                 $state->getClientOriginalName(),
                                                 [
-                                                    'disk' => env('FILESYSTEM_DISK'),
+                                                    'disk' => config('filesystems.default'),
                                                     'visibility' => 'private'
                                                 ]
                                             );
