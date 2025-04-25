@@ -79,7 +79,7 @@ class DataRequestResponseResource extends Resource
                                 FileUpload::make('file_path')
                                     ->label('File')
                                     ->preserveFilenames()
-                                    ->disk('private')
+                                    ->disk(env('FILESYSTEM_DISK'))
                                     ->directory(function () {
                                         return 'attachments/'.Carbon::now()->timestamp.'-'.Str::random(2);
                                     })
@@ -87,7 +87,21 @@ class DataRequestResponseResource extends Resource
                                     ->visibility('private')
                                     ->openable()
                                     ->deletable()
-                                    ->reorderable(),
+                                    ->reorderable()
+                                    ->afterStateUpdated(function ($state, $old) {
+                                        if ($state instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile) {
+                                            $path = 'attachments/' . Carbon::now()->timestamp . '-' . Str::random(2);
+                                            $state->storeAs(
+                                                $path,
+                                                $state->getClientOriginalName(),
+                                                [
+                                                    'disk' => env('FILESYSTEM_DISK'),
+                                                    'visibility' => 'private'
+                                                ]
+                                            );
+                                        }
+                                    })
+                                    ->maxSize(10240), // 10MB max
 
                                 Hidden::make('uploaded_by')
                                     ->default(Auth::id()),
