@@ -49,7 +49,7 @@
                 caused by complex enterprise solutions. It doesn't have to be that hard!</p>
         </div>
         <div class="text-center mt-12">
-            <a href="/app" class="bg-primary-500 p-3 rounded ">Login</a>
+            <a href="/app" class="bg-primary-500 p-3 rounded" id="login-button">Login</a>
         </div>
 
     </div>
