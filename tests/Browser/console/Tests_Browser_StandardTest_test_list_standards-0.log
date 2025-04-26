@@ -1,8 +1,0 @@
-[
-    {
-        "level": "SEVERE",
-        "message": "https:\/\/opengrc.test\/app\/standards - Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
-        "source": "network",
-        "timestamp": 1733533157029
-    }
-]

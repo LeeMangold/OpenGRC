@@ -158,6 +158,7 @@ class StandardResource extends Resource
                 Tables\Filters\SelectFilter::make('authority')
                     ->options(Standard::pluck('authority', 'authority')->toArray())
                     ->label(__('standard.table.filters.authority')),
+                Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make()->hiddenLabel(),

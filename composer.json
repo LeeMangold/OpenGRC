@@ -41,6 +41,7 @@
         "barryvdh/laravel-debugbar": "^3.15.4",
         "fakerphp/faker": "^1.24.1",
         "larastan/larastan": "^2.11.0",
+        "laravel/dusk": "^8.3",
         "laravel/pint": "^1.22.0",
         "laravel/sail": "^1.41.1",
         "mockery/mockery": "^1.6.12",
