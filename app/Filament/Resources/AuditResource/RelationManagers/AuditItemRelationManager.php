@@ -62,6 +62,10 @@ class AuditItemRelationManager extends RelationManager
                             ->grouped(),
                         RichEditor::make('auditor_notes')
                             ->columnSpanFull()
+                            ->disableToolbarButtons([
+                                'image',
+                                'attachFiles'
+                            ])
                             ->label('Auditor Notes'),
                     ]),
 

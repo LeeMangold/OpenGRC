@@ -26,6 +26,10 @@ class FileAttachmentResource extends Resource
         return $form
             ->schema([
                 Forms\Components\RichEditor::make('description')
+                    ->disableToolbarButtons([
+                        'image',
+                        'attachFiles'
+                    ])
                     ->required()
                     ->columnSpanFull(),
                 FileUpload::make('file_path')

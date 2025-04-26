@@ -42,11 +42,19 @@ class ImplementationRelationManager extends RelationManager
                     ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'This should be a detailed description of this implementation in sufficient detail to both implement and test.'),
                 Forms\Components\RichEditor::make('details')
                     ->columnSpanFull()
+                    ->disableToolbarButtons([
+                        'image',
+                        'attachFiles'
+                    ])
                     ->label('Implementation Details')
                     ->required()
                     ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'This should be a detailed description of this implementation in sufficient detail to both implement and test.'),
                 Forms\Components\RichEditor::make('notes')
                     ->columnSpanFull()
+                    ->disableToolbarButtons([
+                        'image',
+                        'attachFiles'
+                    ])
                     ->label('Internal Notes')
                     ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'These notes are for internal use only and will not be shared with auditors.')
                     ->maxLength(4096),

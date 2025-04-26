@@ -64,6 +64,10 @@ class DataRequestResponseResource extends Resource
                     ->columnSpanFull()
                     ->schema([
                         RichEditor::make('response')
+                            ->disableToolbarButtons([
+                                'image',
+                                'attachFiles'
+                            ])
                             ->required(function ($get, $record) {
                                 if (is_null($record)) {
                                     return false;
@@ -79,9 +83,11 @@ class DataRequestResponseResource extends Resource
                             ->columnSpanFull()
                             ->columns()
                             ->schema([
-                                Textarea::make('description'),
+                                Textarea::make('description')                                    
+                                    ->required(),
                                 FileUpload::make('file_path')
                                     ->label('File')
+                                    ->required()
                                     ->preserveFilenames()
                                     ->disk(config('filesystems.default'))
                                     ->directory('data-request-attachments')

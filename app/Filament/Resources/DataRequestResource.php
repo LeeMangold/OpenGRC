@@ -57,6 +57,10 @@ class DataRequestResource extends Resource
                     ->default(ResponseStatus::PENDING)
                     ->required(),
                 Forms\Components\RichEditor::make('details')
+                    ->disableToolbarButtons([
+                        'image',
+                        'attachFiles'
+                    ])
                     ->required()
                     ->columnSpanFull(),
             ]);
@@ -197,7 +201,8 @@ class DataRequestResource extends Resource
                                                 $downloadUrl = null;
                                                 
                                                 if ($storage->exists($attachment->file_path)) {
-                                                    if (method_exists($storage, 'temporaryUrl')) {
+                                                    $driver = config('filesystems.default');
+                                                    if (in_array($driver, ['s3', 'minio'])) {
                                                         $downloadUrl = $storage->temporaryUrl($attachment->file_path, now()->addMinutes(5));
                                                     } else {
                                                         $downloadUrl = $storage->url($attachment->file_path);

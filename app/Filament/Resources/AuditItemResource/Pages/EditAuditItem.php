@@ -154,6 +154,10 @@ class EditAuditItem extends EditRecord
                             ->grouped(),
                         RichEditor::make('auditor_notes')
                             ->columnSpanFull()
+                            ->disableToolbarButtons([
+                                'image',
+                                'attachFiles'
+                            ])
                             ->label('Auditor Notes'),
                     ]),
 

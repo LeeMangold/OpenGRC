@@ -98,6 +98,10 @@ class StandardResource extends Resource
                     ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('standard.form.reference_url.tooltip')),
                 RichEditor::make('description')
                     ->columnSpanFull()
+                    ->disableToolbarButtons([
+                        'image',
+                        'attachFiles'
+                    ])
                     ->maxLength(65535)
                     ->required()
                     ->hint(__('standard.form.description.hint'))
