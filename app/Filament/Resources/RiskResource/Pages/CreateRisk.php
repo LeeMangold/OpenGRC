@@ -47,18 +47,24 @@ class CreateRisk extends CreateRecord
                     TextInput::make('code')
                         ->label('Code')
                         ->prefix('RISK-')
+                        ->numeric()
+                        ->disabled()
+                        ->minValue(0)
+                        ->integer()
                         ->default(Risk::next())
-                        ->helperText('Assign a unique code to the risk')
+                        ->helperText('Unique code for this risk')
                         ->unique('risks', 'code')
                         ->required(),
                     TextInput::make('name')
                         ->columnSpan(3)
+                        ->maxLength(255)
                         ->label('Name')
                         ->helperText('Give the risk a short but descriptive name')
                         ->required(),
                     Textarea::make('description')
                         ->label('Description')
                         ->columnSpanFull()
+                        ->maxLength(4096)
                         ->helperText('Provide a description of the risk that will help others understand it'),
                 ]),
 

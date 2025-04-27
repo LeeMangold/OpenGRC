@@ -64,6 +64,7 @@ class DataRequestResponseResource extends Resource
                     ->columnSpanFull()
                     ->schema([
                         RichEditor::make('response')
+                            ->maxLength(65535)
                             ->disableToolbarButtons([
                                 'image',
                                 'attachFiles'
@@ -83,7 +84,8 @@ class DataRequestResponseResource extends Resource
                             ->columnSpanFull()
                             ->columns()
                             ->schema([
-                                Textarea::make('description')                                    
+                                Textarea::make('description')
+                                    ->maxLength(1024)
                                     ->required(),
                                 FileUpload::make('file_path')
                                     ->label('File')

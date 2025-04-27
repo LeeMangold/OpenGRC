@@ -107,6 +107,7 @@ class CreateAudit extends CreateRecord
                         ->default(fn () => auth()->id())
                         ->searchable(),
                     Textarea::make('description')
+                        ->maxLength(65535)
                         ->columnSpanFull(),
                     DatePicker::make('start_date')
                         ->default(now())

@@ -119,11 +119,25 @@ class RiskResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()
                     ->wrap()
+                    ->formatStateUsing(function ($state) {
+                        // Insert a zero-width space every 30 characters in long words
+                        return preg_replace_callback('/\S{30,}/', function ($matches) {
+                            return wordwrap($matches[0], 30, "\u{200B}", true);
+                        }, $state);
+                    })
+                    ->limit(100)
                     ->sortable(),
                 Tables\Columns\TextColumn::make('description')
                     ->searchable()
                     ->wrap()
-                    ->sortable(),
+                    ->limit(250)
+                    ->sortable()
+                    ->formatStateUsing(function ($state) {
+                        // Insert a zero-width space every 50 characters in long words
+                        return preg_replace_callback('/\S{50,}/', function ($matches) {
+                            return wordwrap($matches[0], 50, "\u{200B}", true);
+                        }, $state);
+                    }),
                 Tables\Columns\TextColumn::make('inherent_risk')
                     ->label('Inherent Risk')
                     ->sortable()

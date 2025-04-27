@@ -88,19 +88,23 @@ class ControlResource extends Resource
                 Forms\Components\TextInput::make('title')
                     ->required()
                     ->columnSpanFull()
+                    ->maxLength(1024)
                     ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('control.form.title.tooltip'))
                     ->maxLength(1024),
                 TinyEditor::make('description')
                     ->required()
+                    ->maxLength(65535)
                     ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('control.form.description.tooltip'))
                     ->extraInputAttributes(['class' => 'filament-forms-rich-editor-unfiltered'])
                     ->columnSpanFull(),
                 TinyEditor::make('discussion')
                     ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('control.form.discussion.tooltip'))
+                    ->maxLength(65535)
                     ->columnSpanFull(),
                 TinyEditor::make('test')
                     ->label(__('control.form.test.label'))
                     ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('control.form.test.tooltip'))
+                    ->maxLength(65535)
                     ->columnSpanFull(),
             ]);
     }

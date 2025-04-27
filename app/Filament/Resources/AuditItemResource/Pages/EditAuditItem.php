@@ -99,6 +99,7 @@ class EditAuditItem extends EditRecord
                                 ->required(),
                             Forms\Components\Textarea::make('details')
                                 ->label('Request Details')
+                                ->maxLength(65535)
                                 ->columnSpanFull()
                                 ->required(),
                             Forms\Components\Checkbox::make('send_email')
@@ -154,6 +155,7 @@ class EditAuditItem extends EditRecord
                             ->grouped(),
                         RichEditor::make('auditor_notes')
                             ->columnSpanFull()
+                            ->maxLength(65535)
                             ->disableToolbarButtons([
                                 'image',
                                 'attachFiles'
