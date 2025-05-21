@@ -9,6 +9,10 @@ class UserSeeder extends Seeder
 {
     public function run()
     {
+        if (User::count() > 0) {
+            return;
+        }
+        
         // Manually create the first user
         User::create([
             'name' => 'Admin User',

@@ -42,9 +42,9 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('program_risk');
         Schema::dropIfExists('control_program');
         Schema::dropIfExists('program_standard');
+        Schema::dropIfExists('program_risk');
         Schema::dropIfExists('programs');
     }
 };
