@@ -73,6 +73,19 @@ class VendorResource extends Resource
                 Forms\Components\Textarea::make('notes')
                     ->label(__('Notes'))
                     ->maxLength(65535),
+                Forms\Components\FileUpload::make('logo')
+                    ->label(__('Logo'))
+                    ->disk(config('filesystems.default'))
+                    ->directory('vendor-logos')
+                    ->storeFileNamesIn('logo')                    
+                    ->visibility('private')                    
+                    ->maxSize(1024) // 1MB
+                    ->deletable()                    
+                    ->deleteUploadedFileUsing(function ($state) {
+                        if ($state) {
+                            \Illuminate\Support\Facades\Storage::disk(config('filesystems.default'))->delete($state);
+                        }
+                    }),
             ]);
     }
 

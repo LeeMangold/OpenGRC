@@ -79,6 +79,19 @@ class ApplicationResource extends Resource
                     ->searchable()
                     ->preload()
                     ->required(),
+                Forms\Components\FileUpload::make('logo')
+                    ->label(__('Logo'))
+                    ->disk(config('filesystems.default'))
+                    ->directory('application-logos')
+                    ->storeFileNamesIn('logo')                    
+                    ->visibility('private')                    
+                    ->maxSize(1024) // 1MB
+                    ->deletable()                    
+                    ->deleteUploadedFileUsing(function ($state) {
+                        if ($state) {
+                            \Illuminate\Support\Facades\Storage::disk(config('filesystems.default'))->delete($state);
+                        }
+                    }),
             ]);
     }
 

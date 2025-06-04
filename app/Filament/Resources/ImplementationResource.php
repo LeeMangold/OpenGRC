@@ -8,6 +8,7 @@ use App\Filament\Resources\ImplementationResource\Pages;
 use App\Filament\Resources\ImplementationResource\RelationManagers;
 use App\Models\Control;
 use App\Models\Implementation;
+use App\Models\User;
 use Exception;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -106,6 +107,12 @@ class ImplementationResource extends Resource
                     ->columnSpanFull()
                     ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Any additional internal notes. This is never visible to an auditor.'),
 
+                Forms\Components\Select::make('implementation_owner_id')
+                    ->label('Owner')
+                    ->options(User::pluck('name', 'id')->toArray())
+                    ->searchable()
+                    ->nullable()
+                    ->columnSpan(1),
             ]);
     }
 
@@ -152,6 +159,11 @@ class ImplementationResource extends Resource
                     ->toggleable()
                     ->sortable()
                     ->searchable(),
+                Tables\Columns\TextColumn::make('implementationOwner.name')
+                    ->label('Owner')
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label(__('implementation.table.columns.created_at'))
                     ->dateTime()
@@ -176,6 +188,9 @@ class ImplementationResource extends Resource
                             $q->where('effectiveness', $data['value']);
                         });
                     }),
+                Tables\Filters\SelectFilter::make('implementation_owner_id')
+                    ->label('Owner')
+                    ->options(User::pluck('name', 'id')->toArray()),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
@@ -343,6 +358,11 @@ class ImplementationResource extends Resource
                     ->toggleable()
                     ->sortable()
                     ->searchable(),
+                Tables\Columns\TextColumn::make('implementationOwner.name')
+                    ->label('Owner')
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -365,6 +385,9 @@ class ImplementationResource extends Resource
                             $q->where('effectiveness', $data['value']);
                         });
                     }),
+                Tables\Filters\SelectFilter::make('implementation_owner_id')
+                    ->label('Owner')
+                    ->options(User::pluck('name', 'id')->toArray()),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),

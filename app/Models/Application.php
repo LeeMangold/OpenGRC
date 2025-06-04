@@ -26,6 +26,7 @@ class Application extends Model
     protected $casts = [
         'type' => ApplicationType::class,
         'status' => ApplicationStatus::class,
+        'logo' => 'array',
     ];
 
     public function owner(): BelongsTo

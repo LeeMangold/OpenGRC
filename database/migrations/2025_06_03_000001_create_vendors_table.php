@@ -15,6 +15,7 @@ return new class extends Migration
             $table->string('name', 255);
             $table->longText('description')->nullable();
             $table->string('url', 512)->nullable();
+            $table->string('logo', 512)->nullable();
             $table->foreignId('vendor_manager_id')->constrained('users');
             $table->enum('status', array_column(VendorStatus::cases(), 'value'))->default(VendorStatus::PENDING->value);
             $table->enum('risk_rating', array_column(VendorRiskRating::cases(), 'value'))->default(VendorRiskRating::MEDIUM->value);

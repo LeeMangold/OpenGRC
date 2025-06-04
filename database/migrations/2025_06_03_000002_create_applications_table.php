@@ -13,6 +13,7 @@ return new class extends Migration
         Schema::create('applications', function (Blueprint $table) {
             $table->id();
             $table->string('name', 255);
+            $table->string('logo', 512)->nullable();
             $table->foreignId('owner_id')->constrained('users');
             $table->enum('type', array_column(ApplicationType::cases(), 'value'))->default(ApplicationType::OTHER->value);
             $table->longText('description')->nullable();

@@ -98,7 +98,8 @@ class RiskResource extends Resource
                 Forms\Components\Select::make('implementations')
                     ->label('Related Implementations')
                     ->helperText('What are we doing to mitigate this risk?')
-                    ->relationship('implementations', 'title')
+                    ->relationship(name: 'implementations', titleAttribute: 'title')
+                    ->searchable(['title', 'code'])
                     ->multiple(),
 
                 Forms\Components\Select::make('status')

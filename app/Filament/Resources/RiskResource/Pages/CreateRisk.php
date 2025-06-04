@@ -248,6 +248,7 @@ class CreateRisk extends CreateRecord
                                 ->label('Related Implementations')
                                 ->helperText('What are we doing to mitigate this risk?')
                                 ->relationship('implementations', 'title')
+                                ->searchable(['title', 'code'])
                                 ->multiple(),
 
                         ]),

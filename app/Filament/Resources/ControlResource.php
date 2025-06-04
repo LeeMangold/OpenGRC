@@ -12,6 +12,7 @@ use App\Filament\Resources\ControlResource\Pages;
 use App\Filament\Resources\ControlResource\RelationManagers;
 use App\Models\Control;
 use App\Models\Standard;
+use App\Models\User;
 use Exception;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -106,6 +107,12 @@ class ControlResource extends Resource
                     ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('control.form.test.tooltip'))
                     ->maxLength(65535)
                     ->columnSpanFull(),
+                Forms\Components\Select::make('control_owner_id')
+                    ->label('Control Owner')
+                    ->options(User::pluck('name', 'id')->toArray())
+                    ->searchable()
+                    ->nullable()
+                    ->columnSpan(1),
             ]);
     }
 
@@ -168,6 +175,11 @@ class ControlResource extends Resource
                     ->default(function (Control $record) {
                         return $record->getEffectivenessDate();
                     }),
+                Tables\Columns\TextColumn::make('controlOwner.name')
+                    ->label('Owner')
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label(__('control.table.columns.created_at'))
                     ->dateTime()
@@ -199,6 +211,9 @@ class ControlResource extends Resource
                 Tables\Filters\SelectFilter::make('applicability')
                     ->options(Applicability::class)
                     ->label(__('control.table.filters.applicability')),
+                Tables\Filters\SelectFilter::make('control_owner_id')
+                    ->label('Owner')
+                    ->options(User::pluck('name', 'id')->toArray()),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

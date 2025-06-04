@@ -13,19 +13,10 @@ class Vendor extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'name',
-        'description',
-        'url',
-        'vendor_manager_id',
-        'status',
-        'risk_rating',
-        'notes',
-    ];
-
     protected $casts = [
         'status' => VendorStatus::class,
         'risk_rating' => VendorRiskRating::class,
+        'logo' => 'array',
     ];
 
     public function vendorManager(): BelongsTo

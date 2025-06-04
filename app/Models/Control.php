@@ -166,4 +166,12 @@ class Control extends Model
     {
         return $this->belongsToMany(Program::class);
     }
+
+    /**
+     * Get the owner of the control.
+     */
+    public function controlOwner(): BelongsTo
+    {
+        return $this->belongsTo(\App\Models\User::class, 'control_owner_id');
+    }
 }
