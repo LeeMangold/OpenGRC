@@ -126,6 +126,7 @@ class AppPanelProvider extends PanelProvider
             )
             ->navigationGroups([
                 'Foundations',
+                'Entities',
                 'Settings',
             ])
             ->middleware([
