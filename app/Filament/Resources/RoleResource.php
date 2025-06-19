@@ -23,6 +23,8 @@ class RoleResource extends Resource
 
     protected static ?string $navigationLabel = null;
 
+    protected static bool $shouldRegisterNavigation = false;
+
     public static function getNavigationLabel(): string
     {
         return __('navigation.resources.role');

@@ -22,6 +22,8 @@ class PermissionResource extends Resource
 
     protected static ?int $navigationSort = 20;
 
+    protected static bool $shouldRegisterNavigation = false;
+
     public static function getNavigationLabel(): string
     {
         return __('navigation.resources.permission');

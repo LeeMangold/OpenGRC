@@ -1,0 +1,42 @@
+.role-permission-matrix {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+}
+
+.role-permission-matrix th,
+.role-permission-matrix td {
+    padding: 0.75rem;
+    text-align: center;
+    border: 1px solid var(--gray-200);
+}
+
+.role-permission-matrix th {
+    background-color: var(--primary-50);
+    font-weight: 600;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+}
+
+.role-permission-matrix tr:hover {
+    background-color: rgb(var(--gray-50));
+}
+
+.role-permission-matrix .permission-name {
+    text-align: left;
+    font-weight: 500;
+}
+
+.role-permission-matrix .checkbox-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.role-permission-matrix .fi-fo-checkbox {
+    margin: 0;
+}
+
+.role-permission-matrix input[type="checkbox"] {
+    cursor: pointer;
+} 
