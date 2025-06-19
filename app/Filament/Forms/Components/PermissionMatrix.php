@@ -4,6 +4,7 @@ namespace App\Filament\Forms\Components;
 
 use Filament\Forms\Components\Field;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection as BaseCollection;
 
 class PermissionMatrix extends Field
 {
@@ -11,6 +12,7 @@ class PermissionMatrix extends Field
 
     protected Collection $matrixRoles;
     protected Collection $matrixPermissions;
+    protected ?BaseCollection $groupedPermissions = null;
 
     public function roles(Collection $roles): static
     {
@@ -21,6 +23,7 @@ class PermissionMatrix extends Field
     public function permissions(Collection $permissions): static
     {
         $this->matrixPermissions = $permissions;
+        $this->groupedPermissions = $permissions->groupBy('category')->sortKeys();
         return $this;
     }
 
@@ -32,5 +35,10 @@ class PermissionMatrix extends Field
     public function getPermissions(): Collection
     {
         return $this->matrixPermissions;
+    }
+
+    public function getGroupedPermissions(): BaseCollection
+    {
+        return $this->groupedPermissions;
     }
 } 

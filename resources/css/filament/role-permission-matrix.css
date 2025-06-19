@@ -22,6 +22,18 @@
     background-color: rgb(var(--gray-50));
 }
 
+.role-permission-matrix tr.category-header {
+    background-color: rgb(var(--gray-50));
+}
+
+.role-permission-matrix tr.category-header:hover {
+    background-color: rgb(var(--gray-50));
+}
+
+.role-permission-matrix .permission-row td:first-child {
+    padding-left: 2rem;
+}
+
 .role-permission-matrix .permission-name {
     text-align: left;
     font-weight: 500;
