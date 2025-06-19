@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
+use App\Filament\Resources\UserResource\RelationManagers;
 use App\Mail\UserCreatedMail;
 use App\Mail\UserForceResetMail;
 use App\Models\User;
@@ -54,14 +55,12 @@ class UserResource extends Resource
                     ->email()
                     ->required()
                     ->maxLength(255),
-                Forms\Components\Placeholder::make('roles_list')
-                    ->content(
-                        function (Model $record) {
-                            return $record->roles->pluck('name')->join(', ');
-                        }
-                    )
-                    ->label('Roles')
-                    ->disabled(),
+                Forms\Components\Select::make('roles')
+                    ->relationship('roles', 'name')
+                    ->multiple()
+                    ->preload()
+                    ->searchable()
+                    ->label('Roles'),
                 Forms\Components\Placeholder::make('last_activity')
                     ->content(
                         function (Model $record) {
@@ -141,7 +140,7 @@ class UserResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            'roles' => RelationManagers\RolesRelationManager::class,
         ];
     }
 
