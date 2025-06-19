@@ -33,6 +33,11 @@ class RiskResource extends Resource
         return $form
             ->columns()
             ->schema([
+                Forms\Components\TextInput::make('code')
+                    ->label('Code')
+                    ->unique('risks', 'code')
+                    ->columnSpanFull()
+                    ->required(),
                 Forms\Components\TextInput::make('name')
                     ->label('Name')
                     ->columnSpanFull()

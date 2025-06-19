@@ -48,7 +48,7 @@ class CreateRisk extends CreateRecord
                         ->label('Code')
                         ->prefix('RISK-')
                         ->numeric()
-                        ->disabled()
+                        //->disabled()
 			->dehydrated(true)
                         ->minValue(0)
                         ->integer()
