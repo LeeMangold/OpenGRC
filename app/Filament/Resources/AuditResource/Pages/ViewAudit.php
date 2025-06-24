@@ -12,6 +12,7 @@ use Filament\Actions\ActionGroup;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Support\Enums\ActionSize;
+use Symfony\Component\Process\Process;
 use Illuminate\Support\Facades\Storage;
 
 class ViewAudit extends ViewRecord
@@ -138,13 +139,29 @@ class ViewAudit extends ViewRecord
                 ->color('primary')
                 ->button(),
             ActionGroup::make([
+                Action::make('ExportAuditEvidence')
+                    ->label('Export All Evidence')
+                    ->icon('heroicon-m-arrow-down-tray')
+                    ->requiresConfirmation()
+                    ->modalHeading('Export All Evidence')
+                    ->modalDescription('This will generate a PDF for each audit item and zip them for download. You will be notified when the export is ready.')
+                    ->action(function (Audit $audit, $livewire) {
+                        \App\Jobs\ExportAuditEvidenceJob::dispatch($audit->id);
+                        $process = new Process(['php', base_path('artisan'), 'queue:work', '--once']);
+                        $process->run();
+                        \Log::info($process->getOutput());
+                        return Notification::make()
+                            ->title('Export Started')
+                            ->body('The export job has started. You will be able to download the ZIP file once it is ready.')
+                            ->success()
+                            ->send();
+                    }),
                 Action::make('ReportsButton')
                     ->label('Download Audit Report')
                     ->size(ActionSize::Small)
                     ->color('primary')
                     ->disabled(function (Audit $record) {
                         $record->load('members');
-
                         if ($record->status == WorkflowStatus::NOTSTARTED) {
                             return true;
                         } elseif ($record->manager_id != auth()->id() && $record->members->doesntContain(auth()->user())) {
@@ -157,7 +174,6 @@ class ViewAudit extends ViewRecord
                         if ($audit->status == WorkflowStatus::COMPLETED) {
                             $filepath = "audit_reports/AuditReport-{$this->record->id}.pdf";
                             $storage = Storage::disk(config('filesystems.default'));
-                            
                             if ($storage->exists($filepath)) {
                                 $fileContents = $storage->get($filepath);
                                 return response()->streamDownload(
@@ -181,7 +197,6 @@ class ViewAudit extends ViewRecord
                                 $reportTemplate = 'reports.implementation-report';
                             }
                             $pdf = Pdf::loadView($reportTemplate, ['audit' => $audit, 'auditItems' => $auditItems]);
-
                             return response()->streamDownload(
                                 function () use ($pdf) {
                                     echo $pdf->output();
@@ -190,8 +205,7 @@ class ViewAudit extends ViewRecord
                                 ['Content-Type' => 'application/pdf']
                             );
                         }
-                    }
-                    ),
+                    }),
             ])
                 ->label('Reports')
                 ->icon('heroicon-m-ellipsis-vertical')

@@ -13,7 +13,7 @@ class SessionTimeout
 {
     public function handle(Request $request, Closure $next)
     {
-        Log::debug('SessionTimeout middleware');
+        //Log::debug('SessionTimeout middleware');
         if (!Auth::check()) {
             return $next($request);
         }
