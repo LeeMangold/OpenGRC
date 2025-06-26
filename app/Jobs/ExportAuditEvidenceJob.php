@@ -116,8 +116,11 @@ class ExportAuditEvidenceJob implements ShouldQueue
             $zip->close();
         }
         // Optionally, clean up individual PDFs if you only want to keep the ZIP
-        // foreach ($pdfFiles as $file) {
-        //     unlink($file);
-        // }
+        foreach ($pdfFiles as $file) {
+            unlink($file);
+        }
+
+        // Send file to browser
+        return response()->download($zipPath);
     }
 }
