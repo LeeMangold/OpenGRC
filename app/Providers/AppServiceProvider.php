@@ -71,14 +71,6 @@ class AppServiceProvider extends ServiceProvider
                         if (!empty($s3Secret)) {
                             $s3Secret = Crypt::decryptString($s3Secret);
                         }
-                    } catch (\Exception $e) {
-                        // If decryption fails, log it but don't expose the error
-                        \Log::error('Failed to decrypt S3 credentials: ' . $e->getMessage());
-                        // Fall back to local storage if S3 credentials can't be decrypted
-                        $storageDriver = 'private';
-                    }
-
-                    if ($storageDriver === 's3') {
                         config()->set('filesystems.disks.s3', array_merge(config('filesystems.disks.s3', []), [
                             'driver' => 's3',
                             'key' => $s3Key,
@@ -87,6 +79,11 @@ class AppServiceProvider extends ServiceProvider
                             'bucket' => setting('storage.s3.bucket'),
                             'use_path_style_endpoint' => false,
                         ]));
+                    } catch (\Exception $e) {
+                        // If decryption fails, log it but don't expose the error
+                        \Log::error('Failed to decrypt S3 credentials: ' . $e->getMessage());
+                        // Fall back to local storage if S3 credentials can't be decrypted
+                        $storageDriver = 'private';
                     }
                 }
 

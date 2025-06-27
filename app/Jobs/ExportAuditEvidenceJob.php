@@ -37,10 +37,14 @@ class ExportAuditEvidenceJob implements ShouldQueue
             'auditItems.dataRequests.responses.attachments',
             'auditItems.auditable'
         ])->findOrFail($this->auditId);
+        Log::info('*** CHECKPOINT 1 ***');
         $exportPath = storage_path("app/exports/audit_{$this->auditId}/");
-        if (!is_dir($exportPath)) {
-            mkdir($exportPath, 0777, true);
+        if (!Storage::exists("app/exports/audit_{$this->auditId}/")) {
+            Storage::makeDirectory("app/exports/audit_{$this->auditId}/");
         }
+
+        
+        
         $pdfFiles = [];
         // Gather all Data Requests for this audit, but only those that exist
         $dataRequests = $audit->auditItems->flatMap(function ($item) {
@@ -115,12 +119,12 @@ class ExportAuditEvidenceJob implements ShouldQueue
             }
             $zip->close();
         }
+
+
         // Optionally, clean up individual PDFs if you only want to keep the ZIP
         foreach ($pdfFiles as $file) {
             unlink($file);
         }
 
-        // Send file to browser
-        return response()->download($zipPath);
     }
 }
