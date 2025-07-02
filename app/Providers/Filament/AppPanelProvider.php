@@ -118,7 +118,8 @@ class AppPanelProvider extends PanelProvider
                     )
                     ->passwordUpdateRules(
                         rules: [Password::default()->mixedCase()->uncompromised(3)->min(12)],
-                    ),
+                    )
+                    ->enableSanctumTokens(),
                 FilamentSocialitePlugin::make()
                     ->setProviders($socialProviders),
             ],

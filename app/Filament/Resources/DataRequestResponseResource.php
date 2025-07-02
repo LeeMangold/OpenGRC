@@ -100,6 +100,10 @@ class DataRequestResponseResource extends Resource
                                     ->deletable()
                                     ->reorderable()
                                     ->maxSize(10240) // 10MB max
+                                    ->getUploadedFileNameForStorageUsing(function ($file) {
+                                        $random = Str::random(8);
+                                        return $random . '-' . $file->getClientOriginalName();
+                                    })
                                     ->deleteUploadedFileUsing(function ($state) {
                                         if ($state) {
                                             Storage::disk(config('filesystems.default'))->delete($state);

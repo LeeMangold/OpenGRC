@@ -13,6 +13,7 @@
         "amidesfahani/filament-tinyeditor": "^2.1.1",
         "barryvdh/laravel-dompdf": "^3.1.1",
         "bezhansalleh/filament-language-switch": "^3.1.1",
+        "dedoc/scramble": "^0.12.23",
         "dutchcodingcompany/filament-socialite": "^1.5.0",
         "filament/actions": "^3.3.28",
         "filament/filament": "^3.3.28",

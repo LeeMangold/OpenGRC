@@ -215,7 +215,7 @@ class Install extends Command
         $envContent = file_get_contents($envPath);
 
         foreach ($data as $key => $value) {
-            $envContent = preg_replace("/^{$key}=.*/m", "{$key}={$value}", $envContent);
+            $envContent = preg_replace("/^{$key}=.*/m", "{$key}=\"{$value}\"", $envContent);
         }
 
         file_put_contents($envPath, $envContent);
