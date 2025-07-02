@@ -100,7 +100,6 @@ class User extends Authenticatable implements FilamentUser
             ->where('id', $this->id)
             ->update(['last_activity' => now()]);
 
-        Log::debug('User Logged In');
     }
 
     public function canAccessPanel(Panel $panel): bool

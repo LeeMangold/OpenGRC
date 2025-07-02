@@ -12,6 +12,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use ZipArchive;
+use Illuminate\Support\Facades\Schema;
 
 class ExportAuditEvidenceJob implements ShouldQueue
 {
@@ -37,29 +38,34 @@ class ExportAuditEvidenceJob implements ShouldQueue
             'auditItems.dataRequests.responses.attachments',
             'auditItems.auditable'
         ])->findOrFail($this->auditId);
-        Log::info('*** CHECKPOINT 1 ***');
+
         $exportPath = storage_path("app/exports/audit_{$this->auditId}/");
-        if (!Storage::exists("app/exports/audit_{$this->auditId}/")) {
+        if (!Storage::exists("app/exports/audit_{$this->auditId}/") && !Storage::disk('s3')) {
             Storage::makeDirectory("app/exports/audit_{$this->auditId}/");
         }
-
         
-        
+        $disk = setting('storage.driver', 'private');
         $pdfFiles = [];
-        // Gather all Data Requests for this audit, but only those that exist
         $dataRequests = $audit->auditItems->flatMap(function ($item) {
             return $item->dataRequests;
-        })->filter(); // filter out empty/null
+        })->filter();
+
+        // Directory/key prefix for exports
+        $exportDir = "exports/audit_{$this->auditId}/";
+
+        // Create a local temp directory for PDFs
+        $tmpDir = sys_get_temp_dir() . "/audit_{$this->auditId}_" . uniqid();
+        if (!is_dir($tmpDir)) {
+            mkdir($tmpDir, 0777, true);
+        }
+        $localFiles = [];
 
         foreach ($dataRequests as $dataRequest) {
             $auditItem = $dataRequest->auditItem;
-            // Ensure responses and attachments are loaded for this dataRequest
             $dataRequest->loadMissing(['responses.attachments']);
             
             // Preprocess attachments: add base64_image property for images
-            $disk = setting('filesystems.default', 'private');
             foreach ($dataRequest->responses as $response) {
-                
                 foreach ($response->attachments as $attachment) {
                     $isImage = false;
                     $ext = strtolower(pathinfo($attachment->file_name, PATHINFO_EXTENSION));
@@ -69,13 +75,6 @@ class ExportAuditEvidenceJob implements ShouldQueue
                     }
                     $storage = \Storage::disk($disk);
                     $attachment->base64_image = null;                    
-                    \Log::debug('[ExportAuditEvidenceJob] Processing attachment', [
-                        'attachment_id' => $attachment->id,
-                        'file_name' => $attachment->file_name,
-                        'file_path' => $attachment->file_path,
-                        'is_image' => $isImage,
-                        'disk' => $disk,
-                    ]);
                     if ($isImage) {
                         $exists = $storage->exists($attachment->file_path);
                         \Log::info('[ExportAuditEvidenceJob] Image file existence', [
@@ -84,47 +83,81 @@ class ExportAuditEvidenceJob implements ShouldQueue
                         ]);
                         if ($exists) {
                             $imgRaw = $storage->get($attachment->file_path);
-                            Log::info($imgRaw);
                             $mime = $storage->mimeType($attachment->file_path);
-                            \Log::info('[ExportAuditEvidenceJob] Image file details', [
-                                'file_path' => $attachment->file_path,
-                                'mime' => $mime,
-                                'raw_size' => strlen($imgRaw)
-                            ]);
                             $attachment->base64_image = 'data:' . $mime . ';base64,' . base64_encode($imgRaw);
-                            \Log::debug('[ExportAuditEvidenceJob] base64_image set', [
-                                'attachment_id' => $attachment->id,
-                                'base64_set' => $attachment->base64_image ? true : false
-                            ]);
                         }
                     }
                 }
             }
-
+            
             $pdf = Pdf::loadView('pdf.audit-item', [
                 'audit' => $audit,
                 'auditItem' => $auditItem,
                 'dataRequest' => $dataRequest,
             ]);
             $filename = "data_request_{$dataRequest->id}.pdf";
-            $pdf->save($exportPath . $filename);
-            $pdfFiles[] = $exportPath . $filename;
+            $localPath = $tmpDir . '/' . $filename;
+            $pdf->save($localPath);
+            $localFiles[] = $localPath;
+            $pdfFiles[] = $filename;
         }
-        // Create ZIP
-        $zipPath = $exportPath . "audit_{$this->auditId}_data_requests.zip";
-        $zip = new ZipArchive;
-        if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) === TRUE) {
-            foreach ($pdfFiles as $file) {
-                $zip->addFile($file, basename($file));
+        Log::info("*** $disk ***");
+        if ($disk === 's3') {
+            // Upload PDFs to S3
+            // foreach ($pdfFiles as $filename) {
+            //     $localPath = $tmpDir . '/' . $filename;
+            //     $pdfPath = $exportDir . $filename;
+            //     \Storage::disk('s3')->put($pdfPath, file_get_contents($localPath));
+            // }
+
+            Log::info('*** CREATE ZIP ***');
+            // Create ZIP locally
+            $zipLocalPath = $tmpDir . "/audit_{$this->auditId}_data_requests.zip";
+            $zip = new ZipArchive;
+            if ($zip->open($zipLocalPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) === TRUE) {
+                foreach ($localFiles as $file) {
+                    $zip->addFile($file, basename($file));
+                }
+                $zip->close();
             }
-            $zip->close();
+            // Upload ZIP to S3
+            $zipS3Path = $exportDir . "audit_{$this->auditId}_data_requests.zip";
+            \Storage::disk('s3')->put($zipS3Path, file_get_contents($zipLocalPath));
+            // Clean up
+            // Remove all files in the temp directory
+            $files = glob($tmpDir . '/*');
+            foreach ($files as $file) {
+                if (is_file($file)) {
+                    unlink($file);
+                }
+            }
+            rmdir($tmpDir);
+        } else {
+            // Local disk: create ZIP directly in export dir
+            $exportPath = storage_path('app/' . $exportDir);
+            if (!is_dir($exportPath)) {
+                mkdir($exportPath, 0777, true);
+            }
+            $zipPath = $exportPath . "audit_{$this->auditId}_data_requests.zip";
+            $zip = new \ZipArchive;
+            if ($zip->open($zipPath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) === TRUE) {
+                foreach ($localFiles as $file) {
+                    $zip->addFile($file, basename($file));
+                }
+                $zip->close();
+            }
+            // Optionally, clean up individual PDFs if you only want to keep the ZIP
+            // foreach ($localFiles as $file) {
+            //     unlink($file);
+            // }
+            // Remove all files in the temp directory
+            $files = glob($tmpDir . '/*');
+            foreach ($files as $file) {
+                if (is_file($file)) {
+                    unlink($file);
+                }
+            }
+            rmdir($tmpDir);
         }
-
-
-        // Optionally, clean up individual PDFs if you only want to keep the ZIP
-        foreach ($pdfFiles as $file) {
-            unlink($file);
-        }
-
     }
 }

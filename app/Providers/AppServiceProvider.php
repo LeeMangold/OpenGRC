@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\ServiceProvider;
 use Schema;
@@ -29,7 +28,7 @@ class AppServiceProvider extends ServiceProvider
         }
 
         // if table "settings" exists
-        if (! app()->runningInConsole()) {
+        // if (! app()->runningInConsole()) {
             if (Schema::hasTable('settings')) {
 
                 Config::set('app.name', setting('general.name', 'OpenGRC'));
@@ -62,11 +61,11 @@ class AppServiceProvider extends ServiceProvider
                 if ($storageDriver === 's3') {
                     $s3Key = setting('storage.s3.key');
                     $s3Secret = setting('storage.s3.secret');
-
+                    
                     // Decrypt credentials if they exist and are encrypted
                     try {
-                        if (!empty($s3Key)) {
-                            $s3Key = Crypt::decryptString($s3Key);
+                        if (!empty($s3Key)) {                            
+                            $s3Key = Crypt::decryptString($s3Key);                        
                         }
                         if (!empty($s3Secret)) {
                             $s3Secret = Crypt::decryptString($s3Secret);
@@ -98,7 +97,7 @@ class AppServiceProvider extends ServiceProvider
                 abort(500, 'OpenGRC was not installed properly. Please review the
                 installation guide at https://docs.opengrc.com to install the app.');
             }
-        }
+        // }
 
         Gate::before(function (User $user, string $ability) {
             return $user->isSuperAdmin() ? true : null;
