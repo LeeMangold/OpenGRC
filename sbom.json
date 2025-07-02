@@ -2,10 +2,10 @@
     "$schema": "http://cyclonedx.org/schema/bom-1.5.schema.json",
     "bomFormat": "CycloneDX",
     "specVersion": "1.5",
-    "serialNumber": "urn:uuid:e343524f-fd80-498b-b5a1-d524269cb99c",
+    "serialNumber": "urn:uuid:0dbd7367-c526-4b92-b5e7-bb3cb64791c6",
     "version": 1,
     "metadata": {
-        "timestamp": "2025-07-01T20:04:00Z",
+        "timestamp": "2025-07-02T00:22:33Z",
         "tools": [
             {
                 "name": "composer",
@@ -99,11 +99,11 @@
             "properties": [
                 {
                     "name": "cdx:composer:package:distReference",
-                    "value": "a4b33a6b263afd1281f80dc1fcdac0848e45cdbe"
+                    "value": "4c2470ab2ef525e0de9a20d64c552ba714c50cf3"
                 },
                 {
                     "name": "cdx:composer:package:sourceReference",
-                    "value": "a4b33a6b263afd1281f80dc1fcdac0848e45cdbe"
+                    "value": "4c2470ab2ef525e0de9a20d64c552ba714c50cf3"
                 },
                 {
                     "name": "cdx:composer:package:type",
@@ -1144,6 +1144,64 @@
                 {
                     "name": "cdx:composer:package:sourceReference",
                     "value": "8dfd07c6d2cf31c8da90c53b83c026c7696dda90"
+                },
+                {
+                    "name": "cdx:composer:package:type",
+                    "value": "library"
+                }
+            ]
+        },
+        {
+            "bom-ref": "dedoc/scramble-0.12.23.0",
+            "type": "library",
+            "name": "scramble",
+            "version": "v0.12.23",
+            "group": "dedoc",
+            "description": "Automatic generation of API documentation for Laravel applications.",
+            "author": "Roman Lytvynenko",
+            "licenses": [
+                {
+                    "license": {
+                        "id": "MIT"
+                    }
+                }
+            ],
+            "purl": "pkg:composer/dedoc/scramble@v0.12.23",
+            "externalReferences": [
+                {
+                    "type": "distribution",
+                    "url": "https://api.github.com/repos/dedoc/scramble/zipball/5b650167c81c59138e844c2ae550c14dc1a249d0",
+                    "comment": "dist reference: 5b650167c81c59138e844c2ae550c14dc1a249d0"
+                },
+                {
+                    "type": "vcs",
+                    "url": "https://github.com/dedoc/scramble.git",
+                    "comment": "source reference: 5b650167c81c59138e844c2ae550c14dc1a249d0"
+                },
+                {
+                    "type": "website",
+                    "url": "https://github.com/dedoc/scramble",
+                    "comment": "as detected from Composer manifest 'homepage'"
+                },
+                {
+                    "type": "issue-tracker",
+                    "url": "https://github.com/dedoc/scramble/issues",
+                    "comment": "as detected from Composer manifest 'support.issues'"
+                },
+                {
+                    "type": "vcs",
+                    "url": "https://github.com/dedoc/scramble/tree/v0.12.23",
+                    "comment": "as detected from Composer manifest 'support.source'"
+                }
+            ],
+            "properties": [
+                {
+                    "name": "cdx:composer:package:distReference",
+                    "value": "5b650167c81c59138e844c2ae550c14dc1a249d0"
+                },
+                {
+                    "name": "cdx:composer:package:sourceReference",
+                    "value": "5b650167c81c59138e844c2ae550c14dc1a249d0"
                 },
                 {
                     "name": "cdx:composer:package:type",
@@ -4824,10 +4882,6 @@
                 {
                     "name": "cdx:composer:package:type",
                     "value": "library"
-                },
-                {
-                    "name": "cdx:composer:package:isDevRequirement",
-                    "value": "true"
                 }
             ]
         },
@@ -6194,6 +6248,58 @@
                 {
                     "name": "cdx:composer:package:sourceReference",
                     "value": "56483a7de62a6c2a6635e42e93b8a9e25d4f0ec6"
+                },
+                {
+                    "name": "cdx:composer:package:type",
+                    "value": "library"
+                }
+            ]
+        },
+        {
+            "bom-ref": "phpstan/phpdoc-parser-2.1.0.0",
+            "type": "library",
+            "name": "phpdoc-parser",
+            "version": "2.1.0",
+            "group": "phpstan",
+            "description": "PHPDoc parser with support for nullable, intersection and generic types",
+            "licenses": [
+                {
+                    "license": {
+                        "id": "MIT"
+                    }
+                }
+            ],
+            "purl": "pkg:composer/phpstan/phpdoc-parser@2.1.0",
+            "externalReferences": [
+                {
+                    "type": "distribution",
+                    "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/9b30d6fd026b2c132b3985ce6b23bec09ab3aa68",
+                    "comment": "dist reference: 9b30d6fd026b2c132b3985ce6b23bec09ab3aa68"
+                },
+                {
+                    "type": "vcs",
+                    "url": "https://github.com/phpstan/phpdoc-parser.git",
+                    "comment": "source reference: 9b30d6fd026b2c132b3985ce6b23bec09ab3aa68"
+                },
+                {
+                    "type": "issue-tracker",
+                    "url": "https://github.com/phpstan/phpdoc-parser/issues",
+                    "comment": "as detected from Composer manifest 'support.issues'"
+                },
+                {
+                    "type": "vcs",
+                    "url": "https://github.com/phpstan/phpdoc-parser/tree/2.1.0",
+                    "comment": "as detected from Composer manifest 'support.source'"
+                }
+            ],
+            "properties": [
+                {
+                    "name": "cdx:composer:package:distReference",
+                    "value": "9b30d6fd026b2c132b3985ce6b23bec09ab3aa68"
+                },
+                {
+                    "name": "cdx:composer:package:sourceReference",
+                    "value": "9b30d6fd026b2c132b3985ce6b23bec09ab3aa68"
                 },
                 {
                     "name": "cdx:composer:package:type",
@@ -11830,6 +11936,15 @@
             "ref": "dasprid/enum-1.0.6.0"
         },
         {
+            "ref": "dedoc/scramble-0.12.23.0",
+            "dependsOn": [
+                "myclabs/deep-copy-1.13.1.0",
+                "nikic/php-parser-5.5.0.0",
+                "phpstan/phpdoc-parser-2.1.0.0",
+                "spatie/laravel-package-tools-1.92.4.0"
+            ]
+        },
+        {
             "ref": "dflydev/dot-access-data-3.0.3.0"
         },
         {
@@ -12404,6 +12519,9 @@
             ]
         },
         {
+            "ref": "phpstan/phpdoc-parser-2.1.0.0"
+        },
+        {
             "ref": "phpstan/phpstan-1.12.27.0"
         },
         {
@@ -12926,6 +13044,7 @@
                 "amidesfahani/filament-tinyeditor-2.1.1.0",
                 "barryvdh/laravel-dompdf-3.1.1.0",
                 "bezhansalleh/filament-language-switch-3.1.1.0",
+                "dedoc/scramble-0.12.23.0",
                 "dutchcodingcompany/filament-socialite-1.5.0.0",
                 "filament/actions-3.3.30.0",
                 "filament/filament-3.3.30.0",
