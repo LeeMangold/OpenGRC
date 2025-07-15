@@ -152,7 +152,7 @@ class ViewAudit extends ViewRecord
                         \Log::info($process->getOutput());
                         return Notification::make()
                             ->title('Export Started')
-                            ->body('The export job has started. You will be able to download the ZIP file once it is ready.')
+                            ->body('The export job has started. You will be able to download the ZIP in the Attachments section.')
                             ->success()
                             ->send();
                     }),

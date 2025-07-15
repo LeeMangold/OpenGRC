@@ -142,7 +142,7 @@ class ExportAuditEvidenceJob implements ShouldQueue
             rmdir($tmpDir);
         } else {
             // Local disk: create ZIP directly in export dir
-            $exportPath = storage_path('app/' . $exportDir);
+            $exportPath = storage_path('app/private/' . $exportDir);
             if (!is_dir($exportPath)) {
                 mkdir($exportPath, 0777, true);
             }
