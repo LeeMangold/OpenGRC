@@ -120,8 +120,7 @@ class User extends Authenticatable implements FilamentUser
     public function openTodos(): HasMany
     {
         return $this->hasMany(DataRequestResponse::class, 'requestee_id')
-            ->where('status', ResponseStatus::PENDING)
-            ->orWhere('status', ResponseStatus::REJECTED);
+            ->whereIn('status', [ResponseStatus::PENDING, ResponseStatus::REJECTED]);
     }
 
     public function managedPrograms(): HasMany

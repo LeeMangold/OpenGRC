@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use ZipArchive;
 use Illuminate\Support\Facades\Schema;
+use App\Models\FileAttachment;
 
 class ExportAuditEvidenceJob implements ShouldQueue
 {
@@ -101,16 +102,8 @@ class ExportAuditEvidenceJob implements ShouldQueue
             $localFiles[] = $localPath;
             $pdfFiles[] = $filename;
         }
-        Log::info("*** $disk ***");
-        if ($disk === 's3') {
-            // Upload PDFs to S3
-            // foreach ($pdfFiles as $filename) {
-            //     $localPath = $tmpDir . '/' . $filename;
-            //     $pdfPath = $exportDir . $filename;
-            //     \Storage::disk('s3')->put($pdfPath, file_get_contents($localPath));
-            // }
 
-            Log::info('*** CREATE ZIP ***');
+        if ($disk === 's3') {
             // Create ZIP locally
             $zipLocalPath = $tmpDir . "/audit_{$this->auditId}_data_requests.zip";
             $zip = new ZipArchive;
@@ -123,6 +116,21 @@ class ExportAuditEvidenceJob implements ShouldQueue
             // Upload ZIP to S3
             $zipS3Path = $exportDir . "audit_{$this->auditId}_data_requests.zip";
             \Storage::disk('s3')->put($zipS3Path, file_get_contents($zipLocalPath));
+
+            // Create or update FileAttachment for the ZIP
+            FileAttachment::updateOrCreate(
+                [
+                    'audit_id' => $this->auditId,
+                    'data_request_response_id' => null,
+                    'file_name' => "audit_{$this->auditId}_data_requests.zip",
+                ],
+                [
+                    'file_path' => $zipS3Path,
+                    'file_size' => filesize($zipLocalPath),
+                    'uploaded_by' => auth()->id() ?? null,
+                    'description' => 'Exported audit evidence ZIP',
+                ]
+            );
             // Clean up
             // Remove all files in the temp directory
             $files = glob($tmpDir . '/*');
@@ -146,10 +154,22 @@ class ExportAuditEvidenceJob implements ShouldQueue
                 }
                 $zip->close();
             }
-            // Optionally, clean up individual PDFs if you only want to keep the ZIP
-            // foreach ($localFiles as $file) {
-            //     unlink($file);
-            // }
+
+            // Create or update FileAttachment for the ZIP
+            FileAttachment::updateOrCreate(
+                [
+                    'audit_id' => $this->auditId,
+                    'data_request_response_id' => null,
+                    'file_name' => "audit_{$this->auditId}_data_requests.zip",
+                ],
+                [
+                    'file_path' => $exportDir . "audit_{$this->auditId}_data_requests.zip",
+                    'file_size' => filesize($zipPath),
+                    'uploaded_by' => auth()->id() ?? null,
+                    'description' => 'Exported audit evidence ZIP',
+                ]
+            );
+
             // Remove all files in the temp directory
             $files = glob($tmpDir . '/*');
             foreach ($files as $file) {

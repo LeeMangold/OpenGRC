@@ -82,7 +82,10 @@ class SettingsSeeder extends Seeder
             $value = stripcslashes($setting['value']);
             //            setting([$setting['key'] => $setting['value']]);
 
-            DB::table('settings')->insert(['key' => $setting['key'], 'value' => json_encode($value)]);
+            DB::table('settings')->updateOrInsert(
+                ['key' => $setting['key']],
+                ['value' => json_encode($value)]
+            );
         }
 
         Artisan::call('cache:clear');

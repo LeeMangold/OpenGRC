@@ -28,7 +28,7 @@
         "laravel/sanctum": "^4.1.2",
         "laravel/tinker": "^2.10.1",
         "league/flysystem-aws-s3-v3": "^3.29",
-        "leandrocfe/filament-apex-charts": "^3.2.0",
+        "leandrocfe/filament-apex-charts": "^3.2.1",
         "lucasgiovanny/filament-multiselect-two-sides": "^2.1.2",
         "outerweb/filament-settings": "^1.3.0",
         "outerweb/settings": "^1.1.0",

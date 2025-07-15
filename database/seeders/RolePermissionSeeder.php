@@ -13,11 +13,23 @@ class RolePermissionSeeder extends Seeder
     {
         // -----------------------------------------------------------------------------------------
         // Create Roles
-        $none = Role::create(['name' => 'None']);
-        $regular = Role::create(['name' => 'Regular User', 'description' => 'Read-Only-Responder User']);
-        $superAdmin = Role::create(['name' => 'Super Admin', 'description' => 'Super User with all permissions']);
-        $securityAdmin = Role::create(['name' => 'Security Admin', 'description' => 'Able to Edit all data and run Audits but not manage users']);
-        $internalAuditor = Role::create(['name' => 'Internal Auditor', 'description' => 'Able to run Audits but not edit other foundational data']);
+        $none = Role::firstOrCreate(['name' => 'None', 'guard_name' => 'web']);
+        $regular = Role::firstOrCreate(
+            ['name' => 'Regular User', 'guard_name' => 'web'],
+            ['description' => 'Read-Only-Responder User']
+        );
+        $superAdmin = Role::firstOrCreate(
+            ['name' => 'Super Admin', 'guard_name' => 'web'],
+            ['description' => 'Super User with all permissions']
+        );
+        $securityAdmin = Role::firstOrCreate(
+            ['name' => 'Security Admin', 'guard_name' => 'web'],
+            ['description' => 'Able to Edit all data and run Audits but not manage users']
+        );
+        $internalAuditor = Role::firstOrCreate(
+            ['name' => 'Internal Auditor', 'guard_name' => 'web'],
+            ['description' => 'Able to run Audits but not edit other foundational data']
+        );
 
         // -----------------------------------------------------------------------------------------
         // Create Resource Permissions

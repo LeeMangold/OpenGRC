@@ -18,6 +18,8 @@ use Illuminate\Support\Carbon;
  * @property Carbon $uploaded_at
  * @property int $uploaded_by
  * @property int $data_request_id
+ * @property int $audit_id
+ * @property int $data_request_response_id
  * @property-read DataRequest $dataRequest
  *
  * @method static Builder|FileAttachment newModelQuery()
@@ -29,6 +31,8 @@ use Illuminate\Support\Carbon;
  * @method static Builder|FileAttachment whereUploadedAt($value)
  * @method static Builder|FileAttachment whereUploadedBy($value)
  * @method static Builder|FileAttachment whereDataRequestId($value)
+ * @method static Builder|FileAttachment whereAuditId($value)
+ * @method static Builder|FileAttachment whereDataRequestResponseId($value)
  *
  * @mixin Eloquent
  */
@@ -46,6 +50,8 @@ class FileAttachment extends Model
         'uploaded_at',
         'uploaded_by',
         'data_request_id',
+        'audit_id',
+        'data_request_response_id',
     ];
 
     /**

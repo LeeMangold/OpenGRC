@@ -27,8 +27,21 @@ class AppServiceProvider extends ServiceProvider
             URL::forceScheme('https');
         }
 
-        // if table "settings" exists
-        // if (! app()->runningInConsole()) {
+        // Only skip the install check if running the installer command
+        $isInstaller = false;
+        if ($this->app->runningInConsole()) {
+            $argv = $_SERVER['argv'] ?? [];
+            if (isset($argv[1]) && (
+               $argv[1] === 'opengrc:install' 
+            || $argv[1] === 'package:discover'
+            || $argv[1] === 'filament:upgrade'
+            || $argv[1] === 'vendor:publish'
+            )) {
+                $isInstaller = true;
+            }
+        }
+
+        if (! $isInstaller) {
             if (Schema::hasTable('settings')) {
 
                 Config::set('app.name', setting('general.name', 'OpenGRC'));
@@ -97,7 +110,7 @@ class AppServiceProvider extends ServiceProvider
                 abort(500, 'OpenGRC was not installed properly. Please review the
                 installation guide at https://docs.opengrc.com to install the app.');
             }
-        // }
+        }
 
         Gate::before(function (User $user, string $ability) {
             return $user->isSuperAdmin() ? true : null;

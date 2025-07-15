@@ -35,7 +35,7 @@ class FileAttachmentResource extends Resource
                 FileUpload::make('file_path')
                     ->label('File')
                     ->preserveFilenames()
-                    ->disk('private')
+                    ->disk(setting('storage.driver', 'private'))
                     ->directory(function () {
                         $rand = Carbon::now()->timestamp.'-'.Str::random(2);
 

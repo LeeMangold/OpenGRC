@@ -33,7 +33,7 @@ class AttachmentsRelationManager extends RelationManager
                     ->label('File')
                     ->required()
                     ->disk(config('filesystems.default'))
-                    ->directory('audit-attachments')
+                    ->directory('attachments')
                     ->visibility('private')
                     ->storeFileNamesIn('file_name')
                     ->deleteUploadedFileUsing(function ($state) {
