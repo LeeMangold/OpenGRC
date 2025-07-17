@@ -128,3 +128,19 @@ a.fi-logo {
     background-color: #d4e7ef !important;
     color: #000000;
 }
+
+.fi-sidebar-bottom-links {
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    width: 100%;
+    background: inherit;
+    z-index: 10;
+}
+.fi-sidebar-bottom-links a {
+    color: #fff !important;
+}
+.fi-sidebar-bottom-links a:hover {
+    color: #d4e7ef !important;
+    text-decoration: underline;
+}

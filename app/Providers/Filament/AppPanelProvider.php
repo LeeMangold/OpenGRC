@@ -20,7 +20,6 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Jeffgreco13\FilamentBreezy\BreezyCore;
-use JibayMcs\FilamentTour\FilamentTourPlugin;
 use Leandrocfe\FilamentApexCharts\FilamentApexChartsPlugin;
 use Outerweb\FilamentSettings\Filament\Plugins\FilamentSettingsPlugin;
 
@@ -94,17 +93,10 @@ class AppPanelProvider extends PanelProvider
             ->sidebarCollapsibleOnDesktop()
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
-            ->pages([
-                //                Pages\Dashboard::class,
-            ])
+            ->pages([])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->plugins([
-                FilamentApexChartsPlugin::make(),
-                //                FilamentTourPlugin::make(),
-                FilamentSettingsPlugin::make()
-                ->pages([
-                    \App\Filament\Pages\Settings\Settings::class,
-                ]),
+                FilamentApexChartsPlugin::make(),                
                 BreezyCore::make()
                     ->myProfile(
                         shouldRegisterUserMenu: true,
@@ -128,7 +120,6 @@ class AppPanelProvider extends PanelProvider
             ->navigationGroups([
                 'Foundations',
                 'Entities',
-                'Settings',
             ])
             ->middleware([
                 EncryptCookies::class,
