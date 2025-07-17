@@ -130,12 +130,10 @@ a.fi-logo {
 }
 
 .fi-sidebar-bottom-links {
-    position: absolute;
-    bottom: 20px;
-    left: 0;
-    width: 100%;
     background: inherit;
+    width: 100%;
     z-index: 10;
+    /* Optionally add padding or border if you want separation */
 }
 .fi-sidebar-bottom-links a {
     color: #fff !important;
@@ -143,4 +141,25 @@ a.fi-logo {
 .fi-sidebar-bottom-links a:hover {
     color: #d4e7ef !important;
     text-decoration: underline;
+}
+
+/* Custom sidebar scrollbar */
+.fi-sidebar-nav {
+    scrollbar-width: thin;
+    scrollbar-color: #374151 #232e3c; /* thumb color, track color */
+}
+
+/* For Webkit browsers (Chrome, Edge, Safari) */
+.fi-sidebar-nav::-webkit-scrollbar {
+    width: 8px;
+    background: #232e3c; /* track color */
+}
+
+.fi-sidebar-nav::-webkit-scrollbar-thumb {
+    background: #374151; /* thumb color */
+    border-radius: 6px;
+}
+
+.fi-sidebar-nav::-webkit-scrollbar-thumb:hover {
+    background: #1375a0; /* thumb color on hover */
 }
