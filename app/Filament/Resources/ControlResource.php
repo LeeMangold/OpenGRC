@@ -133,7 +133,7 @@ class ControlResource extends Resource
             })
             ->emptyStateHeading(__('control.table.empty_state.heading'))
             ->emptyStateDescription(new HtmlString(__('control.table.empty_state.description', [
-                'url' => route('filament.app.resources.bundles.index')
+                'url' => route('filament.app.resources.controls.index')
             ])))
             ->columns([
                 Tables\Columns\TextColumn::make('code')

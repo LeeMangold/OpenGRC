@@ -198,7 +198,7 @@ class StandardResource extends Resource
             ->emptyStateHeading(new HtmlString(__('standard.table.empty_state.heading')))
             ->emptyStateDescription(
                 new HtmlString(__('standard.table.empty_state.description', [
-                    'url' => route('filament.app.resources.bundles.index')
+                    'url' => route('filament.app.resources.standards.index')
                 ]))
             );
     }
