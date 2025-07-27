@@ -50,5 +50,7 @@ sudo find storage bootstrap/cache -type d -exec chmod g+s {} \;
 
 echo "Setting correct permissions for utilities..."
 sudo chmod 770 install.sh update.sh set_permissions generate-sbom.php artisan
+sudo chmod 770 vendor/bin/*
+sudo chmod 770 vendor/laravel/dusk/bin/*
 
 echo "Done. Ownership is $CURRENT_USER:$WEB_USER and OpenGRC permissions are set."
