@@ -179,6 +179,10 @@ class Install extends Command
             'APP_URL' => $site_url,
         ]);
 
+        // Link public storage to public folder.
+        $this->info('Linking public storage to public folder');
+        $this->call('storage:link');
+
         // Build front-end assets.
         $this->info('Building Front-End assets');
         exec('npm install && npm run build');

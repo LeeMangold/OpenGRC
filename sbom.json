@@ -2,10 +2,10 @@
     "$schema": "http://cyclonedx.org/schema/bom-1.5.schema.json",
     "bomFormat": "CycloneDX",
     "specVersion": "1.5",
-    "serialNumber": "urn:uuid:38c44cca-73fa-4151-bfb3-98baab7f8ff5",
+    "serialNumber": "urn:uuid:d8302938-621f-41ff-8c5c-387df26cee0e",
     "version": 1,
     "metadata": {
-        "timestamp": "2025-07-21T14:43:43Z",
+        "timestamp": "2025-07-27T18:01:23Z",
         "tools": [
             {
                 "name": "composer",
@@ -99,11 +99,11 @@
             "properties": [
                 {
                     "name": "cdx:composer:package:distReference",
-                    "value": "73207b072fba2dfead7ed92dbb5b611f5a460300"
+                    "value": "f091fd71b55518ce1364c0fa31beffaeb20654dc"
                 },
                 {
                     "name": "cdx:composer:package:sourceReference",
-                    "value": "73207b072fba2dfead7ed92dbb5b611f5a460300"
+                    "value": "f091fd71b55518ce1364c0fa31beffaeb20654dc"
                 },
                 {
                     "name": "cdx:composer:package:type",
@@ -282,10 +282,10 @@
             ]
         },
         {
-            "bom-ref": "aws/aws-sdk-php-3.351.2.0",
+            "bom-ref": "aws/aws-sdk-php-3.351.7.0",
             "type": "library",
             "name": "aws-sdk-php",
-            "version": "3.351.2",
+            "version": "3.351.7",
             "group": "aws",
             "description": "AWS SDK for PHP - Use Amazon Web Services in your PHP project",
             "author": "Amazon Web Services",
@@ -296,17 +296,17 @@
                     }
                 }
             ],
-            "purl": "pkg:composer/aws/aws-sdk-php@3.351.2",
+            "purl": "pkg:composer/aws/aws-sdk-php@3.351.7",
             "externalReferences": [
                 {
                     "type": "distribution",
-                    "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/b418b41ceee47103f364e709c5f3a58a4bcf0894",
-                    "comment": "dist reference: b418b41ceee47103f364e709c5f3a58a4bcf0894"
+                    "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/9506d7fdb3cb84f8d7b175c594db9993264814be",
+                    "comment": "dist reference: 9506d7fdb3cb84f8d7b175c594db9993264814be"
                 },
                 {
                     "type": "vcs",
                     "url": "https://github.com/aws/aws-sdk-php.git",
-                    "comment": "source reference: b418b41ceee47103f364e709c5f3a58a4bcf0894"
+                    "comment": "source reference: 9506d7fdb3cb84f8d7b175c594db9993264814be"
                 },
                 {
                     "type": "website",
@@ -325,18 +325,18 @@
                 },
                 {
                     "type": "vcs",
-                    "url": "https://github.com/aws/aws-sdk-php/tree/3.351.2",
+                    "url": "https://github.com/aws/aws-sdk-php/tree/3.351.7",
                     "comment": "as detected from Composer manifest 'support.source'"
                 }
             ],
             "properties": [
                 {
                     "name": "cdx:composer:package:distReference",
-                    "value": "b418b41ceee47103f364e709c5f3a58a4bcf0894"
+                    "value": "9506d7fdb3cb84f8d7b175c594db9993264814be"
                 },
                 {
                     "name": "cdx:composer:package:sourceReference",
-                    "value": "b418b41ceee47103f364e709c5f3a58a4bcf0894"
+                    "value": "9506d7fdb3cb84f8d7b175c594db9993264814be"
                 },
                 {
                     "name": "cdx:composer:package:type",
@@ -1152,10 +1152,10 @@
             ]
         },
         {
-            "bom-ref": "dedoc/scramble-0.12.23.0",
+            "bom-ref": "dedoc/scramble-0.12.26.0",
             "type": "library",
             "name": "scramble",
-            "version": "v0.12.23",
+            "version": "v0.12.26",
             "group": "dedoc",
             "description": "Automatic generation of API documentation for Laravel applications.",
             "author": "Roman Lytvynenko",
@@ -1166,17 +1166,17 @@
                     }
                 }
             ],
-            "purl": "pkg:composer/dedoc/scramble@v0.12.23",
+            "purl": "pkg:composer/dedoc/scramble@v0.12.26",
             "externalReferences": [
                 {
                     "type": "distribution",
-                    "url": "https://api.github.com/repos/dedoc/scramble/zipball/5b650167c81c59138e844c2ae550c14dc1a249d0",
-                    "comment": "dist reference: 5b650167c81c59138e844c2ae550c14dc1a249d0"
+                    "url": "https://api.github.com/repos/dedoc/scramble/zipball/cf49fb80476db818115a402d37213be08695e568",
+                    "comment": "dist reference: cf49fb80476db818115a402d37213be08695e568"
                 },
                 {
                     "type": "vcs",
                     "url": "https://github.com/dedoc/scramble.git",
-                    "comment": "source reference: 5b650167c81c59138e844c2ae550c14dc1a249d0"
+                    "comment": "source reference: cf49fb80476db818115a402d37213be08695e568"
                 },
                 {
                     "type": "website",
@@ -1190,18 +1190,18 @@
                 },
                 {
                     "type": "vcs",
-                    "url": "https://github.com/dedoc/scramble/tree/v0.12.23",
+                    "url": "https://github.com/dedoc/scramble/tree/v0.12.26",
                     "comment": "as detected from Composer manifest 'support.source'"
                 }
             ],
             "properties": [
                 {
                     "name": "cdx:composer:package:distReference",
-                    "value": "5b650167c81c59138e844c2ae550c14dc1a249d0"
+                    "value": "cf49fb80476db818115a402d37213be08695e568"
                 },
                 {
                     "name": "cdx:composer:package:sourceReference",
-                    "value": "5b650167c81c59138e844c2ae550c14dc1a249d0"
+                    "value": "cf49fb80476db818115a402d37213be08695e568"
                 },
                 {
                     "name": "cdx:composer:package:type",
@@ -1268,10 +1268,10 @@
             ]
         },
         {
-            "bom-ref": "doctrine/dbal-4.3.0.0",
+            "bom-ref": "doctrine/dbal-4.3.1.0",
             "type": "library",
             "name": "dbal",
-            "version": "4.3.0",
+            "version": "4.3.1",
             "group": "doctrine",
             "description": "Powerful PHP database abstraction layer (DBAL) with many features for database schema introspection and management.",
             "author": "Guilherme Blanco, Roman Borschel, Benjamin Eberlei, Jonathan Wage",
@@ -1282,17 +1282,17 @@
                     }
                 }
             ],
-            "purl": "pkg:composer/doctrine/dbal@4.3.0",
+            "purl": "pkg:composer/doctrine/dbal@4.3.1",
             "externalReferences": [
                 {
                     "type": "distribution",
-                    "url": "https://api.github.com/repos/doctrine/dbal/zipball/5fe09532be619202d59c70956c6fb20e97933ee3",
-                    "comment": "dist reference: 5fe09532be619202d59c70956c6fb20e97933ee3"
+                    "url": "https://api.github.com/repos/doctrine/dbal/zipball/ac336c95ea9e13433d56ca81c308b39db0e1a2a7",
+                    "comment": "dist reference: ac336c95ea9e13433d56ca81c308b39db0e1a2a7"
                 },
                 {
                     "type": "vcs",
                     "url": "https://github.com/doctrine/dbal.git",
-                    "comment": "source reference: 5fe09532be619202d59c70956c6fb20e97933ee3"
+                    "comment": "source reference: ac336c95ea9e13433d56ca81c308b39db0e1a2a7"
                 },
                 {
                     "type": "website",
@@ -1306,18 +1306,18 @@
                 },
                 {
                     "type": "vcs",
-                    "url": "https://github.com/doctrine/dbal/tree/4.3.0",
+                    "url": "https://github.com/doctrine/dbal/tree/4.3.1",
                     "comment": "as detected from Composer manifest 'support.source'"
                 }
             ],
             "properties": [
                 {
                     "name": "cdx:composer:package:distReference",
-                    "value": "5fe09532be619202d59c70956c6fb20e97933ee3"
+                    "value": "ac336c95ea9e13433d56ca81c308b39db0e1a2a7"
                 },
                 {
                     "name": "cdx:composer:package:sourceReference",
-                    "value": "5fe09532be619202d59c70956c6fb20e97933ee3"
+                    "value": "ac336c95ea9e13433d56ca81c308b39db0e1a2a7"
                 },
                 {
                     "name": "cdx:composer:package:type",
@@ -3143,6 +3143,64 @@
             ]
         },
         {
+            "bom-ref": "jurosh/pdf-merge-2.1.0.0",
+            "type": "library",
+            "name": "pdf-merge",
+            "version": "2.1.0",
+            "group": "jurosh",
+            "description": "PHP PDF Merger",
+            "author": "Juraj Husar",
+            "licenses": [
+                {
+                    "license": {
+                        "id": "MIT"
+                    }
+                }
+            ],
+            "purl": "pkg:composer/jurosh/pdf-merge@2.1.0",
+            "externalReferences": [
+                {
+                    "type": "distribution",
+                    "url": "https://api.github.com/repos/jurosh/php-pdf-merge/zipball/89ba3446c9f38c573e3b8bf577d2f22993494130",
+                    "comment": "dist reference: 89ba3446c9f38c573e3b8bf577d2f22993494130"
+                },
+                {
+                    "type": "vcs",
+                    "url": "https://github.com/jurosh/php-pdf-merge.git",
+                    "comment": "source reference: 89ba3446c9f38c573e3b8bf577d2f22993494130"
+                },
+                {
+                    "type": "website",
+                    "url": "https://github.com/jurosh/php-pdf-merge",
+                    "comment": "as detected from Composer manifest 'homepage'"
+                },
+                {
+                    "type": "issue-tracker",
+                    "url": "https://github.com/jurosh/php-pdf-merge/issues",
+                    "comment": "as detected from Composer manifest 'support.issues'"
+                },
+                {
+                    "type": "vcs",
+                    "url": "https://github.com/jurosh/php-pdf-merge/tree/remove",
+                    "comment": "as detected from Composer manifest 'support.source'"
+                }
+            ],
+            "properties": [
+                {
+                    "name": "cdx:composer:package:distReference",
+                    "value": "89ba3446c9f38c573e3b8bf577d2f22993494130"
+                },
+                {
+                    "name": "cdx:composer:package:sourceReference",
+                    "value": "89ba3446c9f38c573e3b8bf577d2f22993494130"
+                },
+                {
+                    "name": "cdx:composer:package:type",
+                    "value": "library"
+                }
+            ]
+        },
+        {
             "bom-ref": "kirschbaum-development/eloquent-power-joins-4.2.6.0",
             "type": "library",
             "name": "eloquent-power-joins",
@@ -3487,10 +3545,10 @@
             ]
         },
         {
-            "bom-ref": "laravel/sail-1.43.1.0",
+            "bom-ref": "laravel/sail-1.44.0.0",
             "type": "library",
             "name": "sail",
-            "version": "v1.43.1",
+            "version": "v1.44.0",
             "group": "laravel",
             "description": "Docker files for running a basic Laravel application.",
             "author": "Taylor Otwell",
@@ -3501,17 +3559,17 @@
                     }
                 }
             ],
-            "purl": "pkg:composer/laravel/sail@v1.43.1",
+            "purl": "pkg:composer/laravel/sail@v1.44.0",
             "externalReferences": [
                 {
                     "type": "distribution",
-                    "url": "https://api.github.com/repos/laravel/sail/zipball/3e7d899232a8c5e3ea4fc6dee7525ad583887e72",
-                    "comment": "dist reference: 3e7d899232a8c5e3ea4fc6dee7525ad583887e72"
+                    "url": "https://api.github.com/repos/laravel/sail/zipball/a09097bd2a8a38e23ac472fa6a6cf5b0d1c1d3fe",
+                    "comment": "dist reference: a09097bd2a8a38e23ac472fa6a6cf5b0d1c1d3fe"
                 },
                 {
                     "type": "vcs",
                     "url": "https://github.com/laravel/sail.git",
-                    "comment": "source reference: 3e7d899232a8c5e3ea4fc6dee7525ad583887e72"
+                    "comment": "source reference: a09097bd2a8a38e23ac472fa6a6cf5b0d1c1d3fe"
                 },
                 {
                     "type": "issue-tracker",
@@ -3527,11 +3585,11 @@
             "properties": [
                 {
                     "name": "cdx:composer:package:distReference",
-                    "value": "3e7d899232a8c5e3ea4fc6dee7525ad583887e72"
+                    "value": "a09097bd2a8a38e23ac472fa6a6cf5b0d1c1d3fe"
                 },
                 {
                     "name": "cdx:composer:package:sourceReference",
-                    "value": "3e7d899232a8c5e3ea4fc6dee7525ad583887e72"
+                    "value": "a09097bd2a8a38e23ac472fa6a6cf5b0d1c1d3fe"
                 },
                 {
                     "name": "cdx:composer:package:type",
@@ -3544,10 +3602,10 @@
             ]
         },
         {
-            "bom-ref": "laravel/sanctum-4.1.2.0",
+            "bom-ref": "laravel/sanctum-4.2.0.0",
             "type": "library",
             "name": "sanctum",
-            "version": "v4.1.2",
+            "version": "v4.2.0",
             "group": "laravel",
             "description": "Laravel Sanctum provides a featherweight authentication system for SPAs and simple APIs.",
             "author": "Taylor Otwell",
@@ -3558,17 +3616,17 @@
                     }
                 }
             ],
-            "purl": "pkg:composer/laravel/sanctum@v4.1.2",
+            "purl": "pkg:composer/laravel/sanctum@v4.2.0",
             "externalReferences": [
                 {
                     "type": "distribution",
-                    "url": "https://api.github.com/repos/laravel/sanctum/zipball/e4c09e69aecd5a383e0c1b85a6bb501c997d7491",
-                    "comment": "dist reference: e4c09e69aecd5a383e0c1b85a6bb501c997d7491"
+                    "url": "https://api.github.com/repos/laravel/sanctum/zipball/fd6df4f79f48a72992e8d29a9c0ee25422a0d677",
+                    "comment": "dist reference: fd6df4f79f48a72992e8d29a9c0ee25422a0d677"
                 },
                 {
                     "type": "vcs",
                     "url": "https://github.com/laravel/sanctum.git",
-                    "comment": "source reference: e4c09e69aecd5a383e0c1b85a6bb501c997d7491"
+                    "comment": "source reference: fd6df4f79f48a72992e8d29a9c0ee25422a0d677"
                 },
                 {
                     "type": "issue-tracker",
@@ -3584,11 +3642,11 @@
             "properties": [
                 {
                     "name": "cdx:composer:package:distReference",
-                    "value": "e4c09e69aecd5a383e0c1b85a6bb501c997d7491"
+                    "value": "fd6df4f79f48a72992e8d29a9c0ee25422a0d677"
                 },
                 {
                     "name": "cdx:composer:package:sourceReference",
-                    "value": "e4c09e69aecd5a383e0c1b85a6bb501c997d7491"
+                    "value": "fd6df4f79f48a72992e8d29a9c0ee25422a0d677"
                 },
                 {
                     "name": "cdx:composer:package:type",
@@ -3650,10 +3708,10 @@
             ]
         },
         {
-            "bom-ref": "laravel/socialite-5.21.0.0",
+            "bom-ref": "laravel/socialite-5.23.0.0",
             "type": "library",
             "name": "socialite",
-            "version": "v5.21.0",
+            "version": "v5.23.0",
             "group": "laravel",
             "description": "Laravel wrapper around OAuth 1 & OAuth 2 libraries.",
             "author": "Taylor Otwell",
@@ -3664,17 +3722,17 @@
                     }
                 }
             ],
-            "purl": "pkg:composer/laravel/socialite@v5.21.0",
+            "purl": "pkg:composer/laravel/socialite@v5.23.0",
             "externalReferences": [
                 {
                     "type": "distribution",
-                    "url": "https://api.github.com/repos/laravel/socialite/zipball/d83639499ad14985c9a6a9713b70073300ce998d",
-                    "comment": "dist reference: d83639499ad14985c9a6a9713b70073300ce998d"
+                    "url": "https://api.github.com/repos/laravel/socialite/zipball/e9e0fc83b9d8d71c8385a5da20e5b95ca6234cf5",
+                    "comment": "dist reference: e9e0fc83b9d8d71c8385a5da20e5b95ca6234cf5"
                 },
                 {
                     "type": "vcs",
                     "url": "https://github.com/laravel/socialite.git",
-                    "comment": "source reference: d83639499ad14985c9a6a9713b70073300ce998d"
+                    "comment": "source reference: e9e0fc83b9d8d71c8385a5da20e5b95ca6234cf5"
                 },
                 {
                     "type": "website",
@@ -3695,11 +3753,11 @@
             "properties": [
                 {
                     "name": "cdx:composer:package:distReference",
-                    "value": "d83639499ad14985c9a6a9713b70073300ce998d"
+                    "value": "e9e0fc83b9d8d71c8385a5da20e5b95ca6234cf5"
                 },
                 {
                     "name": "cdx:composer:package:sourceReference",
-                    "value": "d83639499ad14985c9a6a9713b70073300ce998d"
+                    "value": "e9e0fc83b9d8d71c8385a5da20e5b95ca6234cf5"
                 },
                 {
                     "name": "cdx:composer:package:type",
@@ -4530,10 +4588,10 @@
             ]
         },
         {
-            "bom-ref": "masterminds/html5-2.9.0.0",
+            "bom-ref": "masterminds/html5-2.10.0.0",
             "type": "library",
             "name": "html5",
-            "version": "2.9.0",
+            "version": "2.10.0",
             "group": "masterminds",
             "description": "An HTML5 parser and serializer.",
             "author": "Matt Butcher, Matt Farina, Asmir Mustafic",
@@ -4544,17 +4602,17 @@
                     }
                 }
             ],
-            "purl": "pkg:composer/masterminds/html5@2.9.0",
+            "purl": "pkg:composer/masterminds/html5@2.10.0",
             "externalReferences": [
                 {
                     "type": "distribution",
-                    "url": "https://api.github.com/repos/Masterminds/html5-php/zipball/f5ac2c0b0a2eefca70b2ce32a5809992227e75a6",
-                    "comment": "dist reference: f5ac2c0b0a2eefca70b2ce32a5809992227e75a6"
+                    "url": "https://api.github.com/repos/Masterminds/html5-php/zipball/fcf91eb64359852f00d921887b219479b4f21251",
+                    "comment": "dist reference: fcf91eb64359852f00d921887b219479b4f21251"
                 },
                 {
                     "type": "vcs",
                     "url": "https://github.com/Masterminds/html5-php.git",
-                    "comment": "source reference: f5ac2c0b0a2eefca70b2ce32a5809992227e75a6"
+                    "comment": "source reference: fcf91eb64359852f00d921887b219479b4f21251"
                 },
                 {
                     "type": "website",
@@ -4568,18 +4626,18 @@
                 },
                 {
                     "type": "vcs",
-                    "url": "https://github.com/Masterminds/html5-php/tree/2.9.0",
+                    "url": "https://github.com/Masterminds/html5-php/tree/2.10.0",
                     "comment": "as detected from Composer manifest 'support.source'"
                 }
             ],
             "properties": [
                 {
                     "name": "cdx:composer:package:distReference",
-                    "value": "f5ac2c0b0a2eefca70b2ce32a5809992227e75a6"
+                    "value": "fcf91eb64359852f00d921887b219479b4f21251"
                 },
                 {
                     "name": "cdx:composer:package:sourceReference",
-                    "value": "f5ac2c0b0a2eefca70b2ce32a5809992227e75a6"
+                    "value": "fcf91eb64359852f00d921887b219479b4f21251"
                 },
                 {
                     "name": "cdx:composer:package:type",
@@ -5900,10 +5958,10 @@
             ]
         },
         {
-            "bom-ref": "php-debugbar/php-debugbar-2.2.3.0",
+            "bom-ref": "php-debugbar/php-debugbar-2.2.4.0",
             "type": "library",
             "name": "php-debugbar",
-            "version": "v2.2.3",
+            "version": "v2.2.4",
             "group": "php-debugbar",
             "description": "Debug bar in the browser for php application",
             "author": "Maxime Bouroumeau-Fuseau, Barry vd. Heuvel",
@@ -5914,17 +5972,17 @@
                     }
                 }
             ],
-            "purl": "pkg:composer/php-debugbar/php-debugbar@v2.2.3",
+            "purl": "pkg:composer/php-debugbar/php-debugbar@v2.2.4",
             "externalReferences": [
                 {
                     "type": "distribution",
-                    "url": "https://api.github.com/repos/php-debugbar/php-debugbar/zipball/86eb2323a2a9b7eefb1b63ae5737f778f9fc3a4c",
-                    "comment": "dist reference: 86eb2323a2a9b7eefb1b63ae5737f778f9fc3a4c"
+                    "url": "https://api.github.com/repos/php-debugbar/php-debugbar/zipball/3146d04671f51f69ffec2a4207ac3bdcf13a9f35",
+                    "comment": "dist reference: 3146d04671f51f69ffec2a4207ac3bdcf13a9f35"
                 },
                 {
                     "type": "vcs",
                     "url": "https://github.com/php-debugbar/php-debugbar.git",
-                    "comment": "source reference: 86eb2323a2a9b7eefb1b63ae5737f778f9fc3a4c"
+                    "comment": "source reference: 3146d04671f51f69ffec2a4207ac3bdcf13a9f35"
                 },
                 {
                     "type": "website",
@@ -5938,18 +5996,18 @@
                 },
                 {
                     "type": "vcs",
-                    "url": "https://github.com/php-debugbar/php-debugbar/tree/v2.2.3",
+                    "url": "https://github.com/php-debugbar/php-debugbar/tree/v2.2.4",
                     "comment": "as detected from Composer manifest 'support.source'"
                 }
             ],
             "properties": [
                 {
                     "name": "cdx:composer:package:distReference",
-                    "value": "86eb2323a2a9b7eefb1b63ae5737f778f9fc3a4c"
+                    "value": "3146d04671f51f69ffec2a4207ac3bdcf13a9f35"
                 },
                 {
                     "name": "cdx:composer:package:sourceReference",
-                    "value": "86eb2323a2a9b7eefb1b63ae5737f778f9fc3a4c"
+                    "value": "3146d04671f51f69ffec2a4207ac3bdcf13a9f35"
                 },
                 {
                     "name": "cdx:composer:package:type",
@@ -8598,6 +8656,117 @@
             ]
         },
         {
+            "bom-ref": "setasign/fpdf-1.8.6.0",
+            "type": "library",
+            "name": "fpdf",
+            "version": "1.8.6",
+            "group": "setasign",
+            "description": "FPDF is a PHP class which allows to generate PDF files with pure PHP. F from FPDF stands for Free: you may use it for any kind of usage and modify it to suit your needs.",
+            "author": "Olivier Plathey",
+            "licenses": [
+                {
+                    "license": {
+                        "id": "MIT"
+                    }
+                }
+            ],
+            "purl": "pkg:composer/setasign/fpdf@1.8.6",
+            "externalReferences": [
+                {
+                    "type": "distribution",
+                    "url": "https://api.github.com/repos/Setasign/FPDF/zipball/0838e0ee4925716fcbbc50ad9e1799b5edfae0a0",
+                    "comment": "dist reference: 0838e0ee4925716fcbbc50ad9e1799b5edfae0a0"
+                },
+                {
+                    "type": "vcs",
+                    "url": "https://github.com/Setasign/FPDF.git",
+                    "comment": "source reference: 0838e0ee4925716fcbbc50ad9e1799b5edfae0a0"
+                },
+                {
+                    "type": "website",
+                    "url": "http://www.fpdf.org",
+                    "comment": "as detected from Composer manifest 'homepage'"
+                },
+                {
+                    "type": "vcs",
+                    "url": "https://github.com/Setasign/FPDF/tree/1.8.6",
+                    "comment": "as detected from Composer manifest 'support.source'"
+                }
+            ],
+            "properties": [
+                {
+                    "name": "cdx:composer:package:distReference",
+                    "value": "0838e0ee4925716fcbbc50ad9e1799b5edfae0a0"
+                },
+                {
+                    "name": "cdx:composer:package:sourceReference",
+                    "value": "0838e0ee4925716fcbbc50ad9e1799b5edfae0a0"
+                },
+                {
+                    "name": "cdx:composer:package:type",
+                    "value": "library"
+                }
+            ]
+        },
+        {
+            "bom-ref": "setasign/fpdi-2.6.3.0",
+            "type": "library",
+            "name": "fpdi",
+            "version": "v2.6.3",
+            "group": "setasign",
+            "description": "FPDI is a collection of PHP classes facilitating developers to read pages from existing PDF documents and use them as templates in FPDF. Because it is also possible to use FPDI with TCPDF, there are no fixed dependencies defined. Please see suggestions for packages which evaluates the dependencies automatically.",
+            "author": "Jan Slabon, Maximilian Kresse",
+            "licenses": [
+                {
+                    "license": {
+                        "id": "MIT"
+                    }
+                }
+            ],
+            "purl": "pkg:composer/setasign/fpdi@v2.6.3",
+            "externalReferences": [
+                {
+                    "type": "distribution",
+                    "url": "https://api.github.com/repos/Setasign/FPDI/zipball/67c31f5e50c93c20579ca9e23035d8c540b51941",
+                    "comment": "dist reference: 67c31f5e50c93c20579ca9e23035d8c540b51941"
+                },
+                {
+                    "type": "vcs",
+                    "url": "https://github.com/Setasign/FPDI.git",
+                    "comment": "source reference: 67c31f5e50c93c20579ca9e23035d8c540b51941"
+                },
+                {
+                    "type": "website",
+                    "url": "https://www.setasign.com/fpdi",
+                    "comment": "as detected from Composer manifest 'homepage'"
+                },
+                {
+                    "type": "issue-tracker",
+                    "url": "https://github.com/Setasign/FPDI/issues",
+                    "comment": "as detected from Composer manifest 'support.issues'"
+                },
+                {
+                    "type": "vcs",
+                    "url": "https://github.com/Setasign/FPDI/tree/v2.6.3",
+                    "comment": "as detected from Composer manifest 'support.source'"
+                }
+            ],
+            "properties": [
+                {
+                    "name": "cdx:composer:package:distReference",
+                    "value": "67c31f5e50c93c20579ca9e23035d8c540b51941"
+                },
+                {
+                    "name": "cdx:composer:package:sourceReference",
+                    "value": "67c31f5e50c93c20579ca9e23035d8c540b51941"
+                },
+                {
+                    "name": "cdx:composer:package:type",
+                    "value": "library"
+                }
+            ]
+        },
+        {
             "bom-ref": "socialiteproviders/auth0-4.2.0.0",
             "type": "library",
             "name": "auth0",
@@ -9371,10 +9540,10 @@
             ]
         },
         {
-            "bom-ref": "spatie/laravel-permission-6.20.0.0",
+            "bom-ref": "spatie/laravel-permission-6.21.0.0",
             "type": "library",
             "name": "laravel-permission",
-            "version": "6.20.0",
+            "version": "6.21.0",
             "group": "spatie",
             "description": "Permission handling for Laravel 8.0 and up",
             "author": "Freek Van der Herten",
@@ -9385,17 +9554,17 @@
                     }
                 }
             ],
-            "purl": "pkg:composer/spatie/laravel-permission@6.20.0",
+            "purl": "pkg:composer/spatie/laravel-permission@6.21.0",
             "externalReferences": [
                 {
                     "type": "distribution",
-                    "url": "https://api.github.com/repos/spatie/laravel-permission/zipball/31c05679102c73f3b0d05790d2400182745a5615",
-                    "comment": "dist reference: 31c05679102c73f3b0d05790d2400182745a5615"
+                    "url": "https://api.github.com/repos/spatie/laravel-permission/zipball/6a118e8855dfffcd90403aab77bbf35a03db51b3",
+                    "comment": "dist reference: 6a118e8855dfffcd90403aab77bbf35a03db51b3"
                 },
                 {
                     "type": "vcs",
                     "url": "https://github.com/spatie/laravel-permission.git",
-                    "comment": "source reference: 31c05679102c73f3b0d05790d2400182745a5615"
+                    "comment": "source reference: 6a118e8855dfffcd90403aab77bbf35a03db51b3"
                 },
                 {
                     "type": "website",
@@ -9409,18 +9578,18 @@
                 },
                 {
                     "type": "vcs",
-                    "url": "https://github.com/spatie/laravel-permission/tree/6.20.0",
+                    "url": "https://github.com/spatie/laravel-permission/tree/6.21.0",
                     "comment": "as detected from Composer manifest 'support.source'"
                 }
             ],
             "properties": [
                 {
                     "name": "cdx:composer:package:distReference",
-                    "value": "31c05679102c73f3b0d05790d2400182745a5615"
+                    "value": "6a118e8855dfffcd90403aab77bbf35a03db51b3"
                 },
                 {
                     "name": "cdx:composer:package:sourceReference",
-                    "value": "31c05679102c73f3b0d05790d2400182745a5615"
+                    "value": "6a118e8855dfffcd90403aab77bbf35a03db51b3"
                 },
                 {
                     "name": "cdx:composer:package:type",
@@ -11853,7 +12022,7 @@
             "ref": "aws/aws-crt-php-1.2.7.0"
         },
         {
-            "ref": "aws/aws-sdk-php-3.351.2.0",
+            "ref": "aws/aws-sdk-php-3.351.7.0",
             "dependsOn": [
                 "aws/aws-crt-php-1.2.7.0",
                 "guzzlehttp/guzzle-7.9.3.0",
@@ -11872,7 +12041,7 @@
         {
             "ref": "barryvdh/laravel-debugbar-3.16.0.0",
             "dependsOn": [
-                "php-debugbar/php-debugbar-2.2.3.0",
+                "php-debugbar/php-debugbar-2.2.4.0",
                 "symfony/finder-7.3.0.0"
             ]
         },
@@ -11936,7 +12105,7 @@
             "ref": "dasprid/enum-1.0.6.0"
         },
         {
-            "ref": "dedoc/scramble-0.12.23.0",
+            "ref": "dedoc/scramble-0.12.26.0",
             "dependsOn": [
                 "myclabs/deep-copy-1.13.3.0",
                 "nikic/php-parser-5.5.0.0",
@@ -11948,7 +12117,7 @@
             "ref": "dflydev/dot-access-data-3.0.3.0"
         },
         {
-            "ref": "doctrine/dbal-4.3.0.0",
+            "ref": "doctrine/dbal-4.3.1.0",
             "dependsOn": [
                 "doctrine/deprecations-1.1.5.0",
                 "psr/cache-3.0.0.0",
@@ -11969,7 +12138,7 @@
             "dependsOn": [
                 "dompdf/php-font-lib-1.0.1.0",
                 "dompdf/php-svg-lib-1.0.0.0",
-                "masterminds/html5-2.9.0.0"
+                "masterminds/html5-2.10.0.0"
             ]
         },
         {
@@ -11991,7 +12160,7 @@
             "ref": "dutchcodingcompany/filament-socialite-1.5.0.0",
             "dependsOn": [
                 "filament/filament-3.3.33.0",
-                "laravel/socialite-5.21.0.0",
+                "laravel/socialite-5.23.0.0",
                 "spatie/laravel-package-tools-1.92.7.0"
             ]
         },
@@ -12065,7 +12234,7 @@
             "ref": "filament/support-3.3.33.0",
             "dependsOn": [
                 "blade-ui-kit/blade-heroicons-2.6.0.0",
-                "doctrine/dbal-4.3.0.0",
+                "doctrine/dbal-4.3.1.0",
                 "kirschbaum-development/eloquent-power-joins-4.2.6.0",
                 "livewire/livewire-3.6.4.0",
                 "ryangjchandler/blade-capture-directive-1.1.0.0",
@@ -12173,6 +12342,13 @@
             ]
         },
         {
+            "ref": "jurosh/pdf-merge-2.1.0.0",
+            "dependsOn": [
+                "setasign/fpdf-1.8.6.0",
+                "setasign/fpdi-2.6.3.0"
+            ]
+        },
+        {
             "ref": "kirschbaum-development/eloquent-power-joins-4.2.6.0"
         },
         {
@@ -12243,14 +12419,14 @@
             ]
         },
         {
-            "ref": "laravel/sail-1.43.1.0",
+            "ref": "laravel/sail-1.44.0.0",
             "dependsOn": [
                 "symfony/console-7.3.1.0",
                 "symfony/yaml-7.3.1.0"
             ]
         },
         {
-            "ref": "laravel/sanctum-4.1.2.0",
+            "ref": "laravel/sanctum-4.2.0.0",
             "dependsOn": [
                 "symfony/console-7.3.1.0"
             ]
@@ -12259,7 +12435,7 @@
             "ref": "laravel/serializable-closure-2.0.4.0"
         },
         {
-            "ref": "laravel/socialite-5.21.0.0",
+            "ref": "laravel/socialite-5.23.0.0",
             "dependsOn": [
                 "firebase/php-jwt-6.11.1.0",
                 "guzzlehttp/guzzle-7.9.3.0",
@@ -12303,7 +12479,7 @@
         {
             "ref": "league/flysystem-aws-s3-v3-3.29.0.0",
             "dependsOn": [
-                "aws/aws-sdk-php-3.351.2.0",
+                "aws/aws-sdk-php-3.351.7.0",
                 "league/flysystem-3.30.0.0",
                 "league/mime-type-detection-1.16.0.0"
             ]
@@ -12365,7 +12541,7 @@
             ]
         },
         {
-            "ref": "masterminds/html5-2.9.0.0"
+            "ref": "masterminds/html5-2.10.0.0"
         },
         {
             "ref": "mobiledetect/mobiledetectlib-2.8.45.0"
@@ -12481,7 +12657,7 @@
             "ref": "phar-io/version-3.2.1.0"
         },
         {
-            "ref": "php-debugbar/php-debugbar-2.2.3.0",
+            "ref": "php-debugbar/php-debugbar-2.2.4.0",
             "dependsOn": [
                 "psr/log-3.0.2.0",
                 "symfony/var-dumper-7.3.1.0"
@@ -12710,6 +12886,12 @@
             "ref": "sebastian/version-4.0.1.0"
         },
         {
+            "ref": "setasign/fpdf-1.8.6.0"
+        },
+        {
+            "ref": "setasign/fpdi-2.6.3.0"
+        },
+        {
             "ref": "socialiteproviders/auth0-4.2.0.0",
             "dependsOn": [
                 "socialiteproviders/manager-4.8.1.0"
@@ -12724,7 +12906,7 @@
         {
             "ref": "socialiteproviders/manager-4.8.1.0",
             "dependsOn": [
-                "laravel/socialite-5.21.0.0"
+                "laravel/socialite-5.23.0.0"
             ]
         },
         {
@@ -12782,7 +12964,7 @@
             "ref": "spatie/laravel-package-tools-1.92.7.0"
         },
         {
-            "ref": "spatie/laravel-permission-6.20.0.0"
+            "ref": "spatie/laravel-permission-6.21.0.0"
         },
         {
             "ref": "spatie/laravel-ray-1.40.2.0",
@@ -12854,7 +13036,7 @@
             "ref": "symfony/html-sanitizer-7.3.0.0",
             "dependsOn": [
                 "league/uri-7.5.1.0",
-                "masterminds/html5-2.9.0.0"
+                "masterminds/html5-2.10.0.0"
             ]
         },
         {
@@ -13044,7 +13226,7 @@
                 "amidesfahani/filament-tinyeditor-2.1.1.0",
                 "barryvdh/laravel-dompdf-3.1.1.0",
                 "bezhansalleh/filament-language-switch-3.1.1.0",
-                "dedoc/scramble-0.12.23.0",
+                "dedoc/scramble-0.12.26.0",
                 "dutchcodingcompany/filament-socialite-1.5.0.0",
                 "filament/actions-3.3.33.0",
                 "filament/filament-3.3.33.0",
@@ -13054,9 +13236,10 @@
                 "guzzlehttp/guzzle-7.9.3.0",
                 "jeffgreco13/filament-breezy-2.6.4.0",
                 "jibaymcs/filament-tour-3.1.2.0",
+                "jurosh/pdf-merge-2.1.0.0",
                 "laravel/framework-11.45.1.0",
                 "laravel/prompts-0.3.6.0",
-                "laravel/sanctum-4.1.2.0",
+                "laravel/sanctum-4.2.0.0",
                 "laravel/tinker-2.10.1.0",
                 "league/flysystem-aws-s3-v3-3.29.0.0",
                 "leandrocfe/filament-apex-charts-3.2.1.0",
@@ -13067,14 +13250,14 @@
                 "socialiteproviders/google-4.1.0.0",
                 "socialiteproviders/microsoft-azure-5.2.0.0",
                 "socialiteproviders/okta-4.5.0.0",
-                "spatie/laravel-permission-6.20.0.0",
+                "spatie/laravel-permission-6.21.0.0",
                 "barryvdh/laravel-debugbar-3.16.0.0",
                 "cyclonedx/cyclonedx-php-composer-5.2.3.0",
                 "fakerphp/faker-1.24.1.0",
                 "larastan/larastan-2.11.2.0",
                 "laravel/dusk-8.3.3.0",
                 "laravel/pint-1.24.0.0",
-                "laravel/sail-1.43.1.0",
+                "laravel/sail-1.44.0.0",
                 "mockery/mockery-1.6.12.0",
                 "nunomaduro/collision-8.5.0.0",
                 "phpunit/phpunit-10.5.48.0",

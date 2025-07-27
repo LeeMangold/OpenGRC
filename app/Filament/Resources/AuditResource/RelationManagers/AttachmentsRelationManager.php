@@ -41,7 +41,7 @@ class AttachmentsRelationManager extends RelationManager
                             Storage::disk(config('filesystems.default'))->delete($state);
                         }
                     }),
-                DateTimePicker::make('uploaded_at')
+                DateTimePicker::make('updated_at')
                     ->label('Uploaded At')
                     ->default(now())
                     ->required(),
@@ -64,7 +64,7 @@ class AttachmentsRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('file_name')
                     ->label('File Name')
                     ->description(fn ($record) => $record->description),
-                Tables\Columns\TextColumn::make('created_at')
+                Tables\Columns\TextColumn::make('updated_at')
                     ->label('Uploaded At')
                     ->dateTime(),
                 Tables\Columns\TextColumn::make('uploaded_by')

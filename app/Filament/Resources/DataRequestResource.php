@@ -45,8 +45,13 @@ class DataRequestResource extends Resource
                     ->options(Audit::pluck('title', 'id')->toArray())
                     ->searchable()
                     ->required(),
+                Forms\Components\TextInput::make('code')
+                    ->label('Request Code')
+                    ->maxLength(255)
+                    ->helperText('Optional. If left blank, will default to Request-{id} after creation.')
+                    ->nullable(),
                 Forms\Components\Select::make('created_by_id')
-                    ->label('Created By')
+                ->label('Created By')
                     ->options(User::pluck('name', 'id')->toArray())
                     ->default(auth()->id())
                     ->searchable()
@@ -63,6 +68,16 @@ class DataRequestResource extends Resource
                     ])
                     ->required()
                     ->columnSpanFull(),
+                Forms\Components\TextInput::make('code')
+                    ->label('Request Code')
+                    ->maxLength(255)
+                    ->helperText('Optional. If left blank, will default to Request-{id} after creation.')
+                    ->nullable(),
+                Forms\Components\TextInput::make('code')
+                    ->label('Request Code')
+                    ->maxLength(255)
+                    ->helperText('Optional. If left blank, will default to Request-{id} after creation.')
+                    ->nullable(),
             ]);
     }
 
@@ -76,6 +91,10 @@ class DataRequestResource extends Resource
                 Tables\Columns\TextColumn::make('audit_item_id')
                     ->numeric()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('code')
+                    ->label('Request Code')
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('status')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
@@ -139,18 +158,21 @@ class DataRequestResource extends Resource
             ->schema([
 
                 Forms\Components\Section::make('Request Details')
+                    ->columns(3)
                     ->schema([
                         Forms\Components\Placeholder::make('Requested Information')
                             ->content(function ($record) {
                                 return new HtmlString($record->details ?? '');
-                            })
-                            ->columnSpanFull(),
+                            }),
+                            // ->columnSpanFull(),
                         Placeholder::make('control')
                             ->label('Control')
-                            ->columnSpanFull()
+                            // ->columnSpanFull()
                             ->content(function ($record) {
                                 return $record->auditItem->auditable->code.' - '.$record->auditItem->auditable->title;
                             }),
+                        Placeholder::make('code')
+                            ->label('Request Code'),
                         Placeholder::make('control_description')
                             ->label('Control Description')
                             ->columnSpanFull()
@@ -163,6 +185,7 @@ class DataRequestResource extends Resource
                             ->addable(false)
                             ->columns()
                             ->deletable(false)
+                            ->columnSpanFull()
                             ->schema([
                                 Select::make('requestee_id')
                                     ->label('Assigned To')

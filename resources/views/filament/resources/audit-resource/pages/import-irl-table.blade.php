@@ -15,6 +15,7 @@
             <th class='fi-ta-th'>{{ __('Action') }}</th>
             <th class='fi-ta-th'>{{ __('Audit ID') }}</th>
             <th class='fi-ta-th'>{{ __('Request ID') }}</th>
+            <th class='fi-ta-th'>{{ __('Request Code') }}</th>
             <th class='fi-ta-th'>{{ __('Control Code') }}</th>
             <th class='fi-ta-th'>{{ __('Details') }}</th>
             <th class='fi-ta-th'>{{ __('Assigned To') }}</th>
@@ -45,6 +46,7 @@
                 <td class='fi-ta-td text-center align-middle'>{!! $action_html !!}</td>
                 <td class='fi-ta-td text-center align-middle'>{{ $record["Audit ID"] }}</td>
                 <td class='fi-ta-td text-center align-middle'>{{ $record["Request ID"] ?? 'New'}}</td>
+                <td class='fi-ta-td text-center align-middle'>{{ $record["Request Code"] ?? ''}}</td>
                 <td class='fi-ta-td text-center align-middle'>{{ $record["Control Code"] }}</td>
                 <td class='fi-ta-td'>{{ $record["Details"] }}</td>
                 <td class='fi-ta-td text-center align-middle'>{!! $record["Assigned To"] !!}</td>

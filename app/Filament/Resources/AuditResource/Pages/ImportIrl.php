@@ -75,7 +75,7 @@ class ImportIrl extends Page implements HasForms
         $this->currentDataRequests = DataRequest::query()->where('audit_id', $this->record->id)->get();
         $this->auditItems = $this->record->auditItems()->with('control')->get();
         $this->controlCodes = $this->auditItems->pluck('auditable.code')->toArray();
-        $template_url = Storage::url('irl-template.csv');
+        $template_url = Storage::disk('public')->url('irl-template.csv');
 
         return $form
             ->schema([
@@ -143,6 +143,7 @@ class ImportIrl extends Page implements HasForms
             $requiredHeaders = [
                 'audit id',
                 'request id',
+                'request code',
                 'control code',
                 'details',
                 'assigned to',
@@ -188,6 +189,8 @@ class ImportIrl extends Page implements HasForms
                     $finalRecord['_ACTION'] = 'CREATE';
                     $finalRecord['Request ID'] = null;
                 }
+                // Add Request Code
+                $finalRecord['Request Code'] = $row['Request Code'] ?? null;
 
                 // Validate that the IRL is for this audit only
                 if ($row['Audit ID'] != $this->record->id) {
@@ -287,6 +290,7 @@ class ImportIrl extends Page implements HasForms
                 $dataRequest->details = $row['Details'];
                 $dataRequest->assigned_to_id = array_search($row['Assigned To'], $this->users);
                 $dataRequest->created_by_id = auth()->id();
+                $dataRequest->code = $row['Request Code'] ?? null;
                 $dataRequest->save();
 
                 // Create a Matching DataRequestResponse
@@ -301,6 +305,7 @@ class ImportIrl extends Page implements HasForms
                 $dataRequest = DataRequest::find($row['Request ID']);
                 $dataRequest->details = $row['Details'];
                 $dataRequest->assigned_to_id = array_search($row['Assigned To'], $this->users);
+                $dataRequest->code = $row['Request Code'] ?? $dataRequest->code;
                 $dataRequest->save();
 
                 $dataRequestResponse = $dataRequest->responses()->first();

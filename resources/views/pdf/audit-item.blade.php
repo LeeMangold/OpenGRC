@@ -11,11 +11,13 @@
     </style>
 </head>
 <body>
-    <center><h1>{{ $audit->title }}</h1></center>
+    <center><h1>Audit Evidence</h1></center>
+    <center><h2>{{ $audit->title }}</h2></center>
+    <center><h3>Request Code: {{ $dataRequest->code ?? $dataRequest->id }}</h3></center>
     <div class="section">
         <p>
-            <strong>Audit Item:</strong> {{ $auditItem->auditable->title ?? '' }}<br>
-            {!! html_entity_decode($auditItem->auditable->description ?? '') !!}
+            <strong>Title:</strong> {{ $auditItem->auditable->title ?? '' }}<br>
+            <strong>Description:</strong> {!! html_entity_decode($auditItem->auditable->description ?? '') !!}
         </p>
     </div>
     <div class="section">

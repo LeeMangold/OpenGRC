@@ -12,8 +12,8 @@ use Filament\Actions\ActionGroup;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Support\Enums\ActionSize;
-use Symfony\Component\Process\Process;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\QueueController;
 
 class ViewAudit extends ViewRecord
 {
@@ -147,12 +147,18 @@ class ViewAudit extends ViewRecord
                     ->modalDescription('This will generate a PDF for each audit item and zip them for download. You will be notified when the export is ready.')
                     ->action(function (Audit $audit, $livewire) {
                         \App\Jobs\ExportAuditEvidenceJob::dispatch($audit->id);
-                        $process = new Process(['php', base_path('artisan'), 'queue:work', '--once']);
-                        $process->run();
-                        \Log::info($process->getOutput());
+                        
+                        // Ensure queue worker is running
+                        $queueController = new QueueController();
+                        $wasAlreadyRunning = $queueController->ensureQueueWorkerRunning();
+                        
+                        $body = $wasAlreadyRunning 
+                            ? 'The export job has been added to the queue. You will be able to download the ZIP in the Attachments section.'
+                            : 'The export job has been queued and a queue worker has been started. You will be able to download the ZIP in the Attachments section.';
+                        
                         return Notification::make()
                             ->title('Export Started')
-                            ->body('The export job has started. You will be able to download the ZIP in the Attachments section.')
+                            ->body($body)
                             ->success()
                             ->send();
                     }),

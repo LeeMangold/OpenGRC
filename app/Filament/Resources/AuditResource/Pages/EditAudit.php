@@ -45,7 +45,7 @@ class EditAudit extends EditRecord
                         Select::make('manager_id')
                             ->label('Audit Manager')
                             ->hint('Who will be managing this audit?')
-                            ->options(Standard::query()->where('status', 'In Scope')->pluck('name', 'id')->toArray())
+                            ->options(User::query()->pluck('name', 'id')->toArray())
                             ->columns(1)
                             ->searchable(),
                         Select::make('members')

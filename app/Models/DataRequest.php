@@ -21,6 +21,18 @@ class DataRequest extends Model
         'files' => 'array',
     ];
 
+    protected $fillable = [
+        'created_by_id',
+        'assigned_to_id',
+        'audit_item_id',
+        'audit_id',
+        'status',
+        'details',
+        'response',
+        'files',
+        'code', // Optional code for the data request, can be null, defaults to Request-{id}
+    ];
+
     public function createdBy(): BelongsTo
     {
         return $this->belongsTo(User::class);

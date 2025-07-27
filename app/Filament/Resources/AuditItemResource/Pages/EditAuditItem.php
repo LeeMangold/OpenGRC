@@ -54,7 +54,14 @@ class EditAuditItem extends EditRecord
                     $dataRequest->created_by_id = auth()->id();
                     $dataRequest->assigned_to_id = $data['user_id'];
                     $dataRequest->details = $data['details'];
+                    $dataRequest->code = $data['code'] ?? null;
                     $dataRequest->save();
+
+                    // If code is still null after save, set to Request-{id}
+                    if (!$dataRequest->code) {
+                        $dataRequest->code = 'Request-' . $dataRequest->id;
+                        $dataRequest->save();
+                    }
 
                     if ($data['send_email']) {
                         $user = User::find($dataRequest->assigned_to_id);
@@ -102,6 +109,11 @@ class EditAuditItem extends EditRecord
                                 ->maxLength(65535)
                                 ->columnSpanFull()
                                 ->required(),
+                            Forms\Components\TextInput::make('code')
+                                ->label('Request Code')
+                                ->maxLength(255)
+                                ->helperText('Optional. If left blank, will default to Request-{id} after creation.')
+                                ->nullable(),
                             Forms\Components\Checkbox::make('send_email')
                                 ->label('Send Email Notification')
                                 ->default(true),

@@ -12,7 +12,7 @@ class DataRequestFactory extends Factory
     public function definition(): array
     {
         return [
-
+            'code' => null,
         ];
     }
 }
