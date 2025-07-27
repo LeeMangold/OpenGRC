@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Admin\Pages;
+namespace App\Filament\Admin\Pages\Settings;
 
 use Filament\Pages\Page;
 use Filament\Forms\Components\Section;
