@@ -13,6 +13,11 @@ class AuditItemRelationManager extends RelationManager
     // set table name as Audit Results
     public static ?string $title = 'Audit History';
 
+    public static function canViewForRecord(\Illuminate\Database\Eloquent\Model $ownerRecord, string $pageClass): bool
+    {
+        return auth()->user()->can('Read Audits');
+    }
+
     public function table(Table $table): Table
     {
         return $table

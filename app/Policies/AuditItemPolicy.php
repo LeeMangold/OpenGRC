@@ -14,21 +14,12 @@ class AuditItemPolicy
 
     public function viewAny(User $user): bool
     {
-
-        if ($user->can('Read Audits') && ($this->isOwner() || $this->isMember())) {
-            return true;
-        }
-
-        return false;
+        return $user->can('List '.Str::plural(class_basename($this->model)));
     }
 
     public function view(User $user): bool
     {
-        if ($user->can('Read Audits') && ($this->isOwner() || $this->isMember())) {
-            return true;
-        }
-
-        return false;
+        return $user->can('Read '.Str::plural(class_basename($this->model)));
     }
 
     public function create(User $user): bool
@@ -38,17 +29,19 @@ class AuditItemPolicy
 
     public function update(User $user): bool
     {
-        return $this->isOwner() || $this->isMember();
+        return $user->can('Update '.Str::plural(class_basename($this->model))) && ($this->isOwner() || $this->isMember());
     }
 
     public function delete(User $user): bool
     {
-        return $user->can('Delete '.Str::plural(class_basename($this->model)) && ($this->isOwner() || $this->isMember()));
+        return $user->can('Delete '.Str::plural(class_basename($this->model))) && ($this->isOwner() || $this->isMember());
     }
 
     private function isOwner(): bool
     {
         $type = explode('/', Livewire::originalPath())[1];
+        $audit_id = null;
+
         if ($type === 'audits') {
             $audit_id = explode('/', Livewire::originalPath())[2] ?? null;
         } elseif ($type == 'audit-items') {
@@ -56,14 +49,20 @@ class AuditItemPolicy
             $audit_id = AuditItem::find($audit_item_id)->audit_id;
         }
 
+        if (! $audit_id) {
+            return false;
+        }
+
         $audit = Audit::find($audit_id);
 
-        return $audit->manager_id === auth()->id();
+        return $audit && $audit->manager_id === auth()->id();
     }
 
     private function isMember(): bool
     {
         $type = explode('/', Livewire::originalPath())[1];
+        $audit_id = null;
+
         if ($type === 'audits') {
             $audit_id = explode('/', Livewire::originalPath())[2] ?? null;
         } elseif ($type == 'audit-items') {
@@ -71,8 +70,12 @@ class AuditItemPolicy
             $audit_id = AuditItem::find($audit_item_id)->audit_id;
         }
 
+        if (! $audit_id) {
+            return false;
+        }
+
         $audit = Audit::find($audit_id);
 
-        return $audit->members->contains(auth()->id());
+        return $audit && $audit->members->contains(auth()->id());
     }
 }

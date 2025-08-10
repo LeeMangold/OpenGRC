@@ -10,6 +10,11 @@ class DataRequestResponsePolicy
 {
     protected string $model = DataRequestResponse::class;
 
+    public function viewAny(User $user): bool
+    {
+        return $user->can('List '.Str::plural(class_basename($this->model)));
+    }
+
     public function view(User $user): bool
     {
         return $user->can('Read '.Str::plural(class_basename($this->model)));

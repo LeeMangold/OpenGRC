@@ -27,11 +27,11 @@ class ApplicationPolicy
 
     public function update(User $user): bool
     {
-        return $user->can('Edit '.Str::plural(class_basename($this->model)));
+        return $user->can('Update '.Str::plural(class_basename($this->model)));
     }
 
     public function delete(User $user): bool
     {
         return $user->can('Delete '.Str::plural(class_basename($this->model)));
     }
-} 
+}

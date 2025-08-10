@@ -16,6 +16,11 @@ class ImplementationRelationManager extends RelationManager
 {
     protected static string $relationship = 'Implementations';
 
+    public static function canViewForRecord(\Illuminate\Database\Eloquent\Model $ownerRecord, string $pageClass): bool
+    {
+        return auth()->user()->can('Read Implementations');
+    }
+
     public function form(Form $form): Form
     {
         return $form
