@@ -23,11 +23,27 @@ class About extends Page
 
     public array $version = [];
     public array $license = [];
+    public array $sbom = [];
 
     public function mount(): void
     {
         $this->version = $this->getAppVersion();
         $this->license = $this->getLicenseInfo();
+        $this->sbom = $this->getSbomInfo();
+    }
+
+    public function downloadSbom()
+    {
+        $sbomPath = base_path('sbom.json');
+        
+        if (!file_exists($sbomPath)) {
+            $this->addError('sbom', 'SBOM file not found.');
+            return;
+        }
+
+        return response()->download($sbomPath, 'opengrc-sbom.json', [
+            'Content-Type' => 'application/json',
+        ]);
     }
 
     protected function getAppVersion(): array
@@ -200,6 +216,56 @@ class About extends Page
             'url' => 'https://creativecommons.org/licenses/by-nc-sa/4.0/',
             'text' => $this->getOpenGRCLicenseText(),
         ];
+    }
+
+    protected function getSbomInfo(): array
+    {
+        $sbomPath = base_path('sbom.json');
+        
+        if (!file_exists($sbomPath)) {
+            return [
+                'exists' => false,
+                'size' => 0,
+                'modified' => null,
+                'format' => null,
+            ];
+        }
+
+        $fileSize = filesize($sbomPath);
+        $modified = filemtime($sbomPath);
+        
+        // Try to read basic SBOM info
+        $format = 'Unknown';
+        try {
+            $sbomContent = json_decode(file_get_contents($sbomPath), true);
+            if (isset($sbomContent['bomFormat'])) {
+                $format = $sbomContent['bomFormat'];
+                if (isset($sbomContent['specVersion'])) {
+                    $format .= ' v' . $sbomContent['specVersion'];
+                }
+            }
+        } catch (Exception $e) {
+            // Ignore JSON parsing errors
+        }
+
+        return [
+            'exists' => true,
+            'size' => $fileSize,
+            'modified' => $modified ? date('Y-m-d H:i:s', $modified) : null,
+            'format' => $format,
+            'readable_size' => $this->formatBytes($fileSize),
+        ];
+    }
+
+    protected function formatBytes(int $size, int $precision = 2): string
+    {
+        $units = ['B', 'KB', 'MB', 'GB', 'TB'];
+        
+        for ($i = 0; $size > 1024 && $i < count($units) - 1; $i++) {
+            $size /= 1024;
+        }
+        
+        return round($size, $precision) . ' ' . $units[$i];
     }
 
     protected function getOpenGRCLicenseText(): string
