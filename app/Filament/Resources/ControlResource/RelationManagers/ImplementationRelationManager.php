@@ -18,7 +18,7 @@ class ImplementationRelationManager extends RelationManager
 
     public static function canViewForRecord(\Illuminate\Database\Eloquent\Model $ownerRecord, string $pageClass): bool
     {
-        return auth()->user()->can('Read Implementations');
+        return auth()->check() && auth()->user()->can('Read Implementations');
     }
 
     public function form(Form $form): Form

@@ -21,7 +21,7 @@ class Settings extends BaseSettings
 
     public static function canAccess(): bool
     {
-        if (auth()->user()->can('Manage Preferences')) {
+        if (auth()->check() && auth()->user()->can('Manage Preferences')) {
             return true;
         }
 

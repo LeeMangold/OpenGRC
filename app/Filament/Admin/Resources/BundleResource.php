@@ -114,7 +114,7 @@ class BundleResource extends Resource
                                 <div>This action will import the selected bundle into your OpenGRC. If you already have
                                 content in OpenGRC with the same codes, this will overwrite that data.</div>');
                     })
-                    ->visible(fn () => auth()->user()->can('Manage Bundles'))
+                    ->visible(fn () => auth()->check() && auth()->user()->can('Manage Bundles'))
                     ->modalHeading('Bundle Import')
                     ->modalIconColor('danger')
                     ->action(function (Bundle $record) {
@@ -129,7 +129,7 @@ class BundleResource extends Resource
                 Tables\Actions\Action::make('fetch')
                     ->label('Fetch Bundles Updates')
                     ->button()
-                    ->visible(fn () => auth()->user()->can('Manage Bundles'))
+                    ->visible(fn () => auth()->check() && auth()->user()->can('Manage Bundles'))
                     ->modalContent(function () {
                         return new HtmlString('
                                 <div>This action will fetch the latest bundles from the OpenGRC repository and add them to your OpenGRC.</div>');

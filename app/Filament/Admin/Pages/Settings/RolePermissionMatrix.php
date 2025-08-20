@@ -95,6 +95,6 @@ class RolePermissionMatrix extends Page
 
     public static function shouldRegisterNavigation(): bool
     {
-        return auth()->user()->can('view-any permission') && auth()->user()->can('view-any role');
+        return auth()->check() && auth()->user()->can('view-any permission') && auth()->user()->can('view-any role');
     }
 } 

@@ -15,7 +15,7 @@ class AuditItemRelationManager extends RelationManager
 
     public static function canViewForRecord(\Illuminate\Database\Eloquent\Model $ownerRecord, string $pageClass): bool
     {
-        return auth()->user()->can('Read Audits');
+        return auth()->check() && auth()->user()->can('Read Audits');
     }
 
     public function table(Table $table): Table
