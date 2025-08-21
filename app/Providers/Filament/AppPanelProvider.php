@@ -137,6 +137,10 @@ class AppPanelProvider extends PanelProvider
             ->authGuard('web')
             ->authMiddleware([
                 Authenticate::class,
-            ]);
+            ])
+            ->renderHook(
+                'panels::body.end',
+                fn () => auth()->check() ? view('components.session-timeout-warning') : ''
+            );
     }
 }

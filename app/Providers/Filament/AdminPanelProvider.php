@@ -51,6 +51,8 @@ class AdminPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
+                \App\Http\Middleware\UserActivityMonitor::class,
+                \App\Http\Middleware\SessionTimeout::class,
             ])
             ->authMiddleware([
                 Authenticate::class,
@@ -66,6 +68,9 @@ class AdminPanelProvider extends PanelProvider
                     ->url("/app", shouldOpenInNewTab: false)
                     ->icon('heroicon-o-arrow-left')
             ])
-            ;
+            ->renderHook(
+                'panels::body.end',
+                fn () => auth()->check() ? view('components.session-timeout-warning') : ''
+            );
     }
 }

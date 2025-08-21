@@ -2,10 +2,10 @@
     "$schema": "http://cyclonedx.org/schema/bom-1.5.schema.json",
     "bomFormat": "CycloneDX",
     "specVersion": "1.5",
-    "serialNumber": "urn:uuid:0bf60ab6-a179-4b51-8383-031a3f622f78",
+    "serialNumber": "urn:uuid:82a0b675-a431-42f3-a42d-312311ac3410",
     "version": 1,
     "metadata": {
-        "timestamp": "2025-08-10T16:28:06Z",
+        "timestamp": "2025-08-20T23:54:35Z",
         "tools": [
             {
                 "name": "composer",
@@ -99,11 +99,11 @@
             "properties": [
                 {
                     "name": "cdx:composer:package:distReference",
-                    "value": "46d922ad3738bbe6946fcf2b338331370f098be6"
+                    "value": "8c16a8403ac5a5aa453c7108ea8241fe122d9472"
                 },
                 {
                     "name": "cdx:composer:package:sourceReference",
-                    "value": "46d922ad3738bbe6946fcf2b338331370f098be6"
+                    "value": "8c16a8403ac5a5aa453c7108ea8241fe122d9472"
                 },
                 {
                     "name": "cdx:composer:package:type",
@@ -282,10 +282,10 @@
             ]
         },
         {
-            "bom-ref": "aws/aws-sdk-php-3.352.5.0",
+            "bom-ref": "aws/aws-sdk-php-3.356.1.0",
             "type": "library",
             "name": "aws-sdk-php",
-            "version": "3.352.5",
+            "version": "3.356.1",
             "group": "aws",
             "description": "AWS SDK for PHP - Use Amazon Web Services in your PHP project",
             "author": "Amazon Web Services",
@@ -296,17 +296,17 @@
                     }
                 }
             ],
-            "purl": "pkg:composer/aws/aws-sdk-php@3.352.5",
+            "purl": "pkg:composer/aws/aws-sdk-php@3.356.1",
             "externalReferences": [
                 {
                     "type": "distribution",
-                    "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/e226dcc96c0a1165d9c8248ec637d1006b883609",
-                    "comment": "dist reference: e226dcc96c0a1165d9c8248ec637d1006b883609"
+                    "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/ba92ad336ab18052a51b1294e1b1e75df601eb13",
+                    "comment": "dist reference: ba92ad336ab18052a51b1294e1b1e75df601eb13"
                 },
                 {
                     "type": "vcs",
                     "url": "https://github.com/aws/aws-sdk-php.git",
-                    "comment": "source reference: e226dcc96c0a1165d9c8248ec637d1006b883609"
+                    "comment": "source reference: ba92ad336ab18052a51b1294e1b1e75df601eb13"
                 },
                 {
                     "type": "website",
@@ -325,18 +325,18 @@
                 },
                 {
                     "type": "vcs",
-                    "url": "https://github.com/aws/aws-sdk-php/tree/3.352.5",
+                    "url": "https://github.com/aws/aws-sdk-php/tree/3.356.1",
                     "comment": "as detected from Composer manifest 'support.source'"
                 }
             ],
             "properties": [
                 {
                     "name": "cdx:composer:package:distReference",
-                    "value": "e226dcc96c0a1165d9c8248ec637d1006b883609"
+                    "value": "ba92ad336ab18052a51b1294e1b1e75df601eb13"
                 },
                 {
                     "name": "cdx:composer:package:sourceReference",
-                    "value": "e226dcc96c0a1165d9c8248ec637d1006b883609"
+                    "value": "ba92ad336ab18052a51b1294e1b1e75df601eb13"
                 },
                 {
                     "name": "cdx:composer:package:type",
@@ -1152,10 +1152,10 @@
             ]
         },
         {
-            "bom-ref": "dedoc/scramble-0.12.28.0",
+            "bom-ref": "dedoc/scramble-0.12.30.0",
             "type": "library",
             "name": "scramble",
-            "version": "v0.12.28",
+            "version": "v0.12.30",
             "group": "dedoc",
             "description": "Automatic generation of API documentation for Laravel applications.",
             "author": "Roman Lytvynenko",
@@ -1166,17 +1166,17 @@
                     }
                 }
             ],
-            "purl": "pkg:composer/dedoc/scramble@v0.12.28",
+            "purl": "pkg:composer/dedoc/scramble@v0.12.30",
             "externalReferences": [
                 {
                     "type": "distribution",
-                    "url": "https://api.github.com/repos/dedoc/scramble/zipball/f06a98d1fd6678544428df7077d73194e2d28de3",
-                    "comment": "dist reference: f06a98d1fd6678544428df7077d73194e2d28de3"
+                    "url": "https://api.github.com/repos/dedoc/scramble/zipball/2138ec1acac0077ddcd74e8570c54d4209074261",
+                    "comment": "dist reference: 2138ec1acac0077ddcd74e8570c54d4209074261"
                 },
                 {
                     "type": "vcs",
                     "url": "https://github.com/dedoc/scramble.git",
-                    "comment": "source reference: f06a98d1fd6678544428df7077d73194e2d28de3"
+                    "comment": "source reference: 2138ec1acac0077ddcd74e8570c54d4209074261"
                 },
                 {
                     "type": "website",
@@ -1190,18 +1190,18 @@
                 },
                 {
                     "type": "vcs",
-                    "url": "https://github.com/dedoc/scramble/tree/v0.12.28",
+                    "url": "https://github.com/dedoc/scramble/tree/v0.12.30",
                     "comment": "as detected from Composer manifest 'support.source'"
                 }
             ],
             "properties": [
                 {
                     "name": "cdx:composer:package:distReference",
-                    "value": "f06a98d1fd6678544428df7077d73194e2d28de3"
+                    "value": "2138ec1acac0077ddcd74e8570c54d4209074261"
                 },
                 {
                     "name": "cdx:composer:package:sourceReference",
-                    "value": "f06a98d1fd6678544428df7077d73194e2d28de3"
+                    "value": "2138ec1acac0077ddcd74e8570c54d4209074261"
                 },
                 {
                     "name": "cdx:composer:package:type",
@@ -1383,10 +1383,10 @@
             ]
         },
         {
-            "bom-ref": "doctrine/inflector-2.0.10.0",
+            "bom-ref": "doctrine/inflector-2.1.0.0",
             "type": "library",
             "name": "inflector",
-            "version": "2.0.10",
+            "version": "2.1.0",
             "group": "doctrine",
             "description": "PHP Doctrine Inflector is a small library that can perform string manipulations with regard to upper/lowercase and singular/plural forms of words.",
             "author": "Guilherme Blanco, Roman Borschel, Benjamin Eberlei, Jonathan Wage, Johannes Schmitt",
@@ -1397,17 +1397,17 @@
                     }
                 }
             ],
-            "purl": "pkg:composer/doctrine/inflector@2.0.10",
+            "purl": "pkg:composer/doctrine/inflector@2.1.0",
             "externalReferences": [
                 {
                     "type": "distribution",
-                    "url": "https://api.github.com/repos/doctrine/inflector/zipball/5817d0659c5b50c9b950feb9af7b9668e2c436bc",
-                    "comment": "dist reference: 5817d0659c5b50c9b950feb9af7b9668e2c436bc"
+                    "url": "https://api.github.com/repos/doctrine/inflector/zipball/6d6c96277ea252fc1304627204c3d5e6e15faa3b",
+                    "comment": "dist reference: 6d6c96277ea252fc1304627204c3d5e6e15faa3b"
                 },
                 {
                     "type": "vcs",
                     "url": "https://github.com/doctrine/inflector.git",
-                    "comment": "source reference: 5817d0659c5b50c9b950feb9af7b9668e2c436bc"
+                    "comment": "source reference: 6d6c96277ea252fc1304627204c3d5e6e15faa3b"
                 },
                 {
                     "type": "website",
@@ -1421,18 +1421,18 @@
                 },
                 {
                     "type": "vcs",
-                    "url": "https://github.com/doctrine/inflector/tree/2.0.10",
+                    "url": "https://github.com/doctrine/inflector/tree/2.1.0",
                     "comment": "as detected from Composer manifest 'support.source'"
                 }
             ],
             "properties": [
                 {
                     "name": "cdx:composer:package:distReference",
-                    "value": "5817d0659c5b50c9b950feb9af7b9668e2c436bc"
+                    "value": "6d6c96277ea252fc1304627204c3d5e6e15faa3b"
                 },
                 {
                     "name": "cdx:composer:package:sourceReference",
-                    "value": "5817d0659c5b50c9b950feb9af7b9668e2c436bc"
+                    "value": "6d6c96277ea252fc1304627204c3d5e6e15faa3b"
                 },
                 {
                     "name": "cdx:composer:package:type",
@@ -1899,10 +1899,10 @@
             ]
         },
         {
-            "bom-ref": "filament/actions-3.3.35.0",
+            "bom-ref": "filament/actions-3.3.37.0",
             "type": "library",
             "name": "actions",
-            "version": "v3.3.35",
+            "version": "v3.3.37",
             "group": "filament",
             "description": "Easily add beautiful action modals to any Livewire component.",
             "licenses": [
@@ -1912,7 +1912,7 @@
                     }
                 }
             ],
-            "purl": "pkg:composer/filament/actions@v3.3.35",
+            "purl": "pkg:composer/filament/actions@v3.3.37",
             "externalReferences": [
                 {
                     "type": "distribution",
@@ -1956,10 +1956,10 @@
             ]
         },
         {
-            "bom-ref": "filament/filament-3.3.35.0",
+            "bom-ref": "filament/filament-3.3.37.0",
             "type": "library",
             "name": "filament",
-            "version": "v3.3.35",
+            "version": "v3.3.37",
             "group": "filament",
             "description": "A collection of full-stack components for accelerated Laravel app development.",
             "licenses": [
@@ -1969,17 +1969,17 @@
                     }
                 }
             ],
-            "purl": "pkg:composer/filament/filament@v3.3.35",
+            "purl": "pkg:composer/filament/filament@v3.3.37",
             "externalReferences": [
                 {
                     "type": "distribution",
-                    "url": "https://api.github.com/repos/filamentphp/panels/zipball/d9d2367c910956e1e7a4c2903600f37bd740dd11",
-                    "comment": "dist reference: d9d2367c910956e1e7a4c2903600f37bd740dd11"
+                    "url": "https://api.github.com/repos/filamentphp/panels/zipball/6f460f7f5146217b71fc242b288f908fa58c9131",
+                    "comment": "dist reference: 6f460f7f5146217b71fc242b288f908fa58c9131"
                 },
                 {
                     "type": "vcs",
                     "url": "https://github.com/filamentphp/panels.git",
-                    "comment": "source reference: d9d2367c910956e1e7a4c2903600f37bd740dd11"
+                    "comment": "source reference: 6f460f7f5146217b71fc242b288f908fa58c9131"
                 },
                 {
                     "type": "website",
@@ -2000,11 +2000,11 @@
             "properties": [
                 {
                     "name": "cdx:composer:package:distReference",
-                    "value": "d9d2367c910956e1e7a4c2903600f37bd740dd11"
+                    "value": "6f460f7f5146217b71fc242b288f908fa58c9131"
                 },
                 {
                     "name": "cdx:composer:package:sourceReference",
-                    "value": "d9d2367c910956e1e7a4c2903600f37bd740dd11"
+                    "value": "6f460f7f5146217b71fc242b288f908fa58c9131"
                 },
                 {
                     "name": "cdx:composer:package:type",
@@ -2013,10 +2013,10 @@
             ]
         },
         {
-            "bom-ref": "filament/forms-3.3.35.0",
+            "bom-ref": "filament/forms-3.3.37.0",
             "type": "library",
             "name": "forms",
-            "version": "v3.3.35",
+            "version": "v3.3.37",
             "group": "filament",
             "description": "Easily add beautiful forms to any Livewire component.",
             "licenses": [
@@ -2026,17 +2026,17 @@
                     }
                 }
             ],
-            "purl": "pkg:composer/filament/forms@v3.3.35",
+            "purl": "pkg:composer/filament/forms@v3.3.37",
             "externalReferences": [
                 {
                     "type": "distribution",
-                    "url": "https://api.github.com/repos/filamentphp/forms/zipball/158177c4a551c8aba5be3f45bc423195ab28e5bc",
-                    "comment": "dist reference: 158177c4a551c8aba5be3f45bc423195ab28e5bc"
+                    "url": "https://api.github.com/repos/filamentphp/forms/zipball/5cb8623735691d65b9a08c43be9b4431b017c51a",
+                    "comment": "dist reference: 5cb8623735691d65b9a08c43be9b4431b017c51a"
                 },
                 {
                     "type": "vcs",
                     "url": "https://github.com/filamentphp/forms.git",
-                    "comment": "source reference: 158177c4a551c8aba5be3f45bc423195ab28e5bc"
+                    "comment": "source reference: 5cb8623735691d65b9a08c43be9b4431b017c51a"
                 },
                 {
                     "type": "website",
@@ -2057,11 +2057,11 @@
             "properties": [
                 {
                     "name": "cdx:composer:package:distReference",
-                    "value": "158177c4a551c8aba5be3f45bc423195ab28e5bc"
+                    "value": "5cb8623735691d65b9a08c43be9b4431b017c51a"
                 },
                 {
                     "name": "cdx:composer:package:sourceReference",
-                    "value": "158177c4a551c8aba5be3f45bc423195ab28e5bc"
+                    "value": "5cb8623735691d65b9a08c43be9b4431b017c51a"
                 },
                 {
                     "name": "cdx:composer:package:type",
@@ -2070,10 +2070,10 @@
             ]
         },
         {
-            "bom-ref": "filament/infolists-3.3.35.0",
+            "bom-ref": "filament/infolists-3.3.37.0",
             "type": "library",
             "name": "infolists",
-            "version": "v3.3.35",
+            "version": "v3.3.37",
             "group": "filament",
             "description": "Easily add beautiful read-only infolists to any Livewire component.",
             "licenses": [
@@ -2083,17 +2083,17 @@
                     }
                 }
             ],
-            "purl": "pkg:composer/filament/infolists@v3.3.35",
+            "purl": "pkg:composer/filament/infolists@v3.3.37",
             "externalReferences": [
                 {
                     "type": "distribution",
-                    "url": "https://api.github.com/repos/filamentphp/infolists/zipball/89a3f1f236863e2035be3d7b0c68987508dd06fa",
-                    "comment": "dist reference: 89a3f1f236863e2035be3d7b0c68987508dd06fa"
+                    "url": "https://api.github.com/repos/filamentphp/infolists/zipball/4533c2ccb6ef06ab7f27d81e27be0cdd4f5e72de",
+                    "comment": "dist reference: 4533c2ccb6ef06ab7f27d81e27be0cdd4f5e72de"
                 },
                 {
                     "type": "vcs",
                     "url": "https://github.com/filamentphp/infolists.git",
-                    "comment": "source reference: 89a3f1f236863e2035be3d7b0c68987508dd06fa"
+                    "comment": "source reference: 4533c2ccb6ef06ab7f27d81e27be0cdd4f5e72de"
                 },
                 {
                     "type": "website",
@@ -2114,11 +2114,11 @@
             "properties": [
                 {
                     "name": "cdx:composer:package:distReference",
-                    "value": "89a3f1f236863e2035be3d7b0c68987508dd06fa"
+                    "value": "4533c2ccb6ef06ab7f27d81e27be0cdd4f5e72de"
                 },
                 {
                     "name": "cdx:composer:package:sourceReference",
-                    "value": "89a3f1f236863e2035be3d7b0c68987508dd06fa"
+                    "value": "4533c2ccb6ef06ab7f27d81e27be0cdd4f5e72de"
                 },
                 {
                     "name": "cdx:composer:package:type",
@@ -2127,10 +2127,10 @@
             ]
         },
         {
-            "bom-ref": "filament/notifications-3.3.35.0",
+            "bom-ref": "filament/notifications-3.3.37.0",
             "type": "library",
             "name": "notifications",
-            "version": "v3.3.35",
+            "version": "v3.3.37",
             "group": "filament",
             "description": "Easily add beautiful notifications to any Livewire app.",
             "licenses": [
@@ -2140,7 +2140,7 @@
                     }
                 }
             ],
-            "purl": "pkg:composer/filament/notifications@v3.3.35",
+            "purl": "pkg:composer/filament/notifications@v3.3.37",
             "externalReferences": [
                 {
                     "type": "distribution",
@@ -2184,10 +2184,10 @@
             ]
         },
         {
-            "bom-ref": "filament/support-3.3.35.0",
+            "bom-ref": "filament/support-3.3.37.0",
             "type": "library",
             "name": "support",
-            "version": "v3.3.35",
+            "version": "v3.3.37",
             "group": "filament",
             "description": "Core helper methods and foundation code for all Filament packages.",
             "licenses": [
@@ -2197,17 +2197,17 @@
                     }
                 }
             ],
-            "purl": "pkg:composer/filament/support@v3.3.35",
+            "purl": "pkg:composer/filament/support@v3.3.37",
             "externalReferences": [
                 {
                     "type": "distribution",
-                    "url": "https://api.github.com/repos/filamentphp/support/zipball/89d8e729025c195a06f2e510af4517fc9a8fd07f",
-                    "comment": "dist reference: 89d8e729025c195a06f2e510af4517fc9a8fd07f"
+                    "url": "https://api.github.com/repos/filamentphp/support/zipball/afafd5e7a2f8cf052f70f989b52d82d0a1df5c78",
+                    "comment": "dist reference: afafd5e7a2f8cf052f70f989b52d82d0a1df5c78"
                 },
                 {
                     "type": "vcs",
                     "url": "https://github.com/filamentphp/support.git",
-                    "comment": "source reference: 89d8e729025c195a06f2e510af4517fc9a8fd07f"
+                    "comment": "source reference: afafd5e7a2f8cf052f70f989b52d82d0a1df5c78"
                 },
                 {
                     "type": "website",
@@ -2228,11 +2228,11 @@
             "properties": [
                 {
                     "name": "cdx:composer:package:distReference",
-                    "value": "89d8e729025c195a06f2e510af4517fc9a8fd07f"
+                    "value": "afafd5e7a2f8cf052f70f989b52d82d0a1df5c78"
                 },
                 {
                     "name": "cdx:composer:package:sourceReference",
-                    "value": "89d8e729025c195a06f2e510af4517fc9a8fd07f"
+                    "value": "afafd5e7a2f8cf052f70f989b52d82d0a1df5c78"
                 },
                 {
                     "name": "cdx:composer:package:type",
@@ -2241,10 +2241,10 @@
             ]
         },
         {
-            "bom-ref": "filament/tables-3.3.35.0",
+            "bom-ref": "filament/tables-3.3.37.0",
             "type": "library",
             "name": "tables",
-            "version": "v3.3.35",
+            "version": "v3.3.37",
             "group": "filament",
             "description": "Easily add beautiful tables to any Livewire component.",
             "licenses": [
@@ -2254,17 +2254,17 @@
                     }
                 }
             ],
-            "purl": "pkg:composer/filament/tables@v3.3.35",
+            "purl": "pkg:composer/filament/tables@v3.3.37",
             "externalReferences": [
                 {
                     "type": "distribution",
-                    "url": "https://api.github.com/repos/filamentphp/tables/zipball/22bc439ec6f2b5fd5703ef499381d7beb0a6b369",
-                    "comment": "dist reference: 22bc439ec6f2b5fd5703ef499381d7beb0a6b369"
+                    "url": "https://api.github.com/repos/filamentphp/tables/zipball/20ce6217382785df7b39b8473644c1bfe967963c",
+                    "comment": "dist reference: 20ce6217382785df7b39b8473644c1bfe967963c"
                 },
                 {
                     "type": "vcs",
                     "url": "https://github.com/filamentphp/tables.git",
-                    "comment": "source reference: 22bc439ec6f2b5fd5703ef499381d7beb0a6b369"
+                    "comment": "source reference: 20ce6217382785df7b39b8473644c1bfe967963c"
                 },
                 {
                     "type": "website",
@@ -2285,11 +2285,11 @@
             "properties": [
                 {
                     "name": "cdx:composer:package:distReference",
-                    "value": "22bc439ec6f2b5fd5703ef499381d7beb0a6b369"
+                    "value": "20ce6217382785df7b39b8473644c1bfe967963c"
                 },
                 {
                     "name": "cdx:composer:package:sourceReference",
-                    "value": "22bc439ec6f2b5fd5703ef499381d7beb0a6b369"
+                    "value": "20ce6217382785df7b39b8473644c1bfe967963c"
                 },
                 {
                     "name": "cdx:composer:package:type",
@@ -2298,10 +2298,10 @@
             ]
         },
         {
-            "bom-ref": "filament/widgets-3.3.35.0",
+            "bom-ref": "filament/widgets-3.3.37.0",
             "type": "library",
             "name": "widgets",
-            "version": "v3.3.35",
+            "version": "v3.3.37",
             "group": "filament",
             "description": "Easily add beautiful dashboard widgets to any Livewire component.",
             "licenses": [
@@ -2311,7 +2311,7 @@
                     }
                 }
             ],
-            "purl": "pkg:composer/filament/widgets@v3.3.35",
+            "purl": "pkg:composer/filament/widgets@v3.3.37",
             "externalReferences": [
                 {
                     "type": "distribution",
@@ -3201,10 +3201,10 @@
             ]
         },
         {
-            "bom-ref": "kirschbaum-development/eloquent-power-joins-4.2.7.0",
+            "bom-ref": "kirschbaum-development/eloquent-power-joins-4.2.8.0",
             "type": "library",
             "name": "eloquent-power-joins",
-            "version": "4.2.7",
+            "version": "4.2.8",
             "group": "kirschbaum-development",
             "description": "The Laravel magic applied to joins.",
             "author": "Luis Dalmolin",
@@ -3215,17 +3215,17 @@
                     }
                 }
             ],
-            "purl": "pkg:composer/kirschbaum-development/eloquent-power-joins@4.2.7",
+            "purl": "pkg:composer/kirschbaum-development/eloquent-power-joins@4.2.8",
             "externalReferences": [
                 {
                     "type": "distribution",
-                    "url": "https://api.github.com/repos/kirschbaum-development/eloquent-power-joins/zipball/f2f8d3575a54d91b3e5058d65ac1fccb3ea7dd94",
-                    "comment": "dist reference: f2f8d3575a54d91b3e5058d65ac1fccb3ea7dd94"
+                    "url": "https://api.github.com/repos/kirschbaum-development/eloquent-power-joins/zipball/d67c7e2efa886d2ef8bb29e86c3ddb9438ac6390",
+                    "comment": "dist reference: d67c7e2efa886d2ef8bb29e86c3ddb9438ac6390"
                 },
                 {
                     "type": "vcs",
                     "url": "https://github.com/kirschbaum-development/eloquent-power-joins.git",
-                    "comment": "source reference: f2f8d3575a54d91b3e5058d65ac1fccb3ea7dd94"
+                    "comment": "source reference: d67c7e2efa886d2ef8bb29e86c3ddb9438ac6390"
                 },
                 {
                     "type": "website",
@@ -3239,18 +3239,18 @@
                 },
                 {
                     "type": "vcs",
-                    "url": "https://github.com/kirschbaum-development/eloquent-power-joins/tree/4.2.7",
+                    "url": "https://github.com/kirschbaum-development/eloquent-power-joins/tree/4.2.8",
                     "comment": "as detected from Composer manifest 'support.source'"
                 }
             ],
             "properties": [
                 {
                     "name": "cdx:composer:package:distReference",
-                    "value": "f2f8d3575a54d91b3e5058d65ac1fccb3ea7dd94"
+                    "value": "d67c7e2efa886d2ef8bb29e86c3ddb9438ac6390"
                 },
                 {
                     "name": "cdx:composer:package:sourceReference",
-                    "value": "f2f8d3575a54d91b3e5058d65ac1fccb3ea7dd94"
+                    "value": "d67c7e2efa886d2ef8bb29e86c3ddb9438ac6390"
                 },
                 {
                     "name": "cdx:composer:package:type",
@@ -3373,10 +3373,10 @@
             ]
         },
         {
-            "bom-ref": "laravel/framework-11.45.1.0",
+            "bom-ref": "laravel/framework-11.45.2.0",
             "type": "library",
             "name": "framework",
-            "version": "v11.45.1",
+            "version": "v11.45.2",
             "group": "laravel",
             "description": "The Laravel Framework.",
             "author": "Taylor Otwell",
@@ -3387,17 +3387,17 @@
                     }
                 }
             ],
-            "purl": "pkg:composer/laravel/framework@v11.45.1",
+            "purl": "pkg:composer/laravel/framework@v11.45.2",
             "externalReferences": [
                 {
                     "type": "distribution",
-                    "url": "https://api.github.com/repos/laravel/framework/zipball/b09ba32795b8e71df10856a2694706663984a239",
-                    "comment": "dist reference: b09ba32795b8e71df10856a2694706663984a239"
+                    "url": "https://api.github.com/repos/laravel/framework/zipball/d134bf11e2208c0c5bd488cf19e612ca176b820a",
+                    "comment": "dist reference: d134bf11e2208c0c5bd488cf19e612ca176b820a"
                 },
                 {
                     "type": "vcs",
                     "url": "https://github.com/laravel/framework.git",
-                    "comment": "source reference: b09ba32795b8e71df10856a2694706663984a239"
+                    "comment": "source reference: d134bf11e2208c0c5bd488cf19e612ca176b820a"
                 },
                 {
                     "type": "website",
@@ -3418,11 +3418,11 @@
             "properties": [
                 {
                     "name": "cdx:composer:package:distReference",
-                    "value": "b09ba32795b8e71df10856a2694706663984a239"
+                    "value": "d134bf11e2208c0c5bd488cf19e612ca176b820a"
                 },
                 {
                     "name": "cdx:composer:package:sourceReference",
-                    "value": "b09ba32795b8e71df10856a2694706663984a239"
+                    "value": "d134bf11e2208c0c5bd488cf19e612ca176b820a"
                 },
                 {
                     "name": "cdx:composer:package:type",
@@ -5143,10 +5143,10 @@
             ]
         },
         {
-            "bom-ref": "nikic/php-parser-5.6.0.0",
+            "bom-ref": "nikic/php-parser-5.6.1.0",
             "type": "library",
             "name": "php-parser",
-            "version": "v5.6.0",
+            "version": "v5.6.1",
             "group": "nikic",
             "description": "A PHP parser written in PHP",
             "author": "Nikita Popov",
@@ -5157,17 +5157,17 @@
                     }
                 }
             ],
-            "purl": "pkg:composer/nikic/php-parser@v5.6.0",
+            "purl": "pkg:composer/nikic/php-parser@v5.6.1",
             "externalReferences": [
                 {
                     "type": "distribution",
-                    "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/221b0d0fdf1369c71047ad1d18bb5880017bbc56",
-                    "comment": "dist reference: 221b0d0fdf1369c71047ad1d18bb5880017bbc56"
+                    "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/f103601b29efebd7ff4a1ca7b3eeea9e3336a2a2",
+                    "comment": "dist reference: f103601b29efebd7ff4a1ca7b3eeea9e3336a2a2"
                 },
                 {
                     "type": "vcs",
                     "url": "https://github.com/nikic/PHP-Parser.git",
-                    "comment": "source reference: 221b0d0fdf1369c71047ad1d18bb5880017bbc56"
+                    "comment": "source reference: f103601b29efebd7ff4a1ca7b3eeea9e3336a2a2"
                 },
                 {
                     "type": "issue-tracker",
@@ -5176,18 +5176,18 @@
                 },
                 {
                     "type": "vcs",
-                    "url": "https://github.com/nikic/PHP-Parser/tree/v5.6.0",
+                    "url": "https://github.com/nikic/PHP-Parser/tree/v5.6.1",
                     "comment": "as detected from Composer manifest 'support.source'"
                 }
             ],
             "properties": [
                 {
                     "name": "cdx:composer:package:distReference",
-                    "value": "221b0d0fdf1369c71047ad1d18bb5880017bbc56"
+                    "value": "f103601b29efebd7ff4a1ca7b3eeea9e3336a2a2"
                 },
                 {
                     "name": "cdx:composer:package:sourceReference",
-                    "value": "221b0d0fdf1369c71047ad1d18bb5880017bbc56"
+                    "value": "f103601b29efebd7ff4a1ca7b3eeea9e3336a2a2"
                 },
                 {
                     "name": "cdx:composer:package:type",
@@ -6081,10 +6081,10 @@
             ]
         },
         {
-            "bom-ref": "php-di/php-di-7.0.11.0",
+            "bom-ref": "php-di/php-di-7.1.1.0",
             "type": "library",
             "name": "php-di",
-            "version": "7.0.11",
+            "version": "7.1.1",
             "group": "php-di",
             "description": "The dependency injection container for humans",
             "licenses": [
@@ -6094,17 +6094,17 @@
                     }
                 }
             ],
-            "purl": "pkg:composer/php-di/php-di@7.0.11",
+            "purl": "pkg:composer/php-di/php-di@7.1.1",
             "externalReferences": [
                 {
                     "type": "distribution",
-                    "url": "https://api.github.com/repos/PHP-DI/PHP-DI/zipball/32f111a6d214564520a57831d397263e8946c1d2",
-                    "comment": "dist reference: 32f111a6d214564520a57831d397263e8946c1d2"
+                    "url": "https://api.github.com/repos/PHP-DI/PHP-DI/zipball/f88054cc052e40dbe7b383c8817c19442d480352",
+                    "comment": "dist reference: f88054cc052e40dbe7b383c8817c19442d480352"
                 },
                 {
                     "type": "vcs",
                     "url": "https://github.com/PHP-DI/PHP-DI.git",
-                    "comment": "source reference: 32f111a6d214564520a57831d397263e8946c1d2"
+                    "comment": "source reference: f88054cc052e40dbe7b383c8817c19442d480352"
                 },
                 {
                     "type": "website",
@@ -6118,18 +6118,18 @@
                 },
                 {
                     "type": "vcs",
-                    "url": "https://github.com/PHP-DI/PHP-DI/tree/7.0.11",
+                    "url": "https://github.com/PHP-DI/PHP-DI/tree/7.1.1",
                     "comment": "as detected from Composer manifest 'support.source'"
                 }
             ],
             "properties": [
                 {
                     "name": "cdx:composer:package:distReference",
-                    "value": "32f111a6d214564520a57831d397263e8946c1d2"
+                    "value": "f88054cc052e40dbe7b383c8817c19442d480352"
                 },
                 {
                     "name": "cdx:composer:package:sourceReference",
-                    "value": "32f111a6d214564520a57831d397263e8946c1d2"
+                    "value": "f88054cc052e40dbe7b383c8817c19442d480352"
                 },
                 {
                     "name": "cdx:composer:package:type",
@@ -6762,10 +6762,10 @@
             ]
         },
         {
-            "bom-ref": "phpunit/phpunit-10.5.50.0",
+            "bom-ref": "phpunit/phpunit-10.5.53.0",
             "type": "library",
             "name": "phpunit",
-            "version": "10.5.50",
+            "version": "10.5.53",
             "group": "phpunit",
             "description": "The PHP Unit Testing framework.",
             "author": "Sebastian Bergmann",
@@ -6776,17 +6776,17 @@
                     }
                 }
             ],
-            "purl": "pkg:composer/phpunit/phpunit@10.5.50",
+            "purl": "pkg:composer/phpunit/phpunit@10.5.53",
             "externalReferences": [
                 {
                     "type": "distribution",
-                    "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/a858178a64d88653e94ece15b25a860d48a4644b",
-                    "comment": "dist reference: a858178a64d88653e94ece15b25a860d48a4644b"
+                    "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/32768472ebfb6969e6c7399f1c7b09009723f653",
+                    "comment": "dist reference: 32768472ebfb6969e6c7399f1c7b09009723f653"
                 },
                 {
                     "type": "vcs",
                     "url": "https://github.com/sebastianbergmann/phpunit.git",
-                    "comment": "source reference: a858178a64d88653e94ece15b25a860d48a4644b"
+                    "comment": "source reference: 32768472ebfb6969e6c7399f1c7b09009723f653"
                 },
                 {
                     "type": "website",
@@ -6805,18 +6805,18 @@
                 },
                 {
                     "type": "vcs",
-                    "url": "https://github.com/sebastianbergmann/phpunit/tree/10.5.50",
+                    "url": "https://github.com/sebastianbergmann/phpunit/tree/10.5.53",
                     "comment": "as detected from Composer manifest 'support.source'"
                 }
             ],
             "properties": [
                 {
                     "name": "cdx:composer:package:distReference",
-                    "value": "a858178a64d88653e94ece15b25a860d48a4644b"
+                    "value": "32768472ebfb6969e6c7399f1c7b09009723f653"
                 },
                 {
                     "name": "cdx:composer:package:sourceReference",
-                    "value": "a858178a64d88653e94ece15b25a860d48a4644b"
+                    "value": "32768472ebfb6969e6c7399f1c7b09009723f653"
                 },
                 {
                     "name": "cdx:composer:package:type",
@@ -10478,10 +10478,10 @@
             ]
         },
         {
-            "bom-ref": "symfony/polyfill-ctype-1.32.0.0",
+            "bom-ref": "symfony/polyfill-ctype-1.33.0.0",
             "type": "library",
             "name": "polyfill-ctype",
-            "version": "v1.32.0",
+            "version": "v1.33.0",
             "group": "symfony",
             "description": "Symfony polyfill for ctype functions",
             "author": "Gert de Pagter, Symfony Community",
@@ -10492,7 +10492,7 @@
                     }
                 }
             ],
-            "purl": "pkg:composer/symfony/polyfill-ctype@v1.32.0",
+            "purl": "pkg:composer/symfony/polyfill-ctype@v1.33.0",
             "externalReferences": [
                 {
                     "type": "distribution",
@@ -10511,7 +10511,7 @@
                 },
                 {
                     "type": "vcs",
-                    "url": "https://github.com/symfony/polyfill-ctype/tree/v1.32.0",
+                    "url": "https://github.com/symfony/polyfill-ctype/tree/v1.33.0",
                     "comment": "as detected from Composer manifest 'support.source'"
                 }
             ],
@@ -10531,10 +10531,10 @@
             ]
         },
         {
-            "bom-ref": "symfony/polyfill-iconv-1.32.0.0",
+            "bom-ref": "symfony/polyfill-iconv-1.33.0.0",
             "type": "library",
             "name": "polyfill-iconv",
-            "version": "v1.32.0",
+            "version": "v1.33.0",
             "group": "symfony",
             "description": "Symfony polyfill for the Iconv extension",
             "author": "Nicolas Grekas, Symfony Community",
@@ -10545,7 +10545,7 @@
                     }
                 }
             ],
-            "purl": "pkg:composer/symfony/polyfill-iconv@v1.32.0",
+            "purl": "pkg:composer/symfony/polyfill-iconv@v1.33.0",
             "externalReferences": [
                 {
                     "type": "distribution",
@@ -10564,7 +10564,7 @@
                 },
                 {
                     "type": "vcs",
-                    "url": "https://github.com/symfony/polyfill-iconv/tree/v1.32.0",
+                    "url": "https://github.com/symfony/polyfill-iconv/tree/v1.33.0",
                     "comment": "as detected from Composer manifest 'support.source'"
                 }
             ],
@@ -10588,10 +10588,10 @@
             ]
         },
         {
-            "bom-ref": "symfony/polyfill-intl-grapheme-1.32.0.0",
+            "bom-ref": "symfony/polyfill-intl-grapheme-1.33.0.0",
             "type": "library",
             "name": "polyfill-intl-grapheme",
-            "version": "v1.32.0",
+            "version": "v1.33.0",
             "group": "symfony",
             "description": "Symfony polyfill for intl's grapheme_* functions",
             "author": "Nicolas Grekas, Symfony Community",
@@ -10602,17 +10602,17 @@
                     }
                 }
             ],
-            "purl": "pkg:composer/symfony/polyfill-intl-grapheme@v1.32.0",
+            "purl": "pkg:composer/symfony/polyfill-intl-grapheme@v1.33.0",
             "externalReferences": [
                 {
                     "type": "distribution",
-                    "url": "https://api.github.com/repos/symfony/polyfill-intl-grapheme/zipball/b9123926e3b7bc2f98c02ad54f6a4b02b91a8abe",
-                    "comment": "dist reference: b9123926e3b7bc2f98c02ad54f6a4b02b91a8abe"
+                    "url": "https://api.github.com/repos/symfony/polyfill-intl-grapheme/zipball/380872130d3a5dd3ace2f4010d95125fde5d5c70",
+                    "comment": "dist reference: 380872130d3a5dd3ace2f4010d95125fde5d5c70"
                 },
                 {
                     "type": "vcs",
                     "url": "https://github.com/symfony/polyfill-intl-grapheme.git",
-                    "comment": "source reference: b9123926e3b7bc2f98c02ad54f6a4b02b91a8abe"
+                    "comment": "source reference: 380872130d3a5dd3ace2f4010d95125fde5d5c70"
                 },
                 {
                     "type": "website",
@@ -10621,18 +10621,18 @@
                 },
                 {
                     "type": "vcs",
-                    "url": "https://github.com/symfony/polyfill-intl-grapheme/tree/v1.32.0",
+                    "url": "https://github.com/symfony/polyfill-intl-grapheme/tree/v1.33.0",
                     "comment": "as detected from Composer manifest 'support.source'"
                 }
             ],
             "properties": [
                 {
                     "name": "cdx:composer:package:distReference",
-                    "value": "b9123926e3b7bc2f98c02ad54f6a4b02b91a8abe"
+                    "value": "380872130d3a5dd3ace2f4010d95125fde5d5c70"
                 },
                 {
                     "name": "cdx:composer:package:sourceReference",
-                    "value": "b9123926e3b7bc2f98c02ad54f6a4b02b91a8abe"
+                    "value": "380872130d3a5dd3ace2f4010d95125fde5d5c70"
                 },
                 {
                     "name": "cdx:composer:package:type",
@@ -10641,10 +10641,10 @@
             ]
         },
         {
-            "bom-ref": "symfony/polyfill-intl-idn-1.32.0.0",
+            "bom-ref": "symfony/polyfill-intl-idn-1.33.0.0",
             "type": "library",
             "name": "polyfill-intl-idn",
-            "version": "v1.32.0",
+            "version": "v1.33.0",
             "group": "symfony",
             "description": "Symfony polyfill for intl's idn_to_ascii and idn_to_utf8 functions",
             "author": "Laurent Bassin, Trevor Rowbotham, Symfony Community",
@@ -10655,7 +10655,7 @@
                     }
                 }
             ],
-            "purl": "pkg:composer/symfony/polyfill-intl-idn@v1.32.0",
+            "purl": "pkg:composer/symfony/polyfill-intl-idn@v1.33.0",
             "externalReferences": [
                 {
                     "type": "distribution",
@@ -10674,7 +10674,7 @@
                 },
                 {
                     "type": "vcs",
-                    "url": "https://github.com/symfony/polyfill-intl-idn/tree/v1.32.0",
+                    "url": "https://github.com/symfony/polyfill-intl-idn/tree/v1.33.0",
                     "comment": "as detected from Composer manifest 'support.source'"
                 }
             ],
@@ -10694,10 +10694,10 @@
             ]
         },
         {
-            "bom-ref": "symfony/polyfill-intl-normalizer-1.32.0.0",
+            "bom-ref": "symfony/polyfill-intl-normalizer-1.33.0.0",
             "type": "library",
             "name": "polyfill-intl-normalizer",
-            "version": "v1.32.0",
+            "version": "v1.33.0",
             "group": "symfony",
             "description": "Symfony polyfill for intl's Normalizer class and related functions",
             "author": "Nicolas Grekas, Symfony Community",
@@ -10708,7 +10708,7 @@
                     }
                 }
             ],
-            "purl": "pkg:composer/symfony/polyfill-intl-normalizer@v1.32.0",
+            "purl": "pkg:composer/symfony/polyfill-intl-normalizer@v1.33.0",
             "externalReferences": [
                 {
                     "type": "distribution",
@@ -10727,7 +10727,7 @@
                 },
                 {
                     "type": "vcs",
-                    "url": "https://github.com/symfony/polyfill-intl-normalizer/tree/v1.32.0",
+                    "url": "https://github.com/symfony/polyfill-intl-normalizer/tree/v1.33.0",
                     "comment": "as detected from Composer manifest 'support.source'"
                 }
             ],
@@ -10747,10 +10747,10 @@
             ]
         },
         {
-            "bom-ref": "symfony/polyfill-mbstring-1.32.0.0",
+            "bom-ref": "symfony/polyfill-mbstring-1.33.0.0",
             "type": "library",
             "name": "polyfill-mbstring",
-            "version": "v1.32.0",
+            "version": "v1.33.0",
             "group": "symfony",
             "description": "Symfony polyfill for the Mbstring extension",
             "author": "Nicolas Grekas, Symfony Community",
@@ -10761,7 +10761,7 @@
                     }
                 }
             ],
-            "purl": "pkg:composer/symfony/polyfill-mbstring@v1.32.0",
+            "purl": "pkg:composer/symfony/polyfill-mbstring@v1.33.0",
             "externalReferences": [
                 {
                     "type": "distribution",
@@ -10780,7 +10780,7 @@
                 },
                 {
                     "type": "vcs",
-                    "url": "https://github.com/symfony/polyfill-mbstring/tree/v1.32.0",
+                    "url": "https://github.com/symfony/polyfill-mbstring/tree/v1.33.0",
                     "comment": "as detected from Composer manifest 'support.source'"
                 }
             ],
@@ -10800,10 +10800,10 @@
             ]
         },
         {
-            "bom-ref": "symfony/polyfill-php80-1.32.0.0",
+            "bom-ref": "symfony/polyfill-php80-1.33.0.0",
             "type": "library",
             "name": "polyfill-php80",
-            "version": "v1.32.0",
+            "version": "v1.33.0",
             "group": "symfony",
             "description": "Symfony polyfill backporting some PHP 8.0+ features to lower PHP versions",
             "author": "Ion Bazan, Nicolas Grekas, Symfony Community",
@@ -10814,7 +10814,7 @@
                     }
                 }
             ],
-            "purl": "pkg:composer/symfony/polyfill-php80@v1.32.0",
+            "purl": "pkg:composer/symfony/polyfill-php80@v1.33.0",
             "externalReferences": [
                 {
                     "type": "distribution",
@@ -10833,7 +10833,7 @@
                 },
                 {
                     "type": "vcs",
-                    "url": "https://github.com/symfony/polyfill-php80/tree/v1.32.0",
+                    "url": "https://github.com/symfony/polyfill-php80/tree/v1.33.0",
                     "comment": "as detected from Composer manifest 'support.source'"
                 }
             ],
@@ -10853,10 +10853,10 @@
             ]
         },
         {
-            "bom-ref": "symfony/polyfill-php83-1.32.0.0",
+            "bom-ref": "symfony/polyfill-php83-1.33.0.0",
             "type": "library",
             "name": "polyfill-php83",
-            "version": "v1.32.0",
+            "version": "v1.33.0",
             "group": "symfony",
             "description": "Symfony polyfill backporting some PHP 8.3+ features to lower PHP versions",
             "author": "Nicolas Grekas, Symfony Community",
@@ -10867,17 +10867,17 @@
                     }
                 }
             ],
-            "purl": "pkg:composer/symfony/polyfill-php83@v1.32.0",
+            "purl": "pkg:composer/symfony/polyfill-php83@v1.33.0",
             "externalReferences": [
                 {
                     "type": "distribution",
-                    "url": "https://api.github.com/repos/symfony/polyfill-php83/zipball/2fb86d65e2d424369ad2905e83b236a8805ba491",
-                    "comment": "dist reference: 2fb86d65e2d424369ad2905e83b236a8805ba491"
+                    "url": "https://api.github.com/repos/symfony/polyfill-php83/zipball/17f6f9a6b1735c0f163024d959f700cfbc5155e5",
+                    "comment": "dist reference: 17f6f9a6b1735c0f163024d959f700cfbc5155e5"
                 },
                 {
                     "type": "vcs",
                     "url": "https://github.com/symfony/polyfill-php83.git",
-                    "comment": "source reference: 2fb86d65e2d424369ad2905e83b236a8805ba491"
+                    "comment": "source reference: 17f6f9a6b1735c0f163024d959f700cfbc5155e5"
                 },
                 {
                     "type": "website",
@@ -10886,18 +10886,18 @@
                 },
                 {
                     "type": "vcs",
-                    "url": "https://github.com/symfony/polyfill-php83/tree/v1.32.0",
+                    "url": "https://github.com/symfony/polyfill-php83/tree/v1.33.0",
                     "comment": "as detected from Composer manifest 'support.source'"
                 }
             ],
             "properties": [
                 {
                     "name": "cdx:composer:package:distReference",
-                    "value": "2fb86d65e2d424369ad2905e83b236a8805ba491"
+                    "value": "17f6f9a6b1735c0f163024d959f700cfbc5155e5"
                 },
                 {
                     "name": "cdx:composer:package:sourceReference",
-                    "value": "2fb86d65e2d424369ad2905e83b236a8805ba491"
+                    "value": "17f6f9a6b1735c0f163024d959f700cfbc5155e5"
                 },
                 {
                     "name": "cdx:composer:package:type",
@@ -10906,10 +10906,10 @@
             ]
         },
         {
-            "bom-ref": "symfony/polyfill-uuid-1.32.0.0",
+            "bom-ref": "symfony/polyfill-uuid-1.33.0.0",
             "type": "library",
             "name": "polyfill-uuid",
-            "version": "v1.32.0",
+            "version": "v1.33.0",
             "group": "symfony",
             "description": "Symfony polyfill for uuid functions",
             "author": "Gr\u00e9goire Pineau, Symfony Community",
@@ -10920,7 +10920,7 @@
                     }
                 }
             ],
-            "purl": "pkg:composer/symfony/polyfill-uuid@v1.32.0",
+            "purl": "pkg:composer/symfony/polyfill-uuid@v1.33.0",
             "externalReferences": [
                 {
                     "type": "distribution",
@@ -10939,7 +10939,7 @@
                 },
                 {
                     "type": "vcs",
-                    "url": "https://github.com/symfony/polyfill-uuid/tree/v1.32.0",
+                    "url": "https://github.com/symfony/polyfill-uuid/tree/v1.33.0",
                     "comment": "as detected from Composer manifest 'support.source'"
                 }
             ],
@@ -12020,14 +12020,14 @@
         {
             "ref": "anourvalar/eloquent-serialize-1.3.4.0",
             "dependsOn": [
-                "laravel/framework-11.45.1.0"
+                "laravel/framework-11.45.2.0"
             ]
         },
         {
             "ref": "aws/aws-crt-php-1.2.7.0"
         },
         {
-            "ref": "aws/aws-sdk-php-3.352.5.0",
+            "ref": "aws/aws-sdk-php-3.356.1.0",
             "dependsOn": [
                 "aws/aws-crt-php-1.2.7.0",
                 "guzzlehttp/guzzle-7.9.3.0",
@@ -12059,7 +12059,7 @@
         {
             "ref": "bezhansalleh/filament-language-switch-3.1.1.0",
             "dependsOn": [
-                "filament/filament-3.3.35.0",
+                "filament/filament-3.3.37.0",
                 "spatie/laravel-package-tools-1.92.7.0"
             ]
         },
@@ -12110,10 +12110,10 @@
             "ref": "dasprid/enum-1.0.6.0"
         },
         {
-            "ref": "dedoc/scramble-0.12.28.0",
+            "ref": "dedoc/scramble-0.12.30.0",
             "dependsOn": [
                 "myclabs/deep-copy-1.13.4.0",
-                "nikic/php-parser-5.6.0.0",
+                "nikic/php-parser-5.6.1.0",
                 "phpstan/phpdoc-parser-2.2.0.0",
                 "spatie/laravel-package-tools-1.92.7.0"
             ]
@@ -12133,7 +12133,7 @@
             "ref": "doctrine/deprecations-1.1.5.0"
         },
         {
-            "ref": "doctrine/inflector-2.0.10.0"
+            "ref": "doctrine/inflector-2.1.0.0"
         },
         {
             "ref": "doctrine/lexer-3.0.1.0"
@@ -12164,7 +12164,7 @@
         {
             "ref": "dutchcodingcompany/filament-socialite-1.5.0.0",
             "dependsOn": [
-                "filament/filament-3.3.35.0",
+                "filament/filament-3.3.37.0",
                 "laravel/socialite-5.23.0.0",
                 "spatie/laravel-package-tools-1.92.7.0"
             ]
@@ -12173,7 +12173,7 @@
             "ref": "egulias/email-validator-4.0.4.0",
             "dependsOn": [
                 "doctrine/lexer-3.0.1.0",
-                "symfony/polyfill-intl-idn-1.32.0.0"
+                "symfony/polyfill-intl-idn-1.33.0.0"
             ]
         },
         {
@@ -12184,63 +12184,63 @@
             ]
         },
         {
-            "ref": "filament/actions-3.3.35.0",
+            "ref": "filament/actions-3.3.37.0",
             "dependsOn": [
                 "anourvalar/eloquent-serialize-1.3.4.0",
-                "filament/forms-3.3.35.0",
-                "filament/infolists-3.3.35.0",
-                "filament/notifications-3.3.35.0",
-                "filament/support-3.3.35.0",
+                "filament/forms-3.3.37.0",
+                "filament/infolists-3.3.37.0",
+                "filament/notifications-3.3.37.0",
+                "filament/support-3.3.37.0",
                 "league/csv-9.24.1.0",
                 "openspout/openspout-4.30.1.0",
                 "spatie/laravel-package-tools-1.92.7.0"
             ]
         },
         {
-            "ref": "filament/filament-3.3.35.0",
+            "ref": "filament/filament-3.3.37.0",
             "dependsOn": [
                 "danharrin/livewire-rate-limiting-2.1.0.0",
-                "filament/actions-3.3.35.0",
-                "filament/forms-3.3.35.0",
-                "filament/infolists-3.3.35.0",
-                "filament/notifications-3.3.35.0",
-                "filament/support-3.3.35.0",
-                "filament/tables-3.3.35.0",
-                "filament/widgets-3.3.35.0",
+                "filament/actions-3.3.37.0",
+                "filament/forms-3.3.37.0",
+                "filament/infolists-3.3.37.0",
+                "filament/notifications-3.3.37.0",
+                "filament/support-3.3.37.0",
+                "filament/tables-3.3.37.0",
+                "filament/widgets-3.3.37.0",
                 "spatie/laravel-package-tools-1.92.7.0"
             ]
         },
         {
-            "ref": "filament/forms-3.3.35.0",
+            "ref": "filament/forms-3.3.37.0",
             "dependsOn": [
                 "danharrin/date-format-converter-0.3.1.0",
-                "filament/actions-3.3.35.0",
-                "filament/support-3.3.35.0",
+                "filament/actions-3.3.37.0",
+                "filament/support-3.3.37.0",
                 "spatie/laravel-package-tools-1.92.7.0"
             ]
         },
         {
-            "ref": "filament/infolists-3.3.35.0",
+            "ref": "filament/infolists-3.3.37.0",
             "dependsOn": [
-                "filament/actions-3.3.35.0",
-                "filament/support-3.3.35.0",
+                "filament/actions-3.3.37.0",
+                "filament/support-3.3.37.0",
                 "spatie/laravel-package-tools-1.92.7.0"
             ]
         },
         {
-            "ref": "filament/notifications-3.3.35.0",
+            "ref": "filament/notifications-3.3.37.0",
             "dependsOn": [
-                "filament/actions-3.3.35.0",
-                "filament/support-3.3.35.0",
+                "filament/actions-3.3.37.0",
+                "filament/support-3.3.37.0",
                 "spatie/laravel-package-tools-1.92.7.0"
             ]
         },
         {
-            "ref": "filament/support-3.3.35.0",
+            "ref": "filament/support-3.3.37.0",
             "dependsOn": [
                 "blade-ui-kit/blade-heroicons-2.6.0.0",
                 "doctrine/dbal-4.3.2.0",
-                "kirschbaum-development/eloquent-power-joins-4.2.7.0",
+                "kirschbaum-development/eloquent-power-joins-4.2.8.0",
                 "livewire/livewire-3.6.4.0",
                 "ryangjchandler/blade-capture-directive-1.1.0.0",
                 "spatie/color-1.8.0.0",
@@ -12251,18 +12251,18 @@
             ]
         },
         {
-            "ref": "filament/tables-3.3.35.0",
+            "ref": "filament/tables-3.3.37.0",
             "dependsOn": [
-                "filament/actions-3.3.35.0",
-                "filament/forms-3.3.35.0",
-                "filament/support-3.3.35.0",
+                "filament/actions-3.3.37.0",
+                "filament/forms-3.3.37.0",
+                "filament/support-3.3.37.0",
                 "spatie/laravel-package-tools-1.92.7.0"
             ]
         },
         {
-            "ref": "filament/widgets-3.3.35.0",
+            "ref": "filament/widgets-3.3.37.0",
             "dependsOn": [
-                "filament/support-3.3.35.0",
+                "filament/support-3.3.37.0",
                 "spatie/laravel-package-tools-1.92.7.0"
             ]
         },
@@ -12310,7 +12310,7 @@
         {
             "ref": "guzzlehttp/uri-template-1.0.4.0",
             "dependsOn": [
-                "symfony/polyfill-php80-1.32.0.0"
+                "symfony/polyfill-php80-1.33.0.0"
             ]
         },
         {
@@ -12326,7 +12326,7 @@
             "ref": "jeffgreco13/filament-breezy-2.6.4.0",
             "dependsOn": [
                 "bacon/bacon-qr-code-3.0.1.0",
-                "filament/filament-3.3.35.0",
+                "filament/filament-3.3.37.0",
                 "jenssegers/agent-2.6.4.0",
                 "pragmarx/google2fa-8.0.3.0",
                 "spatie/laravel-package-tools-1.92.7.0"
@@ -12342,7 +12342,7 @@
         {
             "ref": "jibaymcs/filament-tour-3.1.2.0",
             "dependsOn": [
-                "filament/filament-3.3.35.0",
+                "filament/filament-3.3.37.0",
                 "spatie/laravel-package-tools-1.92.7.0"
             ]
         },
@@ -12354,7 +12354,7 @@
             ]
         },
         {
-            "ref": "kirschbaum-development/eloquent-power-joins-4.2.7.0"
+            "ref": "kirschbaum-development/eloquent-power-joins-4.2.8.0"
         },
         {
             "ref": "larastan/larastan-2.11.2.0",
@@ -12375,10 +12375,10 @@
             ]
         },
         {
-            "ref": "laravel/framework-11.45.1.0",
+            "ref": "laravel/framework-11.45.2.0",
             "dependsOn": [
                 "brick/math-0.12.3.0",
-                "doctrine/inflector-2.0.10.0",
+                "doctrine/inflector-2.1.0.0",
                 "dragonmantank/cron-expression-3.4.0.0",
                 "egulias/email-validator-4.0.4.0",
                 "fruitcake/php-cors-1.3.0.0",
@@ -12404,7 +12404,7 @@
                 "symfony/http-kernel-7.3.2.0",
                 "symfony/mailer-7.3.2.0",
                 "symfony/mime-7.3.2.0",
-                "symfony/polyfill-php83-1.32.0.0",
+                "symfony/polyfill-php83-1.33.0.0",
                 "symfony/process-7.3.0.0",
                 "symfony/routing-7.3.2.0",
                 "symfony/uid-7.3.1.0",
@@ -12461,7 +12461,7 @@
                 "league/config-1.2.0.0",
                 "psr/event-dispatcher-1.0.0.0",
                 "symfony/deprecation-contracts-3.6.0.0",
-                "symfony/polyfill-php80-1.32.0.0"
+                "symfony/polyfill-php80-1.33.0.0"
             ]
         },
         {
@@ -12484,7 +12484,7 @@
         {
             "ref": "league/flysystem-aws-s3-v3-3.29.0.0",
             "dependsOn": [
-                "aws/aws-sdk-php-3.352.5.0",
+                "aws/aws-sdk-php-3.356.1.0",
                 "league/flysystem-3.30.0.0",
                 "league/mime-type-detection-1.16.0.0"
             ]
@@ -12522,8 +12522,8 @@
         {
             "ref": "leandrocfe/filament-apex-charts-3.2.1.0",
             "dependsOn": [
-                "filament/forms-3.3.35.0",
-                "filament/widgets-3.3.35.0",
+                "filament/forms-3.3.37.0",
+                "filament/widgets-3.3.37.0",
                 "livewire/livewire-3.6.4.0",
                 "spatie/laravel-package-tools-1.92.7.0"
             ]
@@ -12540,8 +12540,8 @@
         {
             "ref": "lucasgiovanny/filament-multiselect-two-sides-2.1.2.0",
             "dependsOn": [
-                "filament/filament-3.3.35.0",
-                "filament/forms-3.3.35.0",
+                "filament/filament-3.3.37.0",
+                "filament/forms-3.3.37.0",
                 "spatie/laravel-package-tools-1.92.7.0"
             ]
         },
@@ -12566,7 +12566,7 @@
         {
             "ref": "mtdowling/jmespath.php-2.8.0.0",
             "dependsOn": [
-                "symfony/polyfill-mbstring-1.32.0.0"
+                "symfony/polyfill-mbstring-1.33.0.0"
             ]
         },
         {
@@ -12578,7 +12578,7 @@
                 "carbonphp/carbon-doctrine-types-3.2.0.0",
                 "psr/clock-1.0.0.0",
                 "symfony/clock-7.3.0.0",
-                "symfony/polyfill-mbstring-1.32.0.0",
+                "symfony/polyfill-mbstring-1.33.0.0",
                 "symfony/translation-7.3.2.0"
             ]
         },
@@ -12592,7 +12592,7 @@
             "ref": "nette/utils-4.0.8.0"
         },
         {
-            "ref": "nikic/php-parser-5.6.0.0"
+            "ref": "nikic/php-parser-5.6.1.0"
         },
         {
             "ref": "nunomaduro/collision-8.5.0.0",
@@ -12630,8 +12630,8 @@
         {
             "ref": "outerweb/filament-settings-1.3.0.0",
             "dependsOn": [
-                "filament/filament-3.3.35.0",
-                "laravel/framework-11.45.1.0",
+                "filament/filament-3.3.37.0",
+                "laravel/framework-11.45.2.0",
                 "outerweb/settings-1.1.0.0",
                 "spatie/laravel-package-tools-1.92.7.0"
             ]
@@ -12639,7 +12639,7 @@
         {
             "ref": "outerweb/settings-1.1.0.0",
             "dependsOn": [
-                "laravel/framework-11.45.1.0",
+                "laravel/framework-11.45.2.0",
                 "spatie/laravel-package-tools-1.92.7.0"
             ]
         },
@@ -12675,7 +12675,7 @@
             ]
         },
         {
-            "ref": "php-di/php-di-7.0.11.0",
+            "ref": "php-di/php-di-7.1.1.0",
             "dependsOn": [
                 "laravel/serializable-closure-2.0.4.0",
                 "php-di/invoker-2.3.6.0",
@@ -12685,7 +12685,7 @@
         {
             "ref": "php-webdriver/webdriver-1.15.2.0",
             "dependsOn": [
-                "symfony/polyfill-mbstring-1.32.0.0",
+                "symfony/polyfill-mbstring-1.33.0.0",
                 "symfony/process-7.3.0.0"
             ]
         },
@@ -12708,7 +12708,7 @@
         {
             "ref": "phpunit/php-code-coverage-10.1.16.0",
             "dependsOn": [
-                "nikic/php-parser-5.6.0.0",
+                "nikic/php-parser-5.6.1.0",
                 "phpunit/php-file-iterator-4.1.0.0",
                 "phpunit/php-text-template-3.0.1.0",
                 "sebastian/code-unit-reverse-lookup-3.0.0.0",
@@ -12732,7 +12732,7 @@
             "ref": "phpunit/php-timer-6.0.0.0"
         },
         {
-            "ref": "phpunit/phpunit-10.5.50.0",
+            "ref": "phpunit/phpunit-10.5.53.0",
             "dependsOn": [
                 "myclabs/deep-copy-1.13.4.0",
                 "phar-io/manifest-2.0.4.0",
@@ -12797,7 +12797,7 @@
         {
             "ref": "psy/psysh-0.12.10.0",
             "dependsOn": [
-                "nikic/php-parser-5.6.0.0",
+                "nikic/php-parser-5.6.1.0",
                 "symfony/console-7.3.2.0",
                 "symfony/var-dumper-7.3.2.0"
             ]
@@ -12843,7 +12843,7 @@
         {
             "ref": "sebastian/complexity-3.2.0.0",
             "dependsOn": [
-                "nikic/php-parser-5.6.0.0"
+                "nikic/php-parser-5.6.1.0"
             ]
         },
         {
@@ -12868,7 +12868,7 @@
         {
             "ref": "sebastian/lines-of-code-2.0.2.0",
             "dependsOn": [
-                "nikic/php-parser-5.6.0.0"
+                "nikic/php-parser-5.6.1.0"
             ]
         },
         {
@@ -12997,14 +12997,14 @@
             "ref": "symfony/clock-7.3.0.0",
             "dependsOn": [
                 "psr/clock-1.0.0.0",
-                "symfony/polyfill-php83-1.32.0.0"
+                "symfony/polyfill-php83-1.33.0.0"
             ]
         },
         {
             "ref": "symfony/console-7.3.2.0",
             "dependsOn": [
                 "symfony/deprecation-contracts-3.6.0.0",
-                "symfony/polyfill-mbstring-1.32.0.0",
+                "symfony/polyfill-mbstring-1.33.0.0",
                 "symfony/service-contracts-3.6.0.0",
                 "symfony/string-7.3.2.0"
             ]
@@ -13048,8 +13048,8 @@
             "ref": "symfony/http-foundation-7.3.2.0",
             "dependsOn": [
                 "symfony/deprecation-contracts-3.6.0.0",
-                "symfony/polyfill-mbstring-1.32.0.0",
-                "symfony/polyfill-php83-1.32.0.0"
+                "symfony/polyfill-mbstring-1.33.0.0",
+                "symfony/polyfill-php83-1.33.0.0"
             ]
         },
         {
@@ -13060,7 +13060,7 @@
                 "symfony/error-handler-7.3.2.0",
                 "symfony/event-dispatcher-7.3.0.0",
                 "symfony/http-foundation-7.3.2.0",
-                "symfony/polyfill-ctype-1.32.0.0"
+                "symfony/polyfill-ctype-1.33.0.0"
             ]
         },
         {
@@ -13077,39 +13077,39 @@
         {
             "ref": "symfony/mime-7.3.2.0",
             "dependsOn": [
-                "symfony/polyfill-intl-idn-1.32.0.0",
-                "symfony/polyfill-mbstring-1.32.0.0"
+                "symfony/polyfill-intl-idn-1.33.0.0",
+                "symfony/polyfill-mbstring-1.33.0.0"
             ]
         },
         {
-            "ref": "symfony/polyfill-ctype-1.32.0.0"
+            "ref": "symfony/polyfill-ctype-1.33.0.0"
         },
         {
-            "ref": "symfony/polyfill-iconv-1.32.0.0"
+            "ref": "symfony/polyfill-iconv-1.33.0.0"
         },
         {
-            "ref": "symfony/polyfill-intl-grapheme-1.32.0.0"
+            "ref": "symfony/polyfill-intl-grapheme-1.33.0.0"
         },
         {
-            "ref": "symfony/polyfill-intl-idn-1.32.0.0",
+            "ref": "symfony/polyfill-intl-idn-1.33.0.0",
             "dependsOn": [
-                "symfony/polyfill-intl-normalizer-1.32.0.0"
+                "symfony/polyfill-intl-normalizer-1.33.0.0"
             ]
         },
         {
-            "ref": "symfony/polyfill-intl-normalizer-1.32.0.0"
+            "ref": "symfony/polyfill-intl-normalizer-1.33.0.0"
         },
         {
-            "ref": "symfony/polyfill-mbstring-1.32.0.0"
+            "ref": "symfony/polyfill-mbstring-1.33.0.0"
         },
         {
-            "ref": "symfony/polyfill-php80-1.32.0.0"
+            "ref": "symfony/polyfill-php80-1.33.0.0"
         },
         {
-            "ref": "symfony/polyfill-php83-1.32.0.0"
+            "ref": "symfony/polyfill-php83-1.33.0.0"
         },
         {
-            "ref": "symfony/polyfill-uuid-1.32.0.0"
+            "ref": "symfony/polyfill-uuid-1.33.0.0"
         },
         {
             "ref": "symfony/process-7.3.0.0"
@@ -13136,17 +13136,17 @@
         {
             "ref": "symfony/string-7.3.2.0",
             "dependsOn": [
-                "symfony/polyfill-ctype-1.32.0.0",
-                "symfony/polyfill-intl-grapheme-1.32.0.0",
-                "symfony/polyfill-intl-normalizer-1.32.0.0",
-                "symfony/polyfill-mbstring-1.32.0.0"
+                "symfony/polyfill-ctype-1.33.0.0",
+                "symfony/polyfill-intl-grapheme-1.33.0.0",
+                "symfony/polyfill-intl-normalizer-1.33.0.0",
+                "symfony/polyfill-mbstring-1.33.0.0"
             ]
         },
         {
             "ref": "symfony/translation-7.3.2.0",
             "dependsOn": [
                 "symfony/deprecation-contracts-3.6.0.0",
-                "symfony/polyfill-mbstring-1.32.0.0",
+                "symfony/polyfill-mbstring-1.33.0.0",
                 "symfony/translation-contracts-3.6.0.0"
             ]
         },
@@ -13156,21 +13156,21 @@
         {
             "ref": "symfony/uid-7.3.1.0",
             "dependsOn": [
-                "symfony/polyfill-uuid-1.32.0.0"
+                "symfony/polyfill-uuid-1.33.0.0"
             ]
         },
         {
             "ref": "symfony/var-dumper-7.3.2.0",
             "dependsOn": [
                 "symfony/deprecation-contracts-3.6.0.0",
-                "symfony/polyfill-mbstring-1.32.0.0"
+                "symfony/polyfill-mbstring-1.33.0.0"
             ]
         },
         {
             "ref": "symfony/yaml-7.3.2.0",
             "dependsOn": [
                 "symfony/deprecation-contracts-3.6.0.0",
-                "symfony/polyfill-ctype-1.32.0.0"
+                "symfony/polyfill-ctype-1.33.0.0"
             ]
         },
         {
@@ -13190,9 +13190,9 @@
             "dependsOn": [
                 "graham-campbell/result-type-1.1.3.0",
                 "phpoption/phpoption-1.9.3.0",
-                "symfony/polyfill-ctype-1.32.0.0",
-                "symfony/polyfill-mbstring-1.32.0.0",
-                "symfony/polyfill-php80-1.32.0.0"
+                "symfony/polyfill-ctype-1.33.0.0",
+                "symfony/polyfill-mbstring-1.33.0.0",
+                "symfony/polyfill-php80-1.33.0.0"
             ]
         },
         {
@@ -13205,7 +13205,7 @@
             "ref": "zbateson/mail-mime-parser-3.0.3.0",
             "dependsOn": [
                 "guzzlehttp/psr7-2.7.1.0",
-                "php-di/php-di-7.0.11.0",
+                "php-di/php-di-7.1.1.0",
                 "psr/log-3.0.2.0",
                 "zbateson/mb-wrapper-2.0.1.0",
                 "zbateson/stream-decorators-2.1.1.0"
@@ -13214,8 +13214,8 @@
         {
             "ref": "zbateson/mb-wrapper-2.0.1.0",
             "dependsOn": [
-                "symfony/polyfill-iconv-1.32.0.0",
-                "symfony/polyfill-mbstring-1.32.0.0"
+                "symfony/polyfill-iconv-1.33.0.0",
+                "symfony/polyfill-mbstring-1.33.0.0"
             ]
         },
         {
@@ -13231,18 +13231,18 @@
                 "amidesfahani/filament-tinyeditor-2.1.1.0",
                 "barryvdh/laravel-dompdf-3.1.1.0",
                 "bezhansalleh/filament-language-switch-3.1.1.0",
-                "dedoc/scramble-0.12.28.0",
+                "dedoc/scramble-0.12.30.0",
                 "dutchcodingcompany/filament-socialite-1.5.0.0",
-                "filament/actions-3.3.35.0",
-                "filament/filament-3.3.35.0",
-                "filament/forms-3.3.35.0",
-                "filament/notifications-3.3.35.0",
-                "filament/tables-3.3.35.0",
+                "filament/actions-3.3.37.0",
+                "filament/filament-3.3.37.0",
+                "filament/forms-3.3.37.0",
+                "filament/notifications-3.3.37.0",
+                "filament/tables-3.3.37.0",
                 "guzzlehttp/guzzle-7.9.3.0",
                 "jeffgreco13/filament-breezy-2.6.4.0",
                 "jibaymcs/filament-tour-3.1.2.0",
                 "jurosh/pdf-merge-2.1.0.0",
-                "laravel/framework-11.45.1.0",
+                "laravel/framework-11.45.2.0",
                 "laravel/prompts-0.3.6.0",
                 "laravel/sanctum-4.2.0.0",
                 "laravel/tinker-2.10.1.0",
@@ -13265,7 +13265,7 @@
                 "laravel/sail-1.44.0.0",
                 "mockery/mockery-1.6.12.0",
                 "nunomaduro/collision-8.5.0.0",
-                "phpunit/phpunit-10.5.50.0",
+                "phpunit/phpunit-10.5.53.0",
                 "spatie/laravel-ignition-2.9.1.0",
                 "spatie/laravel-ray-1.40.2.0"
             ]

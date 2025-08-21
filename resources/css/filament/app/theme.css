@@ -20,20 +20,29 @@
         color: #1375a0 !important;
     }
 
-    .bg-grcblue-800 {
-        background-color: #374151 !important;
+    .bg-grcblue-200 {
+        background-color: #d4e7ef !important;
     }
 
     .bg-grcblue-400 {
         background-color: #1375a0 !important;
     }
 
-    .bg-grcblue-200 {
-        background-color: #d4e7ef !important;
-    }
-
     .bg-grcblue-500 {
         background-color: #1375a0 !important;
+    }
+
+    .bg-grcblue-600 {
+        background-color: #0f5a7a !important;
+    }
+
+    .bg-grcblue-700 {
+        background-color: #0c4a65 !important;
+    }
+
+
+    .bg-grcblue-800 {
+        background-color: #374151 !important;
     }
 
     .control-description-text ul {
@@ -162,4 +171,21 @@ a.fi-logo {
 
 .fi-sidebar-nav::-webkit-scrollbar-thumb:hover {
     background: #1375a0; /* thumb color on hover */
+}
+
+/* Ensure these classes always persist after npm run build - outside @layer */
+.bg-grcblue-600 {
+    background-color: #0f5a7a !important;
+}
+
+.bg-grcblue-700 {
+    background-color: #0c4a65 !important;
+}
+
+.hover\:bg-grcblue-600:hover {
+    background-color: #0f5a7a !important;
+}
+
+.hover\:bg-grcblue-700:hover {
+    background-color: #0c4a65 !important;
 }
