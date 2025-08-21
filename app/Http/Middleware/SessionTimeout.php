@@ -39,12 +39,11 @@ class SessionTimeout
             return redirect()->route('filament.app.auth.login')->with('message', 'Your session has expired due to inactivity.');
         }
 
-        // Update last_activity for regular requests, but not for logout or session timeout actions
-        $isLogoutRequest = $request->header('X-Livewire') && 
-                          (str_contains($request->getContent(), 'logout') || 
-                           str_contains($request->getPathInfo(), 'session-timeout-warning'));
+        // Check if this is a Livewire update request (by path since header detection isn't working)
+        $isLivewireUpdate = str_contains($request->getPathInfo(), '/livewire/update');
         
-        if (!$isLogoutRequest) {
+        // Only update last_activity for non-Livewire requests
+        if (!$isLivewireUpdate) {
             DB::table('users')
                 ->where('id', $user->id)
                 ->update(['last_activity' => now()]);
