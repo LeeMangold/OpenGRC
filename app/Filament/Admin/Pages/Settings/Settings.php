@@ -4,6 +4,7 @@ namespace App\Filament\Admin\Pages\Settings;
 
 use App\Filament\Admin\Pages\Settings\Schemas\AiSchema;
 use App\Filament\Admin\Pages\Settings\Schemas\AuthenticationSchema;
+use App\Filament\Admin\Pages\Settings\Schemas\BackupSchema;
 use App\Filament\Admin\Pages\Settings\Schemas\GeneralSchema;
 use App\Filament\Admin\Pages\Settings\Schemas\MailSchema;
 use App\Filament\Admin\Pages\Settings\Schemas\MailTemplatesSchema;
@@ -57,6 +58,8 @@ class Settings extends BaseSettings
                         ->schema(ReportSchema::schema()),
                     Tabs\Tab::make(__('navigation.settings.tabs.security'))
                         ->schema(SecuritySchema::schema()),
+                    Tabs\Tab::make('Backup & Recovery')
+                        ->schema(BackupSchema::schema()),
                     Tabs\Tab::make(__('navigation.settings.tabs.authentication'))
                         ->schema(AuthenticationSchema::schema()),
                 ]),
