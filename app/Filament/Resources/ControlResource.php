@@ -201,7 +201,6 @@ class ControlResource extends Resource
                         return $department?->name ?? 'Not assigned';
                     })
                     ->sortable()
-                    ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('scope')
                     ->label('Scope')
@@ -215,7 +214,6 @@ class ControlResource extends Resource
                         return $scope?->name ?? 'Not assigned';
                     })
                     ->sortable()
-                    ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label(__('control.table.columns.created_at'))

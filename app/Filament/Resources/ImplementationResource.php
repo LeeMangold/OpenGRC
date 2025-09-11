@@ -185,7 +185,6 @@ class ImplementationResource extends Resource
                         return $department?->name ?? 'Not assigned';
                     })
                     ->sortable()
-                    ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('scope')
                     ->label('Scope')
@@ -199,7 +198,6 @@ class ImplementationResource extends Resource
                         return $scope?->name ?? 'Not assigned';
                     })
                     ->sortable()
-                    ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label(__('implementation.table.columns.created_at'))

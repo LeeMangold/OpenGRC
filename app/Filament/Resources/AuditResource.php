@@ -97,7 +97,6 @@ class AuditResource extends Resource
                         return $department?->name ?? 'Not assigned';
                     })
                     ->sortable()
-                    ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('scope')
                     ->label('Scope')
@@ -111,7 +110,6 @@ class AuditResource extends Resource
                         return $scope?->name ?? 'Not assigned';
                     })
                     ->sortable()
-                    ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label(__('audit.table.columns.created_at'))
