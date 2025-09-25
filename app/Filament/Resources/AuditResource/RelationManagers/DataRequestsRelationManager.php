@@ -34,28 +34,62 @@ class DataRequestsRelationManager extends RelationManager
                 TextColumn::make('id')
                     ->toggleable()
                     ->toggledHiddenByDefault()
+                    ->searchable()
+                    ->sortable()
                     ->label('ID'),
                 TextColumn::make('auditItem.auditable.code')
                     ->searchable()
+                    ->sortable(query: function ($query, $direction) {
+                        // I hate this. I feel that's important to say. --LVM
+                        return $query->select('data_requests.*')
+                            ->with(['auditItem.auditable'])
+                            ->leftJoin('audit_items', 'data_requests.audit_item_id', '=', 'audit_items.id')
+                            ->leftJoin('controls', function ($join) {
+                                $join->on('audit_items.auditable_id', '=', 'controls.id')
+                                    ->where('audit_items.auditable_type', \App\Models\Control::class);
+                            })
+                            ->leftJoin('implementations', function ($join) {
+                                $join->on('audit_items.auditable_id', '=', 'implementations.id')
+                                    ->where('audit_items.auditable_type', \App\Models\Implementation::class);
+                            })
+                            ->orderByRaw("COALESCE(controls.code, implementations.code) {$direction}");
+                    })
                     ->label('Audit Item'),
                 TextColumn::make('code')
                     ->searchable()
+                    ->sortable()
                     ->toggleable()
                     ->label('Request Code'),
                 TextColumn::make('details')
                     ->label('Request Details')
+                    ->sortable()
                     ->searchable()
                     ->wrap(),
                 TextColumn::make('responses.status')
                     ->label('Responses')
+                    ->sortable()
                     ->badge(),
                 TextColumn::make('assignedTo')
                     ->label('Assigned To')
+                    ->sortable(query: function ($query, $direction) {
+                        // I hate this, too. --LVM
+                        return $query->select('data_requests.*')
+                            ->leftJoinSub(
+                                \App\Models\DataRequestResponse::select(['data_request_id', 'requestee_id'])
+                                    ->whereRaw('id = (SELECT MIN(id) FROM data_request_responses dr WHERE dr.data_request_id = data_request_responses.data_request_id)'),
+                                'first_response',
+                                'data_requests.id',
+                                'first_response.data_request_id'
+                            )
+                            ->leftJoin('users as requestee_user', 'first_response.requestee_id', '=', 'requestee_user.id')
+                            ->orderBy('requestee_user.name', $direction);
+                    })
                     ->state(function (DataRequest $record) {
                         return $record->responses->first()?->requestee->name;
                     }),
                 TextColumn::make('responses')
                     ->label('Due Date')
+                    ->sortable()
                     ->date()
                     ->state(function (DataRequest $record) {
                         return $record->responses->sortByDesc('due_at')->first()?->due_at;
@@ -158,7 +192,7 @@ class DataRequestsRelationManager extends RelationManager
                         ->action(function (array $data, \Illuminate\Database\Eloquent\Collection $records) {
                             $requesteeId = $data['requestee_id'];
                             $updatedCount = 0;
-                            
+
                             foreach ($records as $dataRequest) {
                                 $response = $dataRequest->responses->first();
                                 if ($response) {
@@ -166,7 +200,7 @@ class DataRequestsRelationManager extends RelationManager
                                     $updatedCount++;
                                 }
                             }
-                            
+
                             Notification::make()
                                 ->title('Bulk Assignment Complete')
                                 ->body("Successfully assigned {$updatedCount} data request responses.")
