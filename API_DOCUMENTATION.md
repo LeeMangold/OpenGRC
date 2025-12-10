@@ -247,7 +247,7 @@ GET /api/controls/1?with=standard,implementations
 
 **Searchable Fields:** `title`, `description`, `mitigation`
 
-**Relations:** `riskOwner`, `implementations`
+**Relations:** `implementations`
 
 ### Vendors
 

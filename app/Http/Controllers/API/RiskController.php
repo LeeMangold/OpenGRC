@@ -11,9 +11,7 @@ class RiskController extends BaseApiController
 
     protected string $resourceName = 'Risks';
 
-    protected array $indexRelations = ['riskOwner'];
-
-    protected array $showRelations = ['riskOwner', 'implementations'];
+    protected array $showRelations = ['implementations'];
 
     protected array $searchableFields = ['title', 'description', 'mitigation'];
 
