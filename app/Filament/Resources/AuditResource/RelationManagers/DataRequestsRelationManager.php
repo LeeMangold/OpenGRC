@@ -41,7 +41,7 @@ class DataRequestsRelationManager extends RelationManager
         // Check the jobs table for pending/reserved ExportAuditEvidenceJob for this audit
         // PHP serialization uses null bytes for protected properties: \0*\0propertyName
         // We need to search for the pattern with the actual null bytes
-        $pattern = '%' . chr(0) . '*' . chr(0) . 'auditId";i:' . $auditId . ';%';
+        $pattern = '%'.chr(0).'*'.chr(0).'auditId";i:'.$auditId.';%';
 
         return DB::table('jobs')
             ->where('payload', 'like', '%ExportAuditEvidenceJob%')
@@ -108,7 +108,7 @@ class DataRequestsRelationManager extends RelationManager
                     ->label('Due Date')
                     ->date()
                     ->sortable()
-                    ->default('-'),
+                    ->placeholder('-'),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('status')
@@ -299,7 +299,7 @@ class DataRequestsRelationManager extends RelationManager
                         }
 
                         $body = 'Your evidence export has started and is being processed in the background.';
-                        
+
                         Notification::make()
                             ->title('Export Started')
                             ->body($body)

@@ -36,6 +36,13 @@ return [
             'throw' => false,
         ],
 
+        // Used by Livewire for temporary file uploads in testing environment
+        'tmp-for-tests' => [
+            'driver' => 'local',
+            'root' => storage_path('app/livewire-tmp'),
+            'throw' => false,
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),

@@ -59,6 +59,13 @@ class RolePermissionSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'Manage Bundles', 'category' => 'Bundles']);
         Permission::firstOrCreate(['name' => 'View Bundles', 'category' => 'Bundles']);
 
+        // Trust Center Permissions
+        Permission::firstOrCreate(['name' => 'Manage Trust Center', 'category' => 'Trust Center']);
+        Permission::firstOrCreate(['name' => 'Manage Trust Access', 'category' => 'Trust Center']);
+
+        // Vendor Management Permissions
+        Permission::firstOrCreate(['name' => 'Manage Vendor Management', 'category' => 'Vendors']);
+
         // -----------------------------------------------------------------------------------------
         // Assign Permissions to Super Admin
         $superAdmin->givePermissionTo(Permission::all());
@@ -78,6 +85,9 @@ class RolePermissionSeeder extends Seeder
         }
         $securityAdmin->givePermissionTo('Manage Preferences');
         $securityAdmin->givePermissionTo('View Bundles');
+        $securityAdmin->givePermissionTo('Manage Trust Center');
+        $securityAdmin->givePermissionTo('Manage Trust Access');
+        $securityAdmin->givePermissionTo('Manage Vendor Management');
 
         // Assign specific Permissions to Internal Auditor
         $internalAuditor->givePermissionTo([

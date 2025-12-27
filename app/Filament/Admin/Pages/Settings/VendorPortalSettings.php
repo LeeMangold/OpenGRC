@@ -3,6 +3,8 @@
 namespace App\Filament\Admin\Pages\Settings;
 
 use App\Filament\Admin\Pages\Settings\Schemas\RiskScoringSchema;
+use App\Filament\Admin\Pages\Settings\Schemas\SurveySettingsSchema;
+use App\Filament\Admin\Pages\Settings\Schemas\VendorPortalMailSchema;
 use App\Filament\Admin\Pages\Settings\Schemas\VendorPortalSchema;
 use Closure;
 use Filament\Forms\Components\Tabs;
@@ -51,6 +53,12 @@ class VendorPortalSettings extends BaseSettings
                     Tabs\Tab::make(__('Risk Scoring'))
                         ->icon('heroicon-o-chart-bar')
                         ->schema(RiskScoringSchema::schema()),
+                    Tabs\Tab::make(__('Email Templates'))
+                        ->icon('heroicon-o-envelope')
+                        ->schema(VendorPortalMailSchema::schema()),
+                    Tabs\Tab::make(__('Surveys'))
+                        ->icon('heroicon-o-clipboard-document-list')
+                        ->schema(SurveySettingsSchema::schema()),
                 ]),
         ];
     }

@@ -20,7 +20,6 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Rmsramos\Activitylog\ActivitylogPlugin;
-use Illuminate\Support\Carbon;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -29,6 +28,7 @@ class AdminPanelProvider extends PanelProvider
         try {
             // Check if database is connected
             \DB::connection()->getPdo();
+
             return setting('security.session_timeout', 15);
         } catch (\Exception $e) {
             // Return default value if database is not available
@@ -83,6 +83,7 @@ class AdminPanelProvider extends PanelProvider
                         \App\Filament\Admin\Pages\Settings\SecuritySettings::class,
                         \App\Filament\Admin\Pages\Settings\AuthenticationSettings::class,
                         \App\Filament\Admin\Pages\Settings\VendorPortalSettings::class,
+                        \App\Filament\Admin\Pages\Settings\TrustCenterSettings::class,
                     ]),
                 ActivitylogPlugin::make([
                     'enable_cleanup_command' => true,

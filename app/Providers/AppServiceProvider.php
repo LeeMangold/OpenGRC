@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Livewire\CustomSessionGuard;
 use App\Models\User;
 use BezhanSalleh\FilamentLanguageSwitch\LanguageSwitch;
+use BladeUI\Icons\Factory as IconFactory;
 use Filament\Support\Facades\FilamentColor;
 use Filament\Support\Facades\FilamentView;
 use Filament\View\PanelsRenderHook;
@@ -15,7 +16,6 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
-use BladeUI\Icons\Factory as IconFactory;
 use Livewire\Livewire;
 use Schema;
 
@@ -32,7 +32,7 @@ class AppServiceProvider extends ServiceProvider
         // Disable mass assignment protection
         Model::unguard();
 
-        // Only skip the install check if running the installer command or tests
+        // Only skip the install check if running the installer command or actual PHPUnit tests
         $isInstaller = false;
         if ($this->app->runningInConsole()) {
             $argv = $_SERVER['argv'] ?? [];
@@ -48,8 +48,8 @@ class AppServiceProvider extends ServiceProvider
             }
         }
 
-        // Skip install check when running tests
-        if ($this->app->environment('testing')) {
+        // Skip settings config only when running actual PHPUnit tests (not just APP_ENV=testing)
+        if ($this->app->runningUnitTests()) {
             $isInstaller = true;
         }
 
@@ -83,30 +83,47 @@ class AppServiceProvider extends ServiceProvider
                     'throw' => false,
                 ]));
 
-                if ($storageDriver === 's3') {
-                    $s3Key = setting('storage.s3.key');
-                    $s3Secret = setting('storage.s3.secret');
+                // Configure S3-compatible storage (AWS S3 or DigitalOcean Spaces)
+                if (in_array($storageDriver, ['s3', 'digitalocean'])) {
+                    $settingKey = "storage.{$storageDriver}";
+                    $accessKey = setting("{$settingKey}.key");
+                    $secretKey = setting("{$settingKey}.secret");
+                    $region = setting("{$settingKey}.region", $storageDriver === 's3' ? 'us-east-1' : 'nyc3');
+                    $bucket = setting("{$settingKey}.bucket");
 
-                    // Decrypt credentials if they exist and are encrypted
                     try {
-                        if (! empty($s3Key)) {
-                            $s3Key = Crypt::decryptString($s3Key);
+                        // Decrypt credentials if they exist and are encrypted
+                        if (! empty($accessKey)) {
+                            $accessKey = Crypt::decryptString($accessKey);
                         }
-                        if (! empty($s3Secret)) {
-                            $s3Secret = Crypt::decryptString($s3Secret);
+                        if (! empty($secretKey)) {
+                            $secretKey = Crypt::decryptString($secretKey);
                         }
-                        config()->set('filesystems.disks.s3', array_merge(config('filesystems.disks.s3', []), [
+
+                        $diskConfig = [
                             'driver' => 's3',
-                            'key' => $s3Key,
-                            'secret' => $s3Secret,
-                            'region' => setting('storage.s3.region', 'us-east-1'),
-                            'bucket' => setting('storage.s3.bucket'),
-                            'use_path_style_endpoint' => false,
-                        ]));
+                            'key' => $accessKey,
+                            'secret' => $secretKey,
+                            'bucket' => $bucket,
+                        ];
+
+                        if ($storageDriver === 'digitalocean') {
+                            // DigitalOcean Spaces uses path-style endpoint
+                            $diskConfig['region'] = 'us-east-1'; // Always us-east-1 for AWS SDK compatibility
+                            $diskConfig['endpoint'] = 'https://'.strtolower($region).'.digitaloceanspaces.com';
+                            $diskConfig['use_path_style_endpoint'] = true;
+                        } else {
+                            // AWS S3
+                            $diskConfig['region'] = $region;
+                            $diskConfig['use_path_style_endpoint'] = false;
+                        }
+
+                        config()->set("filesystems.disks.{$storageDriver}", array_merge(
+                            config("filesystems.disks.{$storageDriver}", []),
+                            $diskConfig
+                        ));
                     } catch (\Exception $e) {
-                        // If decryption fails, log it but don't expose the error
-                        \Log::error('Failed to decrypt S3 credentials: '.$e->getMessage());
-                        // Fall back to local storage if S3 credentials can't be decrypted
+                        \Log::error("Failed to decrypt {$storageDriver} credentials: ".$e->getMessage());
                         $storageDriver = 'private';
                     }
                 }

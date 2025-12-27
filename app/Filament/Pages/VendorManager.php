@@ -52,6 +52,12 @@ class VendorManager extends Page
                 ->icon('heroicon-o-plus')
                 ->url(VendorResource::getUrl('create'))
                 ->visible(fn () => auth()->check() && auth()->user()->can('Create Vendors')),
+            Action::make('settings')
+                ->label(__('Settings'))
+                ->icon('heroicon-o-ellipsis-vertical')
+                ->url('/admin/vendor-portal-settings')
+                ->color('gray')
+                ->visible(fn () => auth()->user()?->can('Manage Vendor Management')),
         ];
     }
 

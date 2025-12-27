@@ -171,6 +171,7 @@ return [
         App\Providers\Filament\AppPanelProvider::class,
         App\Providers\Filament\AdminPanelProvider::class,
         App\Providers\Filament\VendorPanelProvider::class,
+        App\Providers\Filament\TrustCenterPanelProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\SocialiteServiceProvider::class,
     ])->toArray(),

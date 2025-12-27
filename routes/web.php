@@ -70,3 +70,29 @@ Route::middleware(['auth:vendor'])->group(function () {
     Route::get('/portal/document/{vendorDocument}/download', [\App\Http\Controllers\Vendor\VendorDocumentController::class, 'download'])
         ->name('vendor.document.download');
 });
+
+// Trust Center Routes (public)
+Route::prefix('trust')->group(function () {
+    // Public Trust Center home page
+    Route::get('/', [\App\Http\Controllers\TrustCenterController::class, 'index'])
+        ->name('trust-center.index');
+
+    // Public document download
+    Route::get('/document/{document}/download', [\App\Http\Controllers\TrustCenterController::class, 'downloadPublic'])
+        ->name('trust-center.document.download');
+
+    // Access request submission (rate limited to prevent spam)
+    Route::post('/request-access', [\App\Http\Controllers\TrustCenterController::class, 'requestAccess'])
+        ->name('trust-center.request-access')
+        ->middleware('throttle:5,1');
+
+    // Protected access via magic link (signed URL)
+    Route::get('/access/{accessRequest}', [\App\Http\Controllers\TrustCenterController::class, 'protectedAccess'])
+        ->name('trust-center.protected-access')
+        ->middleware('signed');
+
+    // Protected document download via magic link
+    Route::get('/access/{accessRequest}/document/{document}/download', [\App\Http\Controllers\TrustCenterController::class, 'downloadProtected'])
+        ->name('trust-center.protected-download')
+        ->middleware('signed');
+});

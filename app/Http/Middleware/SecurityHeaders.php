@@ -26,7 +26,7 @@ class SecurityHeaders
 
         // CSP only for HTML responses
         if ($this->shouldAddCsp($response)) {
-            $response->headers->set('Content-Security-Policy', $this->buildPolicy());
+            $response->headers->set('Content-Security-Policy', $this->buildPolicy($request));
         }
 
         return $response;
@@ -45,16 +45,17 @@ class SecurityHeaders
     /**
      * Build the Content-Security-Policy directive string.
      */
-    protected function buildPolicy(): string
+    protected function buildPolicy(Request $request): string
     {
         $storageEndpoints = $this->getStorageEndpoints();
+        $cdnSources = $this->getCdnSources($request);
 
         $directives = [
             // Default fallback - restrict to same origin
             "default-src 'self'",
 
             // Scripts: self + unsafe-inline/eval required for Livewire/Alpine.js
-            "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval'".$cdnSources['script'],
 
             // Styles: self + unsafe-inline required for Filament's dynamic styles
             "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.bunny.net",
@@ -88,6 +89,25 @@ class SecurityHeaders
         ];
 
         return implode('; ', array_filter($directives));
+    }
+
+    /**
+     * Get CDN sources for public pages that use external scripts.
+     *
+     * Trust Center public pages use Tailwind CDN and Alpine.js CDN.
+     */
+    protected function getCdnSources(Request $request): array
+    {
+        $scriptSources = '';
+
+        // Trust Center public pages need Tailwind CDN and Alpine.js CDN
+        if ($request->is('trust', 'trust/*')) {
+            $scriptSources = ' https://cdn.tailwindcss.com https://cdn.jsdelivr.net';
+        }
+
+        return [
+            'script' => $scriptSources,
+        ];
     }
 
     /**
