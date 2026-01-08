@@ -8,8 +8,8 @@ use Exception;
 use Filament\Notifications\Notification;
 use Http;
 use Illuminate\Http\Client\RequestException;
+use Illuminate\Support\Facades\Schema;
 use Storage;
-use Illuminate\Support\Facades\Log;
 
 class BundleController extends Controller
 {
@@ -17,8 +17,39 @@ class BundleController extends Controller
     {
         try {
             $standard = Standard::where('code', $code)->with('controls')->firstOrFail();
+
+            // Build bundle structure with controls that include optional fields if they exist
+            $bundleData = [
+                'code' => $standard->code,
+                'name' => $standard->name,
+                'authority' => $standard->authority,
+                'description' => $standard->description,
+                'controls' => $standard->controls->map(function ($control) {
+                    $controlData = [
+                        'code' => $control->code,
+                        'title' => $control->title,
+                        'description' => $control->description,
+                        'discussion' => $control->discussion,
+                        'test' => $control->test,
+                        'type' => $control->type,
+                        'category' => $control->category,
+                        'enforcement' => $control->enforcement,
+                    ];
+
+                    // Include optional fields if they have values
+                    if (! empty($control->audit_sanction_date)) {
+                        $controlData['audit_sanction_date'] = $control->audit_sanction_date;
+                    }
+                    if (! empty($control->priority)) {
+                        $controlData['priority'] = $control->priority;
+                    }
+
+                    return $controlData;
+                })->toArray(),
+            ];
+
             $filePath = 'bundlegen/'.$code.'.json';
-            Storage::disk('private')->put($filePath, json_encode($standard));
+            Storage::disk('private')->put($filePath, json_encode($bundleData, JSON_PRETTY_PRINT));
 
             return ['success' => 'Bundle generated successfully! Saved to storage/app/private/'.$filePath];
         } catch (Exception $e) {
@@ -95,11 +126,11 @@ class BundleController extends Controller
                     'content_type' => $response->header('Content-Type'),
                     'body_preview' => substr($response->body(), 0, 500),
                 ]);
-                throw new \Exception('Failed to decode JSON response from: ' . $bundle->repo_url);
+                throw new \Exception('Failed to decode JSON response from: '.$bundle->repo_url);
             }
 
             // Validate required fields exist
-            if (!isset($bundle_content['code']) || !isset($bundle_content['controls'])) {
+            if (! isset($bundle_content['code']) || ! isset($bundle_content['controls'])) {
                 \Log::error('Invalid bundle structure', [
                     'url' => $bundle->repo_url,
                     'keys' => array_keys($bundle_content),
@@ -117,25 +148,36 @@ class BundleController extends Controller
                 ]
             );
 
-
-
             \Log::info('Importing bundle: '.$bundle->code);
+
+            // Check if the optional columns exist in the database
+            $hasAuditSanctionDate = Schema::hasColumn('controls', 'audit_sanction_date');
+            $hasPriority = Schema::hasColumn('controls', 'priority');
 
             foreach ($bundle_content['controls'] as $control) {
 
+                $controlData = [
+                    'title' => $control['title'],
+                    'code' => $control['code'],
+                    'description' => $control['description'],
+                    'discussion' => $control['discussion'] ?? null,
+                    'test' => $control['test'] ?? null,
+                    'type' => $control['type'],
+                    'category' => $control['category'],
+                    'enforcement' => $control['enforcement'],
+                ];
+
+                // Only add these fields if the columns exist in the database AND the bundle provides them
+                if ($hasAuditSanctionDate && isset($control['audit_sanction_date'])) {
+                    $controlData['audit_sanction_date'] = $control['audit_sanction_date'];
+                }
+                if ($hasPriority && isset($control['priority'])) {
+                    $controlData['priority'] = $control['priority'];
+                }
+
                 $standard->controls()->updateOrCreate(
                     ['code' => $control['code']],
-                    [
-
-                        'title' => $control['title'],
-                        'code' => $control['code'],
-                        'description' => $control['description'],
-                        'discussion' => $control['discussion'] ?? null,
-                        'test' => $control['test'] ?? null,
-                        'type' => $control['type'],
-                        'category' => $control['category'],
-                        'enforcement' => $control['enforcement'],
-                    ]
+                    $controlData
                 );
             }
 
@@ -151,9 +193,10 @@ class BundleController extends Controller
 
             Notification::make()
                 ->title('Bundle Import Failed')
-                ->body('Download failed: ' . $e->getMessage())
+                ->body('Download failed: '.$e->getMessage())
                 ->color('danger')
                 ->send();
+
             return;
         } catch (\Exception $e) {
             // Catch any other potential exceptions
@@ -166,9 +209,10 @@ class BundleController extends Controller
 
             Notification::make()
                 ->title('Bundle Import Failed')
-                ->body('An unexpected error occurred: ' . $e->getMessage())
+                ->body('An unexpected error occurred: '.$e->getMessage())
                 ->color('danger')
                 ->send();
+
             return;
         }
 
@@ -179,4 +223,3 @@ class BundleController extends Controller
 
     }
 }
-
