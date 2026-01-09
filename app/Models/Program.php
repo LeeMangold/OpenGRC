@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Aliziodev\LaravelTaxonomy\Traits\HasTaxonomy;
+use App\Mcp\Traits\HasMcpSupport;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -13,7 +14,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 
 class Program extends Model
 {
-    use HasFactory, HasTaxonomy, LogsActivity;
+    use HasFactory, HasMcpSupport, HasTaxonomy, LogsActivity;
 
     protected $fillable = [
         'name',

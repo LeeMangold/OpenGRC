@@ -5,6 +5,7 @@ namespace App\Models;
 use Aliziodev\LaravelTaxonomy\Traits\HasTaxonomy;
 use App\Enums\Effectiveness;
 use App\Enums\ImplementationStatus;
+use App\Mcp\Traits\HasMcpSupport;
 use Eloquent;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -54,12 +55,14 @@ use Spatie\Activitylog\Traits\LogsActivity;
  */
 class Implementation extends Model
 {
-    use HasFactory, HasTaxonomy, LogsActivity, SoftDeletes;
+    use HasFactory, HasMcpSupport, HasTaxonomy, LogsActivity, SoftDeletes;
 
     /**
      * Indicates if the model should be indexed as you type.
      */
     public bool $asYouType = true;
+
+    protected $fillable = ['details', 'status', 'notes', 'effectiveness', 'test_procedure'];
 
     /**
      * The attributes that should be cast.
@@ -71,13 +74,6 @@ class Implementation extends Model
         'status' => ImplementationStatus::class,
         'effectiveness' => Effectiveness::class,
     ];
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-    protected $fillable = ['details', 'status', 'notes', 'effectiveness', 'test_procedure'];
 
     /**
      * The controls that belong to the implementation.

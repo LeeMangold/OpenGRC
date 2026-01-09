@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Aliziodev\LaravelTaxonomy\Models\Taxonomy;
 use Aliziodev\LaravelTaxonomy\Traits\HasTaxonomy;
+use App\Mcp\Traits\HasMcpSupport;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -15,12 +16,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * Class Asset
  *
  * Represents an IT asset in the organization's asset management system.
- *
- * @package App\Models
  */
 class Asset extends Model
 {
-    use HasFactory, HasTaxonomy, SoftDeletes;
+    use HasFactory, HasMcpSupport, HasTaxonomy, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -176,8 +175,6 @@ class Asset extends Model
 
     /**
      * Get the user to whom this asset is assigned.
-     *
-     * @return BelongsTo
      */
     public function assignedToUser(): BelongsTo
     {
@@ -186,8 +183,6 @@ class Asset extends Model
 
     /**
      * Get the user who created this asset record.
-     *
-     * @return BelongsTo
      */
     public function creator(): BelongsTo
     {
@@ -196,8 +191,6 @@ class Asset extends Model
 
     /**
      * Get the user who last updated this asset record.
-     *
-     * @return BelongsTo
      */
     public function updater(): BelongsTo
     {
@@ -206,8 +199,6 @@ class Asset extends Model
 
     /**
      * Get the category this asset belongs to.
-     *
-     * @return BelongsTo
      */
     public function category(): BelongsTo
     {
@@ -216,8 +207,6 @@ class Asset extends Model
 
     /**
      * Get the location of this asset.
-     *
-     * @return BelongsTo
      */
     public function location(): BelongsTo
     {
@@ -226,8 +215,6 @@ class Asset extends Model
 
     /**
      * Get the department this asset belongs to.
-     *
-     * @return BelongsTo
      */
     public function department(): BelongsTo
     {
@@ -236,8 +223,6 @@ class Asset extends Model
 
     /**
      * Get the supplier of this asset.
-     *
-     * @return BelongsTo
      */
     public function supplier(): BelongsTo
     {
@@ -246,8 +231,6 @@ class Asset extends Model
 
     /**
      * Get the parent asset (for hierarchical assets).
-     *
-     * @return BelongsTo
      */
     public function parentAsset(): BelongsTo
     {
@@ -256,8 +239,6 @@ class Asset extends Model
 
     /**
      * Get the child assets.
-     *
-     * @return HasMany
      */
     public function childAssets(): HasMany
     {
@@ -266,8 +247,6 @@ class Asset extends Model
 
     /**
      * Get the asset type taxonomy term.
-     *
-     * @return BelongsTo
      */
     public function assetType(): BelongsTo
     {
@@ -276,8 +255,6 @@ class Asset extends Model
 
     /**
      * Get the status taxonomy term.
-     *
-     * @return BelongsTo
      */
     public function status(): BelongsTo
     {
@@ -286,8 +263,6 @@ class Asset extends Model
 
     /**
      * Get the condition taxonomy term.
-     *
-     * @return BelongsTo
      */
     public function condition(): BelongsTo
     {
@@ -296,8 +271,6 @@ class Asset extends Model
 
     /**
      * Get the compliance status taxonomy term.
-     *
-     * @return BelongsTo
      */
     public function complianceStatus(): BelongsTo
     {
@@ -306,8 +279,6 @@ class Asset extends Model
 
     /**
      * Get the data classification taxonomy term.
-     *
-     * @return BelongsTo
      */
     public function dataClassification(): BelongsTo
     {
@@ -316,8 +287,6 @@ class Asset extends Model
 
     /**
      * Get the implementations associated with this asset.
-     *
-     * @return BelongsToMany
      */
     public function implementations(): BelongsToMany
     {
@@ -327,8 +296,6 @@ class Asset extends Model
 
     /**
      * Get the asset type name accessor.
-     *
-     * @return string|null
      */
     public function getAssetTypeNameAttribute(): ?string
     {
@@ -337,8 +304,6 @@ class Asset extends Model
 
     /**
      * Get the status name accessor.
-     *
-     * @return string|null
      */
     public function getStatusNameAttribute(): ?string
     {
@@ -347,8 +312,6 @@ class Asset extends Model
 
     /**
      * Get the condition name accessor.
-     *
-     * @return string|null
      */
     public function getConditionNameAttribute(): ?string
     {
@@ -357,8 +320,6 @@ class Asset extends Model
 
     /**
      * Get the compliance status name accessor.
-     *
-     * @return string|null
      */
     public function getComplianceStatusNameAttribute(): ?string
     {
@@ -367,8 +328,6 @@ class Asset extends Model
 
     /**
      * Get the data classification name accessor.
-     *
-     * @return string|null
      */
     public function getDataClassificationNameAttribute(): ?string
     {
@@ -378,7 +337,7 @@ class Asset extends Model
     /**
      * Scope a query to only include active assets.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeActive($query)
@@ -389,7 +348,7 @@ class Asset extends Model
     /**
      * Scope a query to only include assigned assets.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeAssigned($query)
@@ -400,8 +359,7 @@ class Asset extends Model
     /**
      * Scope a query to filter by asset type.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param string $assetTypeName
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeByAssetType($query, string $assetTypeName)
@@ -414,8 +372,7 @@ class Asset extends Model
     /**
      * Scope a query to filter by status.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param string $statusName
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeByStatus($query, string $statusName)
