@@ -1,4 +1,6 @@
 <div
+    class="inactivity-guard"
+    :class="{ 'modal-active': modalOpen }"
     wire:ignore
     x-data="{
             inactivityTimer: null,

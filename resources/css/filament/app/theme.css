@@ -189,3 +189,9 @@ a.fi-logo {
 .hover\:bg-grcblue-700:hover {
     background-color: #0c4a65 !important;
 }
+
+/* Prevent inactivity guard wrapper from taking up space when modal is inactive */
+.inactivity-guard:not(.modal-active) {
+    line-height: 0;
+    font-size: 0;
+}
