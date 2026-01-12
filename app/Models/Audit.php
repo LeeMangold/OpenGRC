@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Aliziodev\LaravelTaxonomy\Traits\HasTaxonomy;
 use App\Enums\WorkflowStatus;
+use App\Mcp\Traits\HasMcpSupport;
 use Eloquent;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -52,7 +53,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
  */
 class Audit extends Model
 {
-    use HasFactory, HasTaxonomy, LogsActivity;
+    use HasFactory, HasMcpSupport, HasTaxonomy, LogsActivity;
 
     /**
      * The attributes that are mass assignable.

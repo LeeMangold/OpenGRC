@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\VendorRiskRating;
 use App\Enums\VendorStatus;
+use App\Mcp\Traits\HasMcpSupport;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,7 +15,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 
 class Vendor extends Model
 {
-    use HasFactory, LogsActivity, SoftDeletes;
+    use HasFactory, HasMcpSupport, LogsActivity, SoftDeletes;
 
     protected $fillable = [
         'name',

@@ -16,7 +16,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 
 class DataRequestResponse extends Model implements Commentable
 {
-    use HasFactory, LogsActivity, HasComments;
+    use HasComments, HasFactory, LogsActivity;
 
     protected $casts = [
         'status' => ResponseStatus::class,

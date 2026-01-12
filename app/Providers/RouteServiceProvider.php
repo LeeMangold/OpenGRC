@@ -28,6 +28,11 @@ class RouteServiceProvider extends ServiceProvider
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
 
+        // Rate limiter for MCP endpoints
+        RateLimiter::for('mcp', function (Request $request) {
+            return Limit::perMinute(120)->by($request->user()?->id ?: $request->ip());
+        });
+
         RateLimiter::for('global', function (Request $request) {
             // Skip rate limiting for authenticated users and Livewire requests
             if ($request->user() || $request->is('livewire/*')) {
@@ -44,6 +49,10 @@ class RouteServiceProvider extends ServiceProvider
 
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
+
+            // MCP server routes (AI endpoints)
+            Route::middleware('api')
+                ->group(base_path('routes/ai.php'));
         });
     }
 }
