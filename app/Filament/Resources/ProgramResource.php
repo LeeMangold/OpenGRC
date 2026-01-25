@@ -102,6 +102,7 @@ class ProgramResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->deferLoading()
             ->recordUrl(fn (Program $record): string => ProgramPage::getUrl(['record' => $record]))
             ->columns([
                 TextColumn::make('name')

@@ -147,6 +147,7 @@ class ApplicationResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->deferLoading()
             ->columns([
                 TextColumn::make('name')->label(__('Name'))->searchable(),
                 TextColumn::make('owner.name')->label(__('Owner'))->searchable(),

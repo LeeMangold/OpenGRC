@@ -171,6 +171,7 @@ class ControlResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->deferLoading()
             ->emptyStateHeading(__('control.table.empty_state.heading'))
             ->emptyStateDescription(new HtmlString(__('control.table.empty_state.description', [
                 'url' => route('filament.app.resources.controls.index'),

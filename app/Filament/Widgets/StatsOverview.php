@@ -4,13 +4,10 @@ namespace App\Filament\Widgets;
 
 use App\Enums\Applicability;
 use App\Enums\WorkflowStatus;
-use App\Models\Audit;
-use App\Models\Control;
-use App\Models\Implementation;
 use App\Models\Program;
-use App\Models\Standard;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
+use Illuminate\Support\Facades\DB;
 
 class StatsOverview extends BaseWidget
 {
@@ -29,68 +26,70 @@ class StatsOverview extends BaseWidget
 
     protected function getGlobalStats(): array
     {
-        // Single query for audit counts using conditional aggregation
-        $auditCounts = Audit::selectRaw("
-            SUM(CASE WHEN status = ? THEN 1 ELSE 0 END) as in_progress,
-            SUM(CASE WHEN status = ? THEN 1 ELSE 0 END) as completed
-        ", [WorkflowStatus::INPROGRESS->value, WorkflowStatus::COMPLETED->value])
-            ->first();
-
-        $audits_in_progress = (int) ($auditCounts->in_progress ?? 0);
-        $audits_performed = (int) ($auditCounts->completed ?? 0);
-        $implementations = Implementation::count();
-
-        // Get in-scope standard IDs once
-        $inScopeStandardIds = Standard::where('status', 'In Scope')->pluck('id');
-
-        // Single query for controls in scope (not N/A)
-        $controls_in_scope_count = Control::whereIn('standard_id', $inScopeStandardIds)
-            ->where('applicability', '!=', Applicability::NOTAPPLICABLE)
-            ->count();
+        // Single query for all stats using scalar subqueries
+        $stats = DB::selectOne('
+            SELECT
+                (SELECT COALESCE(SUM(CASE WHEN status = ? THEN 1 ELSE 0 END), 0) FROM audits) as audits_in_progress,
+                (SELECT COALESCE(SUM(CASE WHEN status = ? THEN 1 ELSE 0 END), 0) FROM audits) as audits_completed,
+                (SELECT COUNT(*) FROM implementations) as implementations,
+                (SELECT COUNT(*) FROM controls WHERE standard_id IN (SELECT id FROM standards WHERE status = ?) AND applicability != ?) as controls_in_scope
+        ', [
+            WorkflowStatus::INPROGRESS->value,
+            WorkflowStatus::COMPLETED->value,
+            'In Scope',
+            Applicability::NOTAPPLICABLE->value,
+        ]);
 
         return [
-            Stat::make(__('widgets.stats.audits_in_progress'), $audits_in_progress),
-            Stat::make(__('widgets.stats.audits_completed'), $audits_performed),
-            Stat::make(__('widgets.stats.controls_in_scope'), $controls_in_scope_count),
-            Stat::make(__('widgets.stats.implementations'), $implementations),
+            Stat::make(__('widgets.stats.audits_in_progress'), (int) $stats->audits_in_progress),
+            Stat::make(__('widgets.stats.audits_completed'), (int) $stats->audits_completed),
+            Stat::make(__('widgets.stats.controls_in_scope'), (int) $stats->controls_in_scope),
+            Stat::make(__('widgets.stats.implementations'), (int) $stats->implementations),
         ];
     }
 
     protected function getProgramScopedStats(): array
     {
-        // Single query for audit counts using conditional aggregation
-        $auditCounts = Audit::where('program_id', $this->program->id)
-            ->selectRaw("
-                SUM(CASE WHEN status = ? THEN 1 ELSE 0 END) as in_progress,
-                SUM(CASE WHEN status = ? THEN 1 ELSE 0 END) as completed
-            ", [WorkflowStatus::INPROGRESS->value, WorkflowStatus::COMPLETED->value])
-            ->first();
+        $programId = $this->program->id;
 
-        $audits_in_progress = (int) ($auditCounts->in_progress ?? 0);
-        $audits_performed = (int) ($auditCounts->completed ?? 0);
-
-        // Get all controls for this program (from standards and direct)
-        $allControls = $this->program->getAllControls();
-        $controlIds = $allControls->pluck('id')->toArray();
-
-        // Get implementations scoped to this program's controls
-        $implementations = Implementation::whereHas('controls', function ($query) use ($controlIds) {
-            $query->whereIn('controls.id', $controlIds);
-        })->count();
-
-        // Get in-scope standard IDs for this program
-        $programStandardIds = $this->program->standards()->where('status', 'In Scope')->pluck('standards.id');
-
-        // Single query for controls in scope (not N/A)
-        $controls_in_scope_count = Control::whereIn('standard_id', $programStandardIds)
-            ->where('applicability', '!=', Applicability::NOTAPPLICABLE)
-            ->count();
+        // Single query for all program-scoped stats using scalar subqueries
+        $stats = DB::selectOne('
+            SELECT
+                (SELECT COALESCE(SUM(CASE WHEN status = ? THEN 1 ELSE 0 END), 0) FROM audits WHERE program_id = ?) as audits_in_progress,
+                (SELECT COALESCE(SUM(CASE WHEN status = ? THEN 1 ELSE 0 END), 0) FROM audits WHERE program_id = ?) as audits_completed,
+                (SELECT COUNT(*) FROM implementations WHERE EXISTS (
+                    SELECT 1 FROM control_implementation ci
+                    WHERE ci.implementation_id = implementations.id
+                    AND (
+                        ci.control_id IN (SELECT id FROM controls WHERE standard_id IN (SELECT standard_id FROM program_standard WHERE program_id = ?))
+                        OR ci.control_id IN (SELECT control_id FROM control_program WHERE program_id = ?)
+                    )
+                )) as implementations,
+                (SELECT COUNT(*) FROM controls
+                    WHERE applicability != ?
+                    AND standard_id IN (
+                        SELECT ps.standard_id FROM program_standard ps
+                        JOIN standards s ON s.id = ps.standard_id
+                        WHERE ps.program_id = ? AND s.status = ?
+                    )
+                ) as controls_in_scope
+        ', [
+            WorkflowStatus::INPROGRESS->value,
+            $programId,
+            WorkflowStatus::COMPLETED->value,
+            $programId,
+            $programId,
+            $programId,
+            Applicability::NOTAPPLICABLE->value,
+            $programId,
+            'In Scope',
+        ]);
 
         return [
-            Stat::make(__('widgets.stats.audits_in_progress'), $audits_in_progress),
-            Stat::make(__('widgets.stats.audits_completed'), $audits_performed),
-            Stat::make(__('widgets.stats.controls_in_scope'), $controls_in_scope_count),
-            Stat::make(__('widgets.stats.implementations'), $implementations),
+            Stat::make(__('widgets.stats.audits_in_progress'), (int) $stats->audits_in_progress),
+            Stat::make(__('widgets.stats.audits_completed'), (int) $stats->audits_completed),
+            Stat::make(__('widgets.stats.controls_in_scope'), (int) $stats->controls_in_scope),
+            Stat::make(__('widgets.stats.implementations'), (int) $stats->implementations),
         ];
     }
 }

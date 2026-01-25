@@ -311,6 +311,7 @@ class DataRequestResponseResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->deferLoading()
             ->columns([
                 TextColumn::make('dataRequest.details')
                     ->label('Data Request Details')

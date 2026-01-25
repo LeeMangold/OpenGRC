@@ -142,6 +142,7 @@ class TrustCenterContentBlockResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->deferLoading()
             ->columns([
                 TextColumn::make('title')
                     ->label(__('Title'))

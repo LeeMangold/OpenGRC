@@ -69,6 +69,7 @@ class AuditResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->deferLoading()
             ->emptyStateHeading(__('audit.table.empty_state.heading'))
             ->emptyStateDescription(__('audit.table.empty_state.description'))
             ->columns([

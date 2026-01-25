@@ -197,6 +197,7 @@ class ImplementationResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->deferLoading()
             ->emptyStateHeading(__('implementation.table.empty_state.heading'))
             ->emptyStateDescription(__('implementation.table.empty_state.description'))
             ->columns([

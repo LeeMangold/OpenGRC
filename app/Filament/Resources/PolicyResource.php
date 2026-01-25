@@ -207,6 +207,7 @@ class PolicyResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->deferLoading()
             ->columns([
                 TextColumn::make('code')
                     ->searchable()
