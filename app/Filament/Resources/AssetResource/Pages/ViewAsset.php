@@ -12,7 +12,7 @@ class ViewAsset extends ViewRecord
 
     public function getTitle(): string
     {
-        return $this->record->asset_tag . ': ' . $this->record->name;
+        return $this->record->asset_tag.': '.$this->record->name;
     }
 
     protected function getHeaderActions(): array

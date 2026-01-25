@@ -5,7 +5,6 @@ namespace App\Filament\Admin\Resources;
 use App\Filament\Admin\Resources\VendorUserResource\Pages;
 use App\Mail\VendorInvitationMail;
 use App\Mail\VendorMagicLinkMail;
-use App\Models\Vendor;
 use App\Models\VendorUser;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -17,7 +16,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
-use Illuminate\Support\Facades\URL;
 
 class VendorUserResource extends Resource
 {
@@ -209,7 +207,7 @@ class VendorUserResource extends Resource
 
             if ($notify) {
                 Notification::make()
-                    ->title('Invitation sent to ' . $record->email)
+                    ->title('Invitation sent to '.$record->email)
                     ->success()
                     ->send();
             }
@@ -230,7 +228,7 @@ class VendorUserResource extends Resource
             Mail::send(new VendorMagicLinkMail($record));
 
             Notification::make()
-                ->title('Magic link sent to ' . $record->email)
+                ->title('Magic link sent to '.$record->email)
                 ->success()
                 ->send();
         } catch (\Exception $e) {
@@ -251,7 +249,7 @@ class VendorUserResource extends Resource
 
             if ($status === Password::RESET_LINK_SENT) {
                 Notification::make()
-                    ->title('Password reset sent to ' . $record->email)
+                    ->title('Password reset sent to '.$record->email)
                     ->success()
                     ->send();
             } else {

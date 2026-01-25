@@ -45,7 +45,7 @@ class PolicyController extends BaseApiController
     protected function validateUpdate(Request $request, $resource): array
     {
         return $request->validate([
-            'code' => 'sometimes|string|max:255|unique:policies,code,' . $resource->id,
+            'code' => 'sometimes|string|max:255|unique:policies,code,'.$resource->id,
             'name' => 'sometimes|string|max:255',
             'policy_scope' => 'nullable|string',
             'purpose' => 'nullable|string',

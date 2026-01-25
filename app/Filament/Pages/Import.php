@@ -230,9 +230,9 @@ class Import extends Page
                     $standard = null;
                     if ($standardCode) {
                         $standard = Standard::where('code', $standardCode)->first();
-                        if (!$standard) {
+                        if (! $standard) {
                             $has_errors = true;
-                            $error_array[] = "Row ".($index + 1).": Standard code '{$standardCode}' not found";
+                            $error_array[] = 'Row '.($index + 1).": Standard code '{$standardCode}' not found";
                         }
                     }
 

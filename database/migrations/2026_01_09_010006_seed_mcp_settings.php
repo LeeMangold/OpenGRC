@@ -11,7 +11,7 @@ return new class extends Migration
     public function up(): void
     {
         // Seed MCP settings for in-place upgrades (uses updateOrInsert, safe to run always)
-        $seeder = new McpSettingsSeeder();
+        $seeder = new McpSettingsSeeder;
         $seeder->run();
     }
 

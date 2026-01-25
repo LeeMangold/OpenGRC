@@ -13,9 +13,9 @@ return new class extends Migration
     {
         // Define all entities and actions
         $entities = [
-            'Standards', 'Controls', 'Implementations', 'Audits', 'AuditItems', 
-            'Programs', 'Vendors', 'Applications', 'Risks', 'DataRequests', 
-            'DataRequestResponses', 'FileAttachments'
+            'Standards', 'Controls', 'Implementations', 'Audits', 'AuditItems',
+            'Programs', 'Vendors', 'Applications', 'Risks', 'DataRequests',
+            'DataRequestResponses', 'FileAttachments',
         ];
         $actions = ['List', 'Create', 'Read', 'Update', 'Delete'];
 
@@ -25,7 +25,7 @@ return new class extends Migration
                 Permission::firstOrCreate([
                     'name' => "{$action} {$entity}",
                     'category' => $entity,
-                    'guard_name' => 'web'
+                    'guard_name' => 'web',
                 ]);
             }
         }
@@ -44,7 +44,7 @@ return new class extends Migration
             Permission::firstOrCreate([
                 'name' => $permissionData['name'],
                 'category' => $permissionData['category'],
-                'guard_name' => 'web'
+                'guard_name' => 'web',
             ]);
         }
 
@@ -61,7 +61,7 @@ return new class extends Migration
         $securityAdmin = Role::where('name', 'Security Admin')->first();
         if ($securityAdmin) {
             $securityAdminPermissions = [];
-            
+
             // Add CRUD permissions (excluding Delete)
             foreach ($entities as $entity) {
                 foreach (['List', 'Create', 'Read', 'Update'] as $action) {
@@ -71,7 +71,7 @@ return new class extends Migration
                     }
                 }
             }
-            
+
             // Add additional permissions for Security Admin
             $additionalSecurityAdminPerms = ['Manage Preferences', 'View Bundles'];
             foreach ($additionalSecurityAdminPerms as $permName) {
@@ -80,7 +80,7 @@ return new class extends Migration
                     $securityAdminPermissions[] = $permission->id;
                 }
             }
-            
+
             $securityAdmin->syncPermissions($securityAdminPermissions);
         }
     }

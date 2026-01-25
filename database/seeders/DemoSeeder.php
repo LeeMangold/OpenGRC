@@ -299,7 +299,7 @@ class DemoSeeder extends Seeder
 
             // Create a data request and a data request response for each control.
             $dataRequest = \App\Models\DataRequest::create([
-                'code' => 'DR-' . $ctl->code . '-001',
+                'code' => 'DR-'.$ctl->code.'-001',
                 'created_by_id' => 1,
                 'assigned_to_id' => rand(1, 10),
                 'audit_id' => $audit->id,
@@ -413,7 +413,7 @@ class DemoSeeder extends Seeder
             [
                 'asset_tag' => 'LAP-001',
                 'name' => 'Dell Latitude 5520',
-                'serial_number' => 'DL5520-' . strtoupper($this->faker->bothify('???###')),
+                'serial_number' => 'DL5520-'.strtoupper($this->faker->bothify('???###')),
                 'asset_type_id' => $assetTypeIds->get('Laptop'),
                 'status_id' => $assetStatusIds->get('In Use'),
                 'condition_id' => $conditionIds->get('Good'),
@@ -436,7 +436,7 @@ class DemoSeeder extends Seeder
             [
                 'asset_tag' => 'LAP-002',
                 'name' => 'MacBook Pro 14"',
-                'serial_number' => 'MBP14-' . strtoupper($this->faker->bothify('???###')),
+                'serial_number' => 'MBP14-'.strtoupper($this->faker->bothify('???###')),
                 'asset_type_id' => $assetTypeIds->get('Laptop'),
                 'status_id' => $assetStatusIds->get('In Use'),
                 'condition_id' => $conditionIds->get('Excellent'),
@@ -459,7 +459,7 @@ class DemoSeeder extends Seeder
             [
                 'asset_tag' => 'LAP-003',
                 'name' => 'HP EliteBook 840',
-                'serial_number' => 'HP840-' . strtoupper($this->faker->bothify('???###')),
+                'serial_number' => 'HP840-'.strtoupper($this->faker->bothify('???###')),
                 'asset_type_id' => $assetTypeIds->get('Laptop'),
                 'status_id' => $assetStatusIds->get('Available'),
                 'condition_id' => $conditionIds->get('Good'),
@@ -482,7 +482,7 @@ class DemoSeeder extends Seeder
             [
                 'asset_tag' => 'DSK-001',
                 'name' => 'Dell OptiPlex 7090',
-                'serial_number' => 'OP7090-' . strtoupper($this->faker->bothify('???###')),
+                'serial_number' => 'OP7090-'.strtoupper($this->faker->bothify('???###')),
                 'asset_type_id' => $assetTypeIds->get('Desktop'),
                 'status_id' => $assetStatusIds->get('In Use'),
                 'condition_id' => $conditionIds->get('Good'),
@@ -504,7 +504,7 @@ class DemoSeeder extends Seeder
             [
                 'asset_tag' => 'DSK-002',
                 'name' => 'HP Z2 Workstation',
-                'serial_number' => 'HPZ2-' . strtoupper($this->faker->bothify('???###')),
+                'serial_number' => 'HPZ2-'.strtoupper($this->faker->bothify('???###')),
                 'asset_type_id' => $assetTypeIds->get('Desktop'),
                 'status_id' => $assetStatusIds->get('In Use'),
                 'condition_id' => $conditionIds->get('Excellent'),
@@ -529,7 +529,7 @@ class DemoSeeder extends Seeder
             [
                 'asset_tag' => 'SRV-001',
                 'name' => 'Dell PowerEdge R750',
-                'serial_number' => 'PE-R750-' . strtoupper($this->faker->bothify('???###')),
+                'serial_number' => 'PE-R750-'.strtoupper($this->faker->bothify('???###')),
                 'asset_type_id' => $assetTypeIds->get('Server'),
                 'status_id' => $assetStatusIds->get('In Use'),
                 'condition_id' => $conditionIds->get('Excellent'),
@@ -552,7 +552,7 @@ class DemoSeeder extends Seeder
             [
                 'asset_tag' => 'SRV-002',
                 'name' => 'HPE ProLiant DL380',
-                'serial_number' => 'HPE-DL380-' . strtoupper($this->faker->bothify('???###')),
+                'serial_number' => 'HPE-DL380-'.strtoupper($this->faker->bothify('???###')),
                 'asset_type_id' => $assetTypeIds->get('Server'),
                 'status_id' => $assetStatusIds->get('In Use'),
                 'condition_id' => $conditionIds->get('Good'),
@@ -577,7 +577,7 @@ class DemoSeeder extends Seeder
             [
                 'asset_tag' => 'MON-001',
                 'name' => 'Dell UltraSharp 27"',
-                'serial_number' => 'DU27-' . strtoupper($this->faker->bothify('???###')),
+                'serial_number' => 'DU27-'.strtoupper($this->faker->bothify('???###')),
                 'asset_type_id' => $assetTypeIds->get('Monitor'),
                 'status_id' => $assetStatusIds->get('In Use'),
                 'condition_id' => $conditionIds->get('Good'),
@@ -594,7 +594,7 @@ class DemoSeeder extends Seeder
             [
                 'asset_tag' => 'MON-002',
                 'name' => 'LG UltraFine 4K',
-                'serial_number' => 'LG4K-' . strtoupper($this->faker->bothify('???###')),
+                'serial_number' => 'LG4K-'.strtoupper($this->faker->bothify('???###')),
                 'asset_type_id' => $assetTypeIds->get('Monitor'),
                 'status_id' => $assetStatusIds->get('In Use'),
                 'condition_id' => $conditionIds->get('Excellent'),
@@ -613,7 +613,7 @@ class DemoSeeder extends Seeder
             [
                 'asset_tag' => 'PHN-001',
                 'name' => 'iPhone 14 Pro',
-                'serial_number' => 'IPH14P-' . strtoupper($this->faker->bothify('???###')),
+                'serial_number' => 'IPH14P-'.strtoupper($this->faker->bothify('???###')),
                 'asset_type_id' => $assetTypeIds->get('Phone'),
                 'status_id' => $assetStatusIds->get('In Use'),
                 'condition_id' => $conditionIds->get('Excellent'),
@@ -634,7 +634,7 @@ class DemoSeeder extends Seeder
             [
                 'asset_tag' => 'PHN-002',
                 'name' => 'Samsung Galaxy S23',
-                'serial_number' => 'SGS23-' . strtoupper($this->faker->bothify('???###')),
+                'serial_number' => 'SGS23-'.strtoupper($this->faker->bothify('???###')),
                 'asset_type_id' => $assetTypeIds->get('Phone'),
                 'status_id' => $assetStatusIds->get('In Use'),
                 'condition_id' => $conditionIds->get('Good'),
@@ -657,7 +657,7 @@ class DemoSeeder extends Seeder
             [
                 'asset_tag' => 'TAB-001',
                 'name' => 'iPad Pro 12.9"',
-                'serial_number' => 'IPADP-' . strtoupper($this->faker->bothify('???###')),
+                'serial_number' => 'IPADP-'.strtoupper($this->faker->bothify('???###')),
                 'asset_type_id' => $assetTypeIds->get('Tablet'),
                 'status_id' => $assetStatusIds->get('In Use'),
                 'condition_id' => $conditionIds->get('Excellent'),
@@ -678,7 +678,7 @@ class DemoSeeder extends Seeder
             [
                 'asset_tag' => 'TAB-002',
                 'name' => 'Microsoft Surface Pro 9',
-                'serial_number' => 'MSP9-' . strtoupper($this->faker->bothify('???###')),
+                'serial_number' => 'MSP9-'.strtoupper($this->faker->bothify('???###')),
                 'asset_type_id' => $assetTypeIds->get('Tablet'),
                 'status_id' => $assetStatusIds->get('Available'),
                 'condition_id' => $conditionIds->get('Good'),
@@ -701,7 +701,7 @@ class DemoSeeder extends Seeder
             [
                 'asset_tag' => 'NET-001',
                 'name' => 'Cisco Catalyst 9300',
-                'serial_number' => 'CSC9300-' . strtoupper($this->faker->bothify('???###')),
+                'serial_number' => 'CSC9300-'.strtoupper($this->faker->bothify('???###')),
                 'asset_type_id' => $assetTypeIds->get('Network Equipment'),
                 'status_id' => $assetStatusIds->get('In Use'),
                 'condition_id' => $conditionIds->get('Excellent'),
@@ -718,7 +718,7 @@ class DemoSeeder extends Seeder
             [
                 'asset_tag' => 'NET-002',
                 'name' => 'Ubiquiti UniFi AP',
-                'serial_number' => 'UAP-' . strtoupper($this->faker->bothify('???###')),
+                'serial_number' => 'UAP-'.strtoupper($this->faker->bothify('???###')),
                 'asset_type_id' => $assetTypeIds->get('Network Equipment'),
                 'status_id' => $assetStatusIds->get('In Use'),
                 'condition_id' => $conditionIds->get('Good'),
@@ -735,7 +735,7 @@ class DemoSeeder extends Seeder
             [
                 'asset_tag' => 'NET-003',
                 'name' => 'Fortinet FortiGate 100F',
-                'serial_number' => 'FG100F-' . strtoupper($this->faker->bothify('???###')),
+                'serial_number' => 'FG100F-'.strtoupper($this->faker->bothify('???###')),
                 'asset_type_id' => $assetTypeIds->get('Network Equipment'),
                 'status_id' => $assetStatusIds->get('In Use'),
                 'condition_id' => $conditionIds->get('Excellent'),
@@ -754,7 +754,7 @@ class DemoSeeder extends Seeder
             [
                 'asset_tag' => 'PRT-001',
                 'name' => 'HP LaserJet Pro',
-                'serial_number' => 'HPL-' . strtoupper($this->faker->bothify('???###')),
+                'serial_number' => 'HPL-'.strtoupper($this->faker->bothify('???###')),
                 'asset_type_id' => $assetTypeIds->get('Peripheral'),
                 'status_id' => $assetStatusIds->get('In Use'),
                 'condition_id' => $conditionIds->get('Good'),
@@ -771,7 +771,7 @@ class DemoSeeder extends Seeder
             [
                 'asset_tag' => 'PRT-002',
                 'name' => 'Canon imageCLASS',
-                'serial_number' => 'CAN-' . strtoupper($this->faker->bothify('???###')),
+                'serial_number' => 'CAN-'.strtoupper($this->faker->bothify('???###')),
                 'asset_type_id' => $assetTypeIds->get('Peripheral'),
                 'status_id' => $assetStatusIds->get('In Use'),
                 'condition_id' => $conditionIds->get('Fair'),
@@ -788,7 +788,7 @@ class DemoSeeder extends Seeder
             [
                 'asset_tag' => 'KEY-001',
                 'name' => 'Logitech MX Keys',
-                'serial_number' => 'LGMX-' . strtoupper($this->faker->bothify('???###')),
+                'serial_number' => 'LGMX-'.strtoupper($this->faker->bothify('???###')),
                 'asset_type_id' => $assetTypeIds->get('Peripheral'),
                 'status_id' => $assetStatusIds->get('In Use'),
                 'condition_id' => $conditionIds->get('Excellent'),
@@ -846,7 +846,7 @@ class DemoSeeder extends Seeder
             [
                 'asset_tag' => 'LAP-004',
                 'name' => 'Dell Latitude E7470',
-                'serial_number' => 'DLE7470-' . strtoupper($this->faker->bothify('???###')),
+                'serial_number' => 'DLE7470-'.strtoupper($this->faker->bothify('???###')),
                 'asset_type_id' => $assetTypeIds->get('Laptop'),
                 'status_id' => $assetStatusIds->get('Retired'),
                 'condition_id' => $conditionIds->get('Poor'),
@@ -868,7 +868,7 @@ class DemoSeeder extends Seeder
             [
                 'asset_tag' => 'SRV-003',
                 'name' => 'Dell PowerEdge R640',
-                'serial_number' => 'PE-R640-' . strtoupper($this->faker->bothify('???###')),
+                'serial_number' => 'PE-R640-'.strtoupper($this->faker->bothify('???###')),
                 'asset_type_id' => $assetTypeIds->get('Server'),
                 'status_id' => $assetStatusIds->get('In Repair'),
                 'condition_id' => $conditionIds->get('Fair'),

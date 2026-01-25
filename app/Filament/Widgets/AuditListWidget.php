@@ -11,7 +11,7 @@ use Illuminate\Support\HtmlString;
 class AuditListWidget extends BaseWidget
 {
     protected static bool $isLazy = false;
-    
+
     protected int|string|array $columnSpan = '2';
 
     public function table(Table $table): Table

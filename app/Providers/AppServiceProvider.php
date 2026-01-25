@@ -41,6 +41,13 @@ class AppServiceProvider extends ServiceProvider
             || $argv[1] === 'filament:upgrade'
             || $argv[1] === 'vendor:publish'
             || $argv[1] === 'test'
+            || $argv[1] === 'key:generate'
+            || $argv[1] === 'migrate'
+            || $argv[1] === 'migrate:fresh'
+            || $argv[1] === 'migrate:refresh'
+            || $argv[1] === 'migrate:reset'
+            || $argv[1] === 'migrate:rollback'
+            || $argv[1] === 'migrate:status'
             )) {
                 $isInstaller = true;
             }

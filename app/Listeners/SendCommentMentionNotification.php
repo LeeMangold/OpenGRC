@@ -5,7 +5,6 @@ namespace App\Listeners;
 use App\Mail\CommentMentionMail;
 use Filament\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Mail;
 use Kirschbaum\Commentions\Events\UserWasMentionedEvent;
 

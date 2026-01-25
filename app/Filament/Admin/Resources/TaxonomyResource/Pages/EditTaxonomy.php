@@ -21,11 +21,11 @@ class EditTaxonomy extends EditRecord
     protected function getSaveFormAction(): Actions\Action
     {
         return parent::getSaveFormAction()
-            ->label(fn () => 'Save ' . ($this->record->name ?? 'Taxonomy'));
+            ->label(fn () => 'Save '.($this->record->name ?? 'Taxonomy'));
     }
 
     protected function getSavedNotificationTitle(): ?string
     {
-        return $this->record->name . ' saved successfully';
+        return $this->record->name.' saved successfully';
     }
 }

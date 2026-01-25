@@ -24,7 +24,7 @@ class ApplicationFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->words(3, true) . ' Application',
+            'name' => fake()->words(3, true).' Application',
             'description' => fake()->sentence(10),
             'url' => fake()->url(),
             'owner_id' => User::factory(),

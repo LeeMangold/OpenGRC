@@ -12,7 +12,7 @@ class MultiWindowInactivityGuard extends Component
 {
     protected const MILLISECONDS_PER_SECOND = 1000;
 
-    public function render(): string | View
+    public function render(): string|View
     {
         if (Filament::auth()->guest()) {
             return '<div></div>';

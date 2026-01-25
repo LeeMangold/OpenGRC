@@ -51,9 +51,9 @@ class HelperController extends Controller
 
     /**
      * Update the .env file with the given key-value pairs.
-     * 
-     * @param array $data Key-value pairs to update
-     * @param bool $create If true, creates variables that don't exist. Default: false
+     *
+     * @param  array  $data  Key-value pairs to update
+     * @param  bool  $create  If true, creates variables that don't exist. Default: false
      */
     public static function updateEnv(array $data, bool $create = false): void
     {

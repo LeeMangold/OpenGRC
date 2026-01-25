@@ -30,10 +30,10 @@ class StatsOverview extends BaseWidget
     protected function getGlobalStats(): array
     {
         // Single query for audit counts using conditional aggregation
-        $auditCounts = Audit::selectRaw("
+        $auditCounts = Audit::selectRaw('
             SUM(CASE WHEN status = ? THEN 1 ELSE 0 END) as in_progress,
             SUM(CASE WHEN status = ? THEN 1 ELSE 0 END) as completed
-        ", [WorkflowStatus::INPROGRESS->value, WorkflowStatus::COMPLETED->value])
+        ', [WorkflowStatus::INPROGRESS->value, WorkflowStatus::COMPLETED->value])
             ->first();
 
         $audits_in_progress = (int) ($auditCounts->in_progress ?? 0);
@@ -60,10 +60,10 @@ class StatsOverview extends BaseWidget
     {
         // Single query for audit counts using conditional aggregation
         $auditCounts = Audit::where('program_id', $this->program->id)
-            ->selectRaw("
+            ->selectRaw('
                 SUM(CASE WHEN status = ? THEN 1 ELSE 0 END) as in_progress,
                 SUM(CASE WHEN status = ? THEN 1 ELSE 0 END) as completed
-            ", [WorkflowStatus::INPROGRESS->value, WorkflowStatus::COMPLETED->value])
+            ', [WorkflowStatus::INPROGRESS->value, WorkflowStatus::COMPLETED->value])
             ->first();
 
         $audits_in_progress = (int) ($auditCounts->in_progress ?? 0);

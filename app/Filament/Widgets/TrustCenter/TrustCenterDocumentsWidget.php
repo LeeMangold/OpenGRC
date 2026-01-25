@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Collection;
 class TrustCenterDocumentsWidget extends BaseWidget
 {
     protected static bool $isLazy = false;
-    
+
     protected int|string|array $columnSpan = 'full';
 
     protected static ?string $heading = 'Documents';

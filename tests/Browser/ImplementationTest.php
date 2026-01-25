@@ -95,7 +95,7 @@ class ImplementationTest extends DuskTestCase
         $standard = $this->createTestStandard();
         $control = $this->createTestControl($standard, self::$testControlCodeA, 'Control A for Implementation');
 
-        $this->browse(function (Browser $browser) use ($control) {
+        $this->browse(function (Browser $browser) {
             $this->loginAs($browser);
 
             // ==========================================
@@ -115,7 +115,7 @@ class ImplementationTest extends DuskTestCase
                 ->pause(300);
 
             // Select related control
-            $browser->filamentSelect('controls', "(" . self::$testControlCodeA . ") - Control A for Implementation")
+            $browser->filamentSelect('controls', '('.self::$testControlCodeA.') - Control A for Implementation')
                 ->pause(300);
 
             // Select owner, department, scope
@@ -370,7 +370,7 @@ class ImplementationTest extends DuskTestCase
 
             // Select Implementation C from the dropdown
             $browser->within('.fi-modal', function ($modal) {
-                $modal->filamentSelect('recordId', '(' . self::$testImplCodeC . ') Implementation C');
+                $modal->filamentSelect('recordId', '('.self::$testImplCodeC.') Implementation C');
             });
             $browser->pause(500);
 

@@ -28,6 +28,7 @@ class AssetTest extends TestCase
     private function getTaxonomyTerm(string $parentSlug, string $termName): ?Taxonomy
     {
         $parent = Taxonomy::where('slug', $parentSlug)->first();
+
         return Taxonomy::where('parent_id', $parent->id)->where('name', $termName)->first();
     }
 

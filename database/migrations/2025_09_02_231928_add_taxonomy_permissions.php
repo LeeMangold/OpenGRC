@@ -1,9 +1,9 @@
 <?php
 
+use Aliziodev\LaravelTaxonomy\Models\Taxonomy;
 use Illuminate\Database\Migrations\Migration;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
-use Aliziodev\LaravelTaxonomy\Models\Taxonomy;
 
 return new class extends Migration
 {

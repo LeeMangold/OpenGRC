@@ -74,8 +74,7 @@ class ControlsRelationManager extends RelationManager
             ])
             ->actions([
                 Tables\Actions\ViewAction::make()
-                    ->url(fn ($record): string =>
-                        \App\Filament\Resources\ControlResource::getUrl('view', ['record' => $record])
+                    ->url(fn ($record): string => \App\Filament\Resources\ControlResource::getUrl('view', ['record' => $record])
                     ),
             ])
             ->bulkActions([

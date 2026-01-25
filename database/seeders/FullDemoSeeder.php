@@ -157,7 +157,7 @@ class FullDemoSeeder extends Seeder
 
                 // 9. Create a data request for each audit item
                 $dataRequest = DataRequest::create([
-                    'code' => 'DR-' . $control->code . '-' . str_pad($auditItem->id, 3, '0', STR_PAD_LEFT),
+                    'code' => 'DR-'.$control->code.'-'.str_pad($auditItem->id, 3, '0', STR_PAD_LEFT),
                     'created_by_id' => $user->id,
                     'assigned_to_id' => $users->random()->id,
                     'audit_id' => $audit->id,

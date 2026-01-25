@@ -15,7 +15,7 @@ use Filament\Widgets\TableWidget as BaseWidget;
 class VendorsTableWidget extends BaseWidget
 {
     protected static bool $isLazy = false;
-    
+
     protected static ?int $sort = 1;
 
     protected int|string|array $columnSpan = 'full';

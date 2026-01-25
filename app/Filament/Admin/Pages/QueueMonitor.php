@@ -32,7 +32,7 @@ class QueueMonitor extends Page implements HasTable
     public function table(Table $table): Table
     {
         return $table
-            ->query(QueueJob::query())                        
+            ->query(QueueJob::query())
             ->columns([
                 TextColumn::make('id')
                     ->label('ID')

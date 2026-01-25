@@ -4,11 +4,8 @@ namespace Tests\Feature;
 
 use App\Models\Application;
 use App\Models\Audit;
-use App\Models\AuditItem;
 use App\Models\Control;
 use App\Models\DataRequest;
-use App\Models\DataRequestResponse;
-use App\Models\FileAttachment;
 use App\Models\Implementation;
 use App\Models\Program;
 use App\Models\Risk;

@@ -2,12 +2,12 @@
 
 namespace App\Filament\Resources\PolicyResource\RelationManagers;
 
+use App\Filament\Resources\RiskResource;
+use App\Models\Risk;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use App\Models\Risk;
-use App\Filament\Resources\RiskResource;
 
 class RisksRelationManager extends RelationManager
 {

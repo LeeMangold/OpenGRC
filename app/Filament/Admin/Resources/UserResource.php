@@ -28,7 +28,7 @@ class UserResource extends Resource
 
     protected static ?string $navigationLabel = null;
 
-    protected static ?string $navigationGroup = "System";
+    protected static ?string $navigationGroup = 'System';
 
     protected static ?int $navigationSort = 10;
 
@@ -164,6 +164,7 @@ class UserResource extends Resource
     public static function createDefaultPassword(): string
     {
         $words = collect(range(1, 4))->map(fn () => Str::random(6))->implode('-');
+
         return $words;
     }
 

@@ -4,7 +4,6 @@ namespace App\Filament\Resources\AuditResource\Pages;
 
 use App\Enums\WorkflowStatus;
 use App\Filament\Resources\AuditResource;
-use App\Http\Controllers\QueueController;
 use App\Models\Audit;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Filament\Actions;

@@ -20,8 +20,8 @@ class ListRisks extends ListRecords
     #[On('filter-risks')]
     public function filterRisks(string $type, int $likelihood, int $impact): void
     {
-        $this->tableFilters[$type . '_likelihood']['value'] = (string) $likelihood;
-        $this->tableFilters[$type . '_impact']['value'] = (string) $impact;
+        $this->tableFilters[$type.'_likelihood']['value'] = (string) $likelihood;
+        $this->tableFilters[$type.'_impact']['value'] = (string) $impact;
         $this->hasActiveRiskFilters = true;
         $this->resetPage();
     }

@@ -3,11 +3,9 @@
 namespace App\Filament\Resources\PolicyResource\Pages;
 
 use App\Filament\Resources\PolicyResource;
-use App\Models\Policy;
 use Filament\Actions;
 use Filament\Resources\Pages\ViewRecord;
 use Illuminate\Contracts\Support\Htmlable;
-
 
 class ViewPolicy extends ViewRecord
 {
@@ -15,7 +13,7 @@ class ViewPolicy extends ViewRecord
 
     protected static string $view = 'filament.resources.policy-resource.pages.view-policy-document';
 
-    public function getTitle(): string | Htmlable
+    public function getTitle(): string|Htmlable
     {
         return $this->getRecord()->name;
     }

@@ -49,7 +49,7 @@ return new class extends Migration
         });
 
         // If table didn't exist before (fresh creation), seed the policy taxonomies and permissions
-        if (!$tableExists) {
+        if (! $tableExists) {
             $this->seedPolicyTaxonomies();
             $this->seedPolicyPermissions();
         }
@@ -148,7 +148,7 @@ return new class extends Migration
 
         foreach ($actions as $action) {
             $permission = Permission::where('name', "{$action} Policies")->first();
-            if (!$permission) {
+            if (! $permission) {
                 Permission::create([
                     'name' => "{$action} Policies",
                     'guard_name' => 'web',
@@ -169,7 +169,7 @@ return new class extends Migration
         if ($superAdmin) {
             $permissionsToAssign = ['List Policies', 'Create Policies', 'Read Policies', 'Update Policies', 'Delete Policies'];
             foreach ($permissionsToAssign as $permName) {
-                if (!$superAdmin->hasPermissionTo($permName)) {
+                if (! $superAdmin->hasPermissionTo($permName)) {
                     $superAdmin->givePermissionTo($permName);
                 }
             }
@@ -179,7 +179,7 @@ return new class extends Migration
         if ($regular) {
             $permissionsToAssign = ['List Policies', 'Read Policies'];
             foreach ($permissionsToAssign as $permName) {
-                if (!$regular->hasPermissionTo($permName)) {
+                if (! $regular->hasPermissionTo($permName)) {
                     $regular->givePermissionTo($permName);
                 }
             }
@@ -189,7 +189,7 @@ return new class extends Migration
         if ($securityAdmin) {
             $permissionsToAssign = ['List Policies', 'Create Policies', 'Read Policies', 'Update Policies'];
             foreach ($permissionsToAssign as $permName) {
-                if (!$securityAdmin->hasPermissionTo($permName)) {
+                if (! $securityAdmin->hasPermissionTo($permName)) {
                     $securityAdmin->givePermissionTo($permName);
                 }
             }

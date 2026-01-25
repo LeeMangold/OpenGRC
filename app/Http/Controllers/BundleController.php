@@ -9,7 +9,6 @@ use Filament\Notifications\Notification;
 use Http;
 use Illuminate\Http\Client\RequestException;
 use Storage;
-use Illuminate\Support\Facades\Log;
 
 class BundleController extends Controller
 {
@@ -95,11 +94,11 @@ class BundleController extends Controller
                     'content_type' => $response->header('Content-Type'),
                     'body_preview' => substr($response->body(), 0, 500),
                 ]);
-                throw new \Exception('Failed to decode JSON response from: ' . $bundle->repo_url);
+                throw new \Exception('Failed to decode JSON response from: '.$bundle->repo_url);
             }
 
             // Validate required fields exist
-            if (!isset($bundle_content['code']) || !isset($bundle_content['controls'])) {
+            if (! isset($bundle_content['code']) || ! isset($bundle_content['controls'])) {
                 \Log::error('Invalid bundle structure', [
                     'url' => $bundle->repo_url,
                     'keys' => array_keys($bundle_content),
@@ -116,8 +115,6 @@ class BundleController extends Controller
                     'description' => $bundle_content['description'],
                 ]
             );
-
-
 
             \Log::info('Importing bundle: '.$bundle->code);
 
@@ -151,9 +148,10 @@ class BundleController extends Controller
 
             Notification::make()
                 ->title('Bundle Import Failed')
-                ->body('Download failed: ' . $e->getMessage())
+                ->body('Download failed: '.$e->getMessage())
                 ->color('danger')
                 ->send();
+
             return;
         } catch (\Exception $e) {
             // Catch any other potential exceptions
@@ -166,9 +164,10 @@ class BundleController extends Controller
 
             Notification::make()
                 ->title('Bundle Import Failed')
-                ->body('An unexpected error occurred: ' . $e->getMessage())
+                ->body('An unexpected error occurred: '.$e->getMessage())
                 ->color('danger')
                 ->send();
+
             return;
         }
 
@@ -179,4 +178,3 @@ class BundleController extends Controller
 
     }
 }
-

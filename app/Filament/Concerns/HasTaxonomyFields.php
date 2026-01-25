@@ -38,7 +38,6 @@ trait HasTaxonomyFields
      * This handles cases where slugs might have been changed.
      *
      * @param  string  $type  The taxonomy type (e.g., 'department', 'scope')
-     * @return Taxonomy|null
      */
     protected static function getParentTaxonomy(string $type): ?Taxonomy
     {
@@ -52,7 +51,7 @@ trait HasTaxonomyFields
         }
 
         // Try plural version
-        $taxonomy = Taxonomy::where('slug', $type . 's')
+        $taxonomy = Taxonomy::where('slug', $type.'s')
             ->whereNull('parent_id')
             ->first();
 
@@ -70,7 +69,7 @@ trait HasTaxonomyFields
         }
 
         // Try plural type
-        $taxonomy = Taxonomy::where('type', $type . 's')
+        $taxonomy = Taxonomy::where('type', $type.'s')
             ->whereNull('parent_id')
             ->first();
 
@@ -101,7 +100,7 @@ trait HasTaxonomyFields
                 // Find the root taxonomy
                 $taxonomy = self::getParentTaxonomy($taxonomyType);
 
-                if (!$taxonomy) {
+                if (! $taxonomy) {
                     return [];
                 }
 
@@ -112,12 +111,16 @@ trait HasTaxonomyFields
                     ->toArray();
             })
             ->afterStateHydrated(function (Select $component, $state, $record) use ($taxonomyType) {
-                if (!$record) return;
+                if (! $record) {
+                    return;
+                }
 
                 // Find the taxonomy type
                 $taxonomy = self::getParentTaxonomy($taxonomyType);
 
-                if (!$taxonomy) return;
+                if (! $taxonomy) {
+                    return;
+                }
 
                 // Get the current taxonomy term for this type
                 $currentTerm = $record->taxonomies()
@@ -128,12 +131,16 @@ trait HasTaxonomyFields
             })
             ->saveRelationshipsUsing(function (Select $component, $state) use ($taxonomyType) {
                 $record = $component->getRecord();
-                if (!$record || !$state) return;
+                if (! $record || ! $state) {
+                    return;
+                }
 
                 // Find the taxonomy type
                 $taxonomy = self::getParentTaxonomy($taxonomyType);
 
-                if (!$taxonomy) return;
+                if (! $taxonomy) {
+                    return;
+                }
 
                 // Detach any existing terms of this taxonomy type
                 $existingTermIds = Taxonomy::where('parent_id', $taxonomy->id)->pluck('id');
@@ -184,7 +191,7 @@ trait HasTaxonomyFields
                     // Find the root taxonomy
                     $taxonomy = self::getParentTaxonomy($taxonomyType);
 
-                    if (!$taxonomy) {
+                    if (! $taxonomy) {
                         return $query->whereRaw('1 = 0'); // Return empty result
                     }
 
@@ -197,7 +204,7 @@ trait HasTaxonomyFields
             ->getOptionLabelFromRecordUsing(function (Taxonomy $record) {
                 // Show hierarchical format: Parent → Child
                 return $record->parent
-                    ? $record->parent->name . ' → ' . $record->name
+                    ? $record->parent->name.' → '.$record->name
                     : $record->name;
             })
             ->searchable()
@@ -230,7 +237,7 @@ trait HasTaxonomyFields
         ];
 
         foreach ($taxonomyFields as $fieldName => $taxonomyType) {
-            if (!isset($data[$fieldName]) || !$data[$fieldName]) {
+            if (! isset($data[$fieldName]) || ! $data[$fieldName]) {
                 continue;
             }
 
@@ -239,7 +246,7 @@ trait HasTaxonomyFields
             // Find the root taxonomy
             $taxonomy = self::getParentTaxonomy($taxonomyType);
 
-            if (!$taxonomy) {
+            if (! $taxonomy) {
                 continue;
             }
 
@@ -261,13 +268,12 @@ trait HasTaxonomyFields
      *
      * @param  Model  $record  The model instance
      * @param  string  $taxonomyType  The type identifier of the parent taxonomy
-     * @return Taxonomy|null
      */
     public static function getTaxonomyTerm($record, string $taxonomyType): ?Taxonomy
     {
         $parent = self::getParentTaxonomy($taxonomyType);
 
-        if (!$parent) {
+        if (! $parent) {
             return null;
         }
 

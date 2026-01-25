@@ -74,7 +74,7 @@ class VendorUsersRelationManager extends RelationManager
                         try {
                             Mail::send(new VendorInvitationMail($record));
                             Notification::make()
-                                ->title('Invitation sent to ' . $record->email)
+                                ->title('Invitation sent to '.$record->email)
                                 ->success()
                                 ->send();
                         } catch (\Exception $e) {
@@ -99,7 +99,7 @@ class VendorUsersRelationManager extends RelationManager
                             try {
                                 Mail::send(new VendorInvitationMail($record));
                                 Notification::make()
-                                    ->title('Invitation sent to ' . $record->email)
+                                    ->title('Invitation sent to '.$record->email)
                                     ->success()
                                     ->send();
                             } catch (\Exception $e) {
@@ -120,7 +120,7 @@ class VendorUsersRelationManager extends RelationManager
                             try {
                                 Mail::send(new VendorMagicLinkMail($record));
                                 Notification::make()
-                                    ->title('Magic link sent to ' . $record->email)
+                                    ->title('Magic link sent to '.$record->email)
                                     ->success()
                                     ->send();
                             } catch (\Exception $e) {
@@ -146,7 +146,7 @@ class VendorUsersRelationManager extends RelationManager
                             $record->vendor->update(['primary_contact_id' => $record->id]);
 
                             Notification::make()
-                                ->title($record->name . ' is now the primary contact')
+                                ->title($record->name.' is now the primary contact')
                                 ->success()
                                 ->send();
                         }),

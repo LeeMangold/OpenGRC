@@ -2,14 +2,11 @@
 
 namespace App\Filament\Resources\VendorResource\RelationManagers;
 
-use App\Enums\ApplicationStatus;
-use App\Enums\ApplicationType;
-use App\Models\Application;
+use App\Filament\Resources\ApplicationResource;
 use Filament\Forms;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
-use App\Filament\Resources\ApplicationResource;
 
 class ApplicationsRelationManager extends RelationManager
 {

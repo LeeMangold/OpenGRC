@@ -63,7 +63,7 @@ class ControlTest extends DuskTestCase
         // Create the test standard first
         $standard = $this->createTestStandard();
 
-        $this->browse(function (Browser $browser) use ($standard) {
+        $this->browse(function (Browser $browser) {
             $this->loginAs($browser);
 
             // ==========================================

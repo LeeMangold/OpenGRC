@@ -4,14 +4,13 @@ namespace App\Filament\Resources\ControlResource\Pages;
 
 use App\Filament\Concerns\HasTaxonomyFields;
 use App\Filament\Resources\ControlResource;
-use App\Models\Control;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
 class EditControl extends EditRecord
 {
     use HasTaxonomyFields;
-    
+
     protected static string $resource = ControlResource::class;
 
     protected function getHeaderActions(): array
@@ -33,7 +32,6 @@ class EditControl extends EditRecord
     {
         return [];
     }
-
 
     public function save(bool $shouldRedirect = true, bool $shouldSendSavedNotification = true): void
     {

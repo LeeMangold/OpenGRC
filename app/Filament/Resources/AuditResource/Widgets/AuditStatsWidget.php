@@ -8,9 +8,8 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class AuditStatsWidget extends BaseWidget
 {
-
     protected static bool $isLazy = false;
-    
+
     protected function getStats(): array
     {
         $totalAudited = \App\Models\Audit::count();

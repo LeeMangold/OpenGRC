@@ -2,13 +2,9 @@
 
 namespace App\Filament\Resources\ProgramResource\RelationManagers;
 
-use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class AuditsRelationManager extends RelationManager
 {
@@ -25,7 +21,7 @@ class AuditsRelationManager extends RelationManager
                     ->sortable()
                     ->badge()
                     ->searchable(),
-                 Tables\Columns\TextColumn::make('manager.name')
+                Tables\Columns\TextColumn::make('manager.name')
                     ->label(__('audit.table.columns.manager'))
                     ->default('Unassigned')
                     ->sortable(),
@@ -37,7 +33,7 @@ class AuditsRelationManager extends RelationManager
                     ->label(__('audit.table.columns.end_date'))
                     ->date()
                     ->sortable(),
-                
+
             ])
             ->filters([
                 //
@@ -45,15 +41,13 @@ class AuditsRelationManager extends RelationManager
             ->headerActions([
                 Tables\Actions\CreateAction::make()
                     ->label('Create New Audit')
-                    ->url(fn (): string =>
-                        \App\Filament\Resources\AuditResource::getUrl('create', ['default_program_id' => $this->ownerRecord->id])
-                ),
+                    ->url(fn (): string => \App\Filament\Resources\AuditResource::getUrl('create', ['default_program_id' => $this->ownerRecord->id])
+                    ),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make()
-                    ->url(fn ($record): string =>
-                        \App\Filament\Resources\AuditResource::getUrl('view', ['record' => $record])
-                ),
+                    ->url(fn ($record): string => \App\Filament\Resources\AuditResource::getUrl('view', ['record' => $record])
+                    ),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

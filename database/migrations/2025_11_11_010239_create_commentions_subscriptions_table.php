@@ -15,7 +15,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->unique([
-                'subscribable_type', 'subscribable_id', 'subscriber_type', 'subscriber_id'
+                'subscribable_type', 'subscribable_id', 'subscriber_type', 'subscriber_id',
             ], 'commentions_subscriptions_unique');
         });
     }
@@ -25,5 +25,3 @@ return new class extends Migration
         Schema::dropIfExists(config('commentions.tables.comment_subscriptions', 'comment_subscriptions'));
     }
 };
-
-

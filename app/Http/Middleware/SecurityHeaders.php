@@ -26,7 +26,7 @@ class SecurityHeaders
 
         // HSTS - only in production to avoid issues with local development
         if (app()->environment('production')) {
-            //$response->headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+            // $response->headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
         }
 
         // CSP only for HTML responses
@@ -73,7 +73,7 @@ class SecurityHeaders
             "img-src 'self' data: blob: https://ui-avatars.com".$storageEndpoints,
 
             // Forms - relaxed for OAuth routes that need to redirect to external clients
-            "form-action ".$formAction,
+            'form-action '.$formAction,
 
             // Prevent site from being embedded in frames (clickjacking protection)
             "frame-ancestors 'self'",

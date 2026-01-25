@@ -2,7 +2,6 @@
 
 namespace App\Policies;
 
-use App\Models\User;
 use App\Models\VendorDocument;
 use App\Models\VendorUser;
 use Illuminate\Contracts\Auth\Authenticatable;

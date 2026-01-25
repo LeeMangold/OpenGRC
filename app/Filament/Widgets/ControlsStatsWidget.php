@@ -10,7 +10,6 @@ use Filament\Widgets\ChartWidget;
 
 class ControlsStatsWidget extends ChartWidget
 {
-
     protected static bool $isLazy = false;
 
     protected static ?string $heading = null;
@@ -32,12 +31,12 @@ class ControlsStatsWidget extends ChartWidget
 
         // Single query with conditional aggregation for all effectiveness counts
         $counts = Control::whereIn('standard_id', $inScopeStandardIds)
-            ->selectRaw("
+            ->selectRaw('
                 SUM(CASE WHEN effectiveness = ? AND applicability = ? THEN 1 ELSE 0 END) as effective,
                 SUM(CASE WHEN effectiveness = ? AND applicability = ? THEN 1 ELSE 0 END) as partial,
                 SUM(CASE WHEN effectiveness = ? AND applicability = ? THEN 1 ELSE 0 END) as ineffective,
                 SUM(CASE WHEN effectiveness = ? AND applicability != ? THEN 1 ELSE 0 END) as unknown
-            ", [
+            ', [
                 Effectiveness::EFFECTIVE->value, Applicability::APPLICABLE->value,
                 Effectiveness::PARTIAL->value, Applicability::APPLICABLE->value,
                 Effectiveness::INEFFECTIVE->value, Applicability::APPLICABLE->value,

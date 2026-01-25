@@ -12,7 +12,6 @@ namespace App\Mcp\Tools;
  * Tools with custom behavior (like ManagePolicyTool with auto-code generation)
  * are defined in their own files.
  */
-
 class ManageApplicationTool extends BaseManageEntityTool {}
 class ManageAssetTool extends BaseManageEntityTool {}
 class ManageAuditTool extends BaseManageEntityTool {}

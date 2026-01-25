@@ -4,7 +4,6 @@ namespace App\Filament\Resources\RiskResource\Pages;
 
 use App\Enums\MitigationType;
 use App\Filament\Resources\RiskResource;
-use App\Models\Mitigation;
 use Filament\Actions;
 use Filament\Forms;
 use Filament\Resources\Pages\ViewRecord;

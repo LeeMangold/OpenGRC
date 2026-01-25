@@ -361,7 +361,7 @@ trait HasMcpSupport
      */
     protected static function deriveUrlPath(string $className): string
     {
-        return '/app/' . Str::kebab(Str::pluralStudly($className));
+        return '/app/'.Str::kebab(Str::pluralStudly($className));
     }
 
     /**
