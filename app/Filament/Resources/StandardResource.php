@@ -142,32 +142,38 @@ class StandardResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->deferLoading()
             ->columns([
                 TextColumn::make('code')
                     ->label(__('standard.table.columns.code'))
-                    ->searchable()
-                    ->sortable(),
+                    ->searchable()                    
+                    ->sortable()
+                    ->toggleable(),
                 TextColumn::make('name')
                     ->label(__('standard.table.columns.name'))
                     ->searchable()
                     ->sortable()
-                    ->wrap(true),
+                    ->wrap(true)
+                    ->toggleable(),
                 TextColumn::make('description')
                     ->label(__('standard.table.columns.description'))
                     ->html()
                     ->searchable()
                     ->sortable()
                     ->wrap(true)
-                    ->limit(250),
+                    ->limit(250)
+                    ->toggleable(),
                 TextColumn::make('authority')
                     ->label(__('standard.table.columns.authority'))
                     ->searchable()
                     ->sortable()
-                    ->wrap(true),
+                    ->wrap(true)
+                    ->toggleable(),
                 TextColumn::make('status')
                     ->label(__('standard.table.columns.status'))
                     ->badge()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
             ])
             ->filters([
                 SelectFilter::make('status')

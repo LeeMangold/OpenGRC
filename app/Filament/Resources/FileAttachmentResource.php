@@ -62,6 +62,7 @@ class FileAttachmentResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->deferLoading()
             ->columns([
                 TextColumn::make('description')
                     ->searchable()

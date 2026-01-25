@@ -150,6 +150,7 @@ class RiskResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->deferLoading()
             ->defaultSort('residual_risk', 'desc')
             ->emptyStateHeading('No Risks Identified Yet')
             ->emptyStateDescription('Add and analyse your first risk by clicking the "Track New Risk" button above.')

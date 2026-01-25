@@ -171,6 +171,7 @@ class SurveyResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->deferLoading()
             ->columns([
                 TextColumn::make('display_title')
                     ->label(__('survey.survey.table.columns.title'))

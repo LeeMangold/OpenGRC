@@ -219,6 +219,7 @@ class TrustCenterAccessRequestResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->deferLoading()
             ->columns([
                 TextColumn::make('requester_name')
                     ->label(__('Name'))
