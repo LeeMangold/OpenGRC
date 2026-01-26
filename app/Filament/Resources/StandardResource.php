@@ -146,34 +146,29 @@ class StandardResource extends Resource
             ->columns([
                 TextColumn::make('code')
                     ->label(__('standard.table.columns.code'))
-                    ->searchable()                    
-                    ->sortable()
-                    ->toggleable(),
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('name')
                     ->label(__('standard.table.columns.name'))
                     ->searchable()
                     ->sortable()
-                    ->wrap(true)
-                    ->toggleable(),
+                    ->wrap(true),
                 TextColumn::make('description')
                     ->label(__('standard.table.columns.description'))
                     ->html()
                     ->searchable()
                     ->sortable()
                     ->wrap(true)
-                    ->limit(250)
-                    ->toggleable(),
+                    ->limit(250),
                 TextColumn::make('authority')
                     ->label(__('standard.table.columns.authority'))
                     ->searchable()
                     ->sortable()
-                    ->wrap(true)
-                    ->toggleable(),
+                    ->wrap(true),
                 TextColumn::make('status')
                     ->label(__('standard.table.columns.status'))
                     ->badge()
-                    ->sortable()
-                    ->toggleable(),
+                    ->sortable(),
             ])
             ->filters([
                 SelectFilter::make('status')

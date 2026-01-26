@@ -2,14 +2,15 @@
 
 namespace App\Filament\Resources;
 
-use Aliziodev\LaravelTaxonomy\Models\Taxonomy;
 use App\Enums\Applicability;
 use App\Enums\ControlCategory;
 use App\Enums\ControlEnforcementCategory;
 use App\Enums\ControlType;
 use App\Enums\Effectiveness;
+use App\Filament\Columns\TaxonomyColumn;
 use App\Filament\Concerns\HasTaxonomyFields;
 use App\Filament\Exports\ControlExporter;
+use App\Filament\Filters\TaxonomySelectFilter;
 use App\Filament\Resources\ControlResource\Pages\CreateControl;
 use App\Filament\Resources\ControlResource\Pages\EditControl;
 use App\Filament\Resources\ControlResource\Pages\ListControls;
@@ -98,7 +99,7 @@ class ControlResource extends Resource
                     }),
                 Select::make('standard_id')
                     ->label(__('control.form.standard.label'))
-                    ->searchable()
+
                     ->options(Standard::pluck('name', 'id')->toArray())
                     ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('control.form.standard.tooltip'))
                     ->default(function (Get $get, Select $component) {
@@ -133,7 +134,7 @@ class ControlResource extends Resource
                 Select::make('control_owner_id')
                     ->label('Control Owner')
                     ->options(User::pluck('name', 'id')->toArray())
-                    ->searchable()
+
                     ->nullable()
                     ->columnSpan(1),
                 self::taxonomySelect('Department', 'department')
@@ -178,104 +179,46 @@ class ControlResource extends Resource
             ])))
             ->columns([
                 TextColumn::make('code')
-                    ->label(__('control.table.columns.code'))
-                    ->sortable()
-                    ->searchable(),
+                    ->label(__('control.table.columns.code')),
                 TextColumn::make('title')
                     ->label(__('control.table.columns.title'))
-                    ->sortable()
-                    ->searchable()
                     ->wrap(),
                 TextColumn::make('standard.name')
                     ->label(__('control.table.columns.standard'))
-                    ->wrap()
-                    ->sortable(),
+                    ->wrap(),
                 TextColumn::make('type')
-                    ->label(__('control.table.columns.type'))
-                    ->sortable(),
+                    ->label(__('control.table.columns.type')),
                 TextColumn::make('category')
-                    ->label(__('control.table.columns.category'))
-                    ->sortable(),
+                    ->label(__('control.table.columns.category')),
                 TextColumn::make('enforcement')
-                    ->label(__('control.table.columns.enforcement'))
-                    ->sortable(),
+                    ->label(__('control.table.columns.enforcement')),
                 TextColumn::make('LatestAuditEffectiveness')
                     ->label(__('control.table.columns.effectiveness'))
                     ->badge()
-                    ->sortable()
                     ->default(function (Control $record) {
                         return $record->getEffectiveness();
                     }),
                 TextColumn::make('applicability')
                     ->label(__('control.table.columns.applicability'))
-                    ->sortable()
                     ->badge(),
                 TextColumn::make('LatestAuditDate')
                     ->label(__('control.table.columns.assessed'))
-                    ->sortable()
                     ->default(function (Control $record) {
                         return $record->getEffectivenessDate();
                     }),
                 TextColumn::make('controlOwner.name')
-                    ->label('Owner')
-                    ->sortable()
-                    ->searchable()
-                    ->toggleable(),
-                TextColumn::make('taxonomy_department')
-                    ->label('Department')
-                    ->getStateUsing(function (Control $record) {
-                        return self::getTaxonomyTerm($record, 'department')?->name ?? 'Not assigned';
-                    })
-                    ->sortable(query: function ($query, string $direction): void {
-                        $departmentParent = Taxonomy::where('slug', 'department')->whereNull('parent_id')->first();
-                        if (! $departmentParent) {
-                            return;
-                        }
-
-                        $query->leftJoin('taxonomables as dept_taxonomables', function ($join) {
-                            $join->on('controls.id', '=', 'dept_taxonomables.taxonomable_id')
-                                ->where('dept_taxonomables.taxonomable_type', '=', 'App\\Models\\Control');
-                        })
-                            ->leftJoin('taxonomies as dept_taxonomies', function ($join) use ($departmentParent) {
-                                $join->on('dept_taxonomables.taxonomy_id', '=', 'dept_taxonomies.id')
-                                    ->where('dept_taxonomies.parent_id', '=', $departmentParent->id);
-                            })
-                            ->orderBy('dept_taxonomies.name', $direction)
-                            ->select('controls.*');
-                    })
-                    ->toggleable(),
-                TextColumn::make('taxonomy_scope')
-                    ->label('Scope')
-                    ->getStateUsing(function (Control $record) {
-                        return self::getTaxonomyTerm($record, 'scope')?->name ?? 'Not assigned';
-                    })
-                    ->sortable(query: function ($query, string $direction): void {
-                        $scopeParent = Taxonomy::where('slug', 'scope')->whereNull('parent_id')->first();
-                        if (! $scopeParent) {
-                            return;
-                        }
-
-                        $query->leftJoin('taxonomables as scope_taxonomables', function ($join) {
-                            $join->on('controls.id', '=', 'scope_taxonomables.taxonomable_id')
-                                ->where('scope_taxonomables.taxonomable_type', '=', 'App\\Models\\Control');
-                        })
-                            ->leftJoin('taxonomies as scope_taxonomies', function ($join) use ($scopeParent) {
-                                $join->on('scope_taxonomables.taxonomy_id', '=', 'scope_taxonomies.id')
-                                    ->where('scope_taxonomies.parent_id', '=', $scopeParent->id);
-                            })
-                            ->orderBy('scope_taxonomies.name', $direction)
-                            ->select('controls.*');
-                    })
-                    ->toggleable(),
+                    ->label('Owner'),
+                TaxonomyColumn::make('department'),
+                TaxonomyColumn::make('scope'),
                 TextColumn::make('created_at')
                     ->label(__('control.table.columns.created_at'))
                     ->dateTime()
-                    ->sortable()
+
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
                     ->label(__('control.table.columns.updated_at'))
                     ->dateTime()
-                    ->sortable()
+
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
@@ -301,52 +244,8 @@ class ControlResource extends Resource
                 SelectFilter::make('control_owner_id')
                     ->label('Owner')
                     ->options(User::pluck('name', 'id')->toArray()),
-                SelectFilter::make('department')
-                    ->label('Department')
-                    ->options(function () {
-                        $taxonomy = self::getParentTaxonomy('department');
-
-                        if (! $taxonomy) {
-                            return [];
-                        }
-
-                        return Taxonomy::where('parent_id', $taxonomy->id)
-                            ->orderBy('name')
-                            ->pluck('name', 'id')
-                            ->toArray();
-                    })
-                    ->query(function ($query, array $data) {
-                        if (! $data['value']) {
-                            return;
-                        }
-
-                        $query->whereHas('taxonomies', function ($query) use ($data) {
-                            $query->where('taxonomy_id', $data['value']);
-                        });
-                    }),
-                SelectFilter::make('scope')
-                    ->label('Scope')
-                    ->options(function () {
-                        $taxonomy = self::getParentTaxonomy('scope');
-
-                        if (! $taxonomy) {
-                            return [];
-                        }
-
-                        return Taxonomy::where('parent_id', $taxonomy->id)
-                            ->orderBy('name')
-                            ->pluck('name', 'id')
-                            ->toArray();
-                    })
-                    ->query(function ($query, array $data) {
-                        if (! $data['value']) {
-                            return;
-                        }
-
-                        $query->whereHas('taxonomies', function ($query) use ($data) {
-                            $query->where('taxonomy_id', $data['value']);
-                        });
-                    }),
+                TaxonomySelectFilter::make('department'),
+                TaxonomySelectFilter::make('scope'),
             ])
             ->headerActions([
                 ExportAction::make()

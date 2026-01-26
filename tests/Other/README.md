@@ -1,0 +1,1 @@
+The files in this folder are fo use with LLM and MCP servers for testing purpose.
