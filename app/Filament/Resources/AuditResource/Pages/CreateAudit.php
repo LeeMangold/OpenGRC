@@ -143,12 +143,12 @@ class CreateAudit extends CreateRecord
                                     $controlModels = Control::where('standard_id', '=', $standard_id)->get();
                                     $controls = $controlModels->mapWithKeys(function ($control) {
                                         return [$control->id => $control->code.' - '.$control->title];
-                                    });
+                                    })->toArray();
                                     $metadata = $controlModels->mapWithKeys(function ($control) {
                                         $latestAudit = $control->latestCompletedAuditItem();
 
                                         return [$control->id => [
-                                            'effectiveness' => $control->effectiveness,
+                                            'effectiveness' => $control->getEffectiveness(),
                                             'applicability' => $control->applicability,
                                             'control_owner_id' => $control->control_owner_id,
                                             'standard_id' => $control->standard_id,
@@ -166,7 +166,7 @@ class CreateAudit extends CreateRecord
                                             ->first();
 
                                         return [$implementation->id => [
-                                            'effectiveness' => $implementation->effectiveness,
+                                            'effectiveness' => $implementation->getEffectiveness(),
                                             'status' => $implementation->status,
                                             'implementation_owner_id' => $implementation->implementation_owner_id,
                                             'last_assessed_at' => $latestAudit?->updated_at?->toDateTimeString(),
@@ -179,12 +179,12 @@ class CreateAudit extends CreateRecord
                                         $controlModels = $program->getAllControls();
                                         $controls = $controlModels->mapWithKeys(function ($control) {
                                             return [$control->id => $control->code.' - '.$control->title];
-                                        });
+                                        })->toArray();
                                         $metadata = $controlModels->mapWithKeys(function ($control) {
                                             $latestAudit = $control->latestCompletedAuditItem();
 
                                             return [$control->id => [
-                                                'effectiveness' => $control->effectiveness,
+                                                'effectiveness' => $control->getEffectiveness(),
                                                 'applicability' => $control->applicability,
                                                 'control_owner_id' => $control->control_owner_id,
                                                 'standard_id' => $control->standard_id,
@@ -210,7 +210,7 @@ class CreateAudit extends CreateRecord
                                         ->addDropdownAction(
                                             name: 'randomSelect',
                                             label: 'Random Select',
-                                            callback: ActionableMultiselectTwoSides::randomSelector(),
+                                            type: 'random',
                                             options: [
                                                 ['label' => 'Random 5', 'count' => 5],
                                                 ['label' => 'Random 10', 'count' => 10],
@@ -221,7 +221,7 @@ class CreateAudit extends CreateRecord
                                         ->addDropdownAction(
                                             name: 'randomUnassessed',
                                             label: 'Random (Unassessed)',
-                                            callback: ActionableMultiselectTwoSides::randomUnassessedSelector(),
+                                            type: 'randomUnassessed',
                                             options: [
                                                 ['label' => '5 Unassessed', 'count' => 5],
                                                 ['label' => '10 Unassessed', 'count' => 10],
@@ -232,7 +232,7 @@ class CreateAudit extends CreateRecord
                                         ->addDropdownAction(
                                             name: 'oldestAssessed',
                                             label: 'Oldest Assessed',
-                                            callback: ActionableMultiselectTwoSides::oldestAssessedSelector(),
+                                            type: 'oldest',
                                             options: [
                                                 ['label' => '5 Oldest', 'count' => 5],
                                                 ['label' => '10 Oldest', 'count' => 10],

@@ -2,10 +2,7 @@
 
 namespace App\Filament\Forms\Components;
 
-use BackedEnum;
-use Closure;
 use Filament\Forms\Components\Select;
-use Filament\Schemas\Components\Component;
 
 /**
  * A two-sided multiselect component with customizable action buttons.
@@ -42,14 +39,14 @@ class ActionableMultiselectTwoSides extends Select
     /**
      * Registered simple action buttons
      *
-     * @var array<string, array{label: string, callback: Closure, icon: string|null, color: string, count: int}>
+     * @var array<string, array{label: string, type: string, icon: string|null, color: string, count: int}>
      */
     protected array $actions = [];
 
     /**
      * Registered dropdown actions
      *
-     * @var array<string, array{label: string, callback: Closure, icon: string|null, color: string, options: array}>
+     * @var array<string, array{label: string, type: string, icon: string|null, color: string, options: array}>
      */
     protected array $dropdownActions = [];
 
@@ -63,40 +60,18 @@ class ActionableMultiselectTwoSides extends Select
         // Set default labels
         $this->selectableLabel = 'Available';
         $this->selectedLabel = 'Selected';
+    }
 
-        // Register Livewire listeners for all interactions
-        $this->registerListeners([
-            // Single item selection
-            'ms-two-sides::selectOption' => [
-                fn (Component $component, string $statePath, string $value) => $statePath === $component->getStatePath()
-                    ? $this->selectOption($value)
-                    : null,
-            ],
-            // Single item deselection
-            'ms-two-sides::unselectOption' => [
-                fn (Component $component, string $statePath, string $value) => $statePath === $component->getStatePath()
-                    ? $this->unselectOption($value)
-                    : null,
-            ],
-            // Select all items
-            'ms-two-sides::selectAllOptions' => [
-                fn (Component $component, string $statePath) => $statePath === $component->getStatePath()
-                    ? $this->selectAll()
-                    : null,
-            ],
-            // Unselect all items
-            'ms-two-sides::unselectAllOptions' => [
-                fn (Component $component, string $statePath) => $statePath === $component->getStatePath()
-                    ? $this->unselectAll()
-                    : null,
-            ],
-            // Execute custom action
-            'ms-two-sides::executeAction' => [
-                fn (Component $component, string $statePath, string $actionName, int $count = 10) => $statePath === $component->getStatePath()
-                    ? $this->executeAction($actionName, $count)
-                    : null,
-            ],
-        ]);
+    /**
+     * Get options formatted for JavaScript consumption
+     *
+     * @return array<string, string>
+     */
+    public function getOptionsForJs(): array
+    {
+        return collect($this->getOptions())
+            ->mapWithKeys(fn ($label, $value) => [(string) $value => $label])
+            ->toArray();
     }
 
     // =========================================================================
@@ -263,24 +238,26 @@ class ActionableMultiselectTwoSides extends Select
     /**
      * Add a simple action button
      *
+     * Available types: 'random', 'randomUnassessed', 'oldest', 'oldestPreviouslyAssessed'
+     *
      * @param  string  $name  Unique identifier for the action
      * @param  string  $label  Display label for the button
-     * @param  Closure  $callback  Function that receives (array $selectableIds, array $metadata, int $count) and returns array of IDs to select
+     * @param  string  $type  The type of selection algorithm (random, randomUnassessed, oldest, oldestPreviouslyAssessed)
      * @param  string|null  $icon  Heroicon name (e.g., 'heroicon-o-sparkles')
      * @param  string  $color  Tailwind color (e.g., 'primary', 'gray', 'danger')
-     * @param  int  $count  Default count parameter passed to callback
+     * @param  int  $count  Default count parameter
      */
     public function addAction(
         string $name,
         string $label,
-        Closure $callback,
+        string $type = 'random',
         ?string $icon = null,
         string $color = 'gray',
         int $count = 10
     ): static {
         $this->actions[$name] = [
             'label' => $label,
-            'callback' => $callback,
+            'type' => $type,
             'icon' => $icon,
             'color' => $color,
             'count' => $count,
@@ -292,9 +269,11 @@ class ActionableMultiselectTwoSides extends Select
     /**
      * Add a dropdown action with sub-options
      *
+     * Available types: 'random', 'randomUnassessed', 'oldest', 'oldestPreviouslyAssessed'
+     *
      * @param  string  $name  Unique identifier for the action
      * @param  string  $label  Display label for the dropdown button
-     * @param  Closure  $callback  Function that receives (array $selectableIds, array $metadata, int $count) and returns array of IDs to select
+     * @param  string  $type  The type of selection algorithm (random, randomUnassessed, oldest, oldestPreviouslyAssessed)
      * @param  array  $options  Array of dropdown options, each with 'label' and 'count' keys
      * @param  string|null  $icon  Heroicon name
      * @param  string  $color  Tailwind color
@@ -302,14 +281,14 @@ class ActionableMultiselectTwoSides extends Select
     public function addDropdownAction(
         string $name,
         string $label,
-        Closure $callback,
+        string $type,
         array $options,
         ?string $icon = null,
         string $color = 'gray'
     ): static {
         $this->dropdownActions[$name] = [
             'label' => $label,
-            'callback' => $callback,
+            'type' => $type,
             'icon' => $icon,
             'color' => $color,
             'options' => $options,
@@ -321,7 +300,7 @@ class ActionableMultiselectTwoSides extends Select
     /**
      * Get all registered simple actions
      *
-     * @return array<string, array{label: string, callback: Closure, icon: string|null, color: string, count: int}>
+     * @return array<string, array{label: string, type: string, icon: string|null, color: string, count: int}>
      */
     public function getActions(): array
     {
@@ -331,258 +310,10 @@ class ActionableMultiselectTwoSides extends Select
     /**
      * Get all registered dropdown actions
      *
-     * @return array<string, array{label: string, callback: Closure, icon: string|null, color: string, options: array}>
+     * @return array<string, array{label: string, type: string, icon: string|null, color: string, options: array}>
      */
     public function getDropdownActions(): array
     {
         return $this->dropdownActions;
-    }
-
-    /**
-     * Execute a registered action
-     */
-    public function executeAction(string $actionName, int $count = 10): void
-    {
-        // Check simple actions first, then dropdown actions
-        if (isset($this->actions[$actionName])) {
-            $action = $this->actions[$actionName];
-        } elseif (isset($this->dropdownActions[$actionName])) {
-            $action = $this->dropdownActions[$actionName];
-        } else {
-            return;
-        }
-
-        $callback = $action['callback'];
-
-        // Get currently selectable options (not yet selected)
-        $selectableOptions = $this->getSelectableOptions();
-        $selectableIds = array_keys($selectableOptions);
-
-        // Get metadata for selectable options only
-        $allMetadata = $this->getOptionsMetadata();
-        $selectableMetadata = array_intersect_key($allMetadata, array_flip($selectableIds));
-
-        // Execute the callback to get IDs to select
-        $idsToSelect = $this->evaluate($callback, [
-            'selectableIds' => $selectableIds,
-            'metadata' => $selectableMetadata,
-            'count' => $count,
-        ]);
-
-        // Add selected IDs to current state
-        if (is_array($idsToSelect) && count($idsToSelect) > 0) {
-            $currentState = $this->getState() ?? [];
-            // Convert to strings for consistency
-            $idsToSelect = array_map('strval', $idsToSelect);
-            $newState = array_unique(array_merge($currentState, $idsToSelect));
-            $this->state($newState);
-        }
-    }
-
-    // =========================================================================
-    // BUILT-IN SELECTORS
-    // =========================================================================
-
-    /**
-     * Helper: Select random items from available options
-     */
-    public static function randomSelector(): Closure
-    {
-        return function (array $selectableIds, array $metadata, int $count): array {
-            if (empty($selectableIds)) {
-                return [];
-            }
-
-            $count = min($count, count($selectableIds));
-            if ($count <= 0) {
-                return [];
-            }
-
-            $randomKeys = array_rand(array_flip($selectableIds), $count);
-
-            return is_array($randomKeys) ? $randomKeys : [$randomKeys];
-        };
-    }
-
-    /**
-     * Helper: Select random items where effectiveness is UNKNOWN/Not Assessed
-     */
-    public static function randomUnassessedSelector(): Closure
-    {
-        return function (array $selectableIds, array $metadata, int $count): array {
-            // Filter to only items with UNKNOWN effectiveness
-            $unassessed = array_filter($selectableIds, function ($id) use ($metadata) {
-                if (! isset($metadata[$id]['effectiveness'])) {
-                    return true; // Include if no effectiveness data (treat as unknown)
-                }
-                $effectiveness = $metadata[$id]['effectiveness'];
-                // Handle both enum objects and string values
-                if ($effectiveness instanceof BackedEnum) {
-                    $effectivenessValue = $effectiveness->value;
-                } elseif (is_object($effectiveness) && property_exists($effectiveness, 'value')) {
-                    $effectivenessValue = $effectiveness->value;
-                } else {
-                    $effectivenessValue = $effectiveness;
-                }
-
-                return in_array($effectivenessValue, ['Not Assessed', 'UNKNOWN', 'Unknown']);
-            });
-
-            if (empty($unassessed)) {
-                return [];
-            }
-
-            // If count is 0 or negative, return all unassessed
-            if ($count <= 0) {
-                return array_values($unassessed);
-            }
-
-            $count = min($count, count($unassessed));
-            $randomKeys = array_rand(array_flip($unassessed), $count);
-
-            return is_array($randomKeys) ? $randomKeys : [$randomKeys];
-        };
-    }
-
-    /**
-     * Helper: Select all items matching a filter
-     */
-    public static function filterSelector(string $field, mixed $value): Closure
-    {
-        return function (array $selectableIds, array $metadata, int $count) use ($field, $value): array {
-            $filtered = array_filter($selectableIds, function ($id) use ($metadata, $field, $value) {
-                if (! isset($metadata[$id][$field])) {
-                    return false;
-                }
-
-                $fieldValue = $metadata[$id][$field];
-
-                // Handle enum objects
-                if ($fieldValue instanceof BackedEnum) {
-                    $fieldValue = $fieldValue->value;
-                } elseif (is_object($fieldValue) && property_exists($fieldValue, 'value')) {
-                    $fieldValue = $fieldValue->value;
-                }
-
-                // Handle array of values (like taxonomy_ids)
-                if (is_array($fieldValue)) {
-                    return in_array($value, $fieldValue);
-                }
-
-                return $fieldValue == $value;
-            });
-
-            $filtered = array_values($filtered);
-
-            // If count is 0 or negative, return all filtered
-            if ($count <= 0) {
-                return $filtered;
-            }
-
-            // Return random selection from filtered
-            if (empty($filtered)) {
-                return [];
-            }
-
-            $count = min($count, count($filtered));
-            $randomKeys = array_rand(array_flip($filtered), $count);
-
-            return is_array($randomKeys) ? $randomKeys : [$randomKeys];
-        };
-    }
-
-    /**
-     * Helper: Select items by owner
-     */
-    public static function ownerSelector(int $ownerId): Closure
-    {
-        return function (array $selectableIds, array $metadata, int $count) use ($ownerId): array {
-            $filtered = array_filter($selectableIds, function ($id) use ($metadata, $ownerId) {
-                $ownerKey = $metadata[$id]['control_owner_id']
-                    ?? $metadata[$id]['implementation_owner_id']
-                    ?? null;
-
-                return $ownerKey == $ownerId;
-            });
-
-            return array_values($filtered);
-        };
-    }
-
-    /**
-     * Helper: Select items sorted by oldest assessed date (oldest first)
-     * Items never assessed are prioritized, then sorted by last_assessed_at ascending
-     */
-    public static function oldestAssessedSelector(): Closure
-    {
-        return function (array $selectableIds, array $metadata, int $count): array {
-            if (empty($selectableIds)) {
-                return [];
-            }
-
-            // Separate never assessed from assessed
-            $neverAssessed = [];
-            $assessed = [];
-
-            foreach ($selectableIds as $id) {
-                $lastAssessed = $metadata[$id]['last_assessed_at'] ?? null;
-
-                if ($lastAssessed === null) {
-                    $neverAssessed[] = $id;
-                } else {
-                    $assessed[$id] = $lastAssessed;
-                }
-            }
-
-            // Sort assessed by date ascending (oldest first)
-            asort($assessed);
-
-            // Combine: never assessed first, then oldest assessed
-            $sorted = array_merge($neverAssessed, array_keys($assessed));
-
-            // If count is 0 or negative, return all sorted
-            if ($count <= 0) {
-                return $sorted;
-            }
-
-            return array_slice($sorted, 0, $count);
-        };
-    }
-
-    /**
-     * Helper: Select items that were assessed (have a last_assessed_at date),
-     * sorted by oldest assessed date first
-     */
-    public static function oldestPreviouslyAssessedSelector(): Closure
-    {
-        return function (array $selectableIds, array $metadata, int $count): array {
-            if (empty($selectableIds)) {
-                return [];
-            }
-
-            // Filter to only items that have been assessed
-            $assessed = [];
-            foreach ($selectableIds as $id) {
-                $lastAssessed = $metadata[$id]['last_assessed_at'] ?? null;
-                if ($lastAssessed !== null) {
-                    $assessed[$id] = $lastAssessed;
-                }
-            }
-
-            if (empty($assessed)) {
-                return [];
-            }
-
-            // Sort by date ascending (oldest first)
-            asort($assessed);
-            $sorted = array_keys($assessed);
-
-            // If count is 0 or negative, return all sorted
-            if ($count <= 0) {
-                return $sorted;
-            }
-
-            return array_slice($sorted, 0, $count);
-        };
     }
 }
