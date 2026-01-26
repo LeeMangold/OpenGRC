@@ -147,11 +147,15 @@ class EditAuditItem extends EditRecord
                             ->content(fn (AuditItem $record): ?string => $record->auditable->title),
                         Placeholder::make('control_desc')
                             ->label('Description')
-                            ->content(fn (AuditItem $record): HtmlString => new HtmlString(optional($record->auditable)->description ?? ''))
+                            ->content(fn (AuditItem $record): HtmlString => new HtmlString(optional($record->auditable)->description ?? optional($record->auditable)->details ?? ''))
                             ->columnSpanFull(),
                         Placeholder::make('control_discussion')
-                            ->label('Discussion')
-                            ->content(fn (AuditItem $record): HtmlString => new HtmlString(optional($record->auditable)->discussion ?? ''))
+                            ->label($this->record->audit->audit_type == 'implementations' ? 'Test Procedure' : 'Discussion')
+                            ->content(fn (AuditItem $record): HtmlString => new HtmlString(
+                                $record->audit->audit_type == 'implementations'
+                                    ? (optional($record->auditable)->test_procedure ?? '<em>No test procedure provided.</em>')
+                                    : (optional($record->auditable)->discussion ?? '<em>No discussion provided.</em>')
+                            ))
                             ->columnSpanFull(),
 
                     ])->columns(2)->collapsible(true),
@@ -187,12 +191,11 @@ class EditAuditItem extends EditRecord
                 Section::make('Audit Evidence')
                     ->columnSpanFull()
                     ->schema([
-                        // Todo: This can be replaced with a Repeater component when nested relationships are
-                        // supported in Filament - potentially in v4.x. Or, maybe do a footer widget.
+                        // When auditing controls, show associated implementations
                         Placeholder::make('control.implementations')
                             ->hidden($this->record->audit->audit_type == 'implementations')
                             ->label('Documented Implementations')
-                            ->view('tables.implementations-table', ['implementations' => $this->record->auditable->implementations])
+                            ->view('tables.implementations-table', ['implementations' => $this->record->auditable->implementations ?? collect()])
                             ->columnSpanFull()
                             ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Implementations that are related to this control.'),
                         Placeholder::make('data_requests')
