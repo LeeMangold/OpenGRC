@@ -2,7 +2,7 @@
 @php
     use Illuminate\Support\Facades\Storage;
     use App\Http\Controllers\PdfHelper;
-    use App\Filament\Resources\RiskResource;
+    use App\Enums\RiskLevel;
     use App\Filament\Resources\RiskResource\Widgets\InherentRisk;
 @endphp
 
@@ -214,7 +214,7 @@
                                             $actualLikelihood = $likelihoodIndex + 1; // Convert to 1-5 scale
                                             // Use weight 200 for empty cells, 500 for cells with risks
                                             $colorWeight = $count > 0 ? 500 : 200;
-                                            $colorClass = RiskResource::getRiskColor($actualLikelihood, $actualImpact, $colorWeight);
+                                            $colorClass = RiskLevel::getColor($actualLikelihood, $actualImpact, $colorWeight);
                                             $colorClass = str_replace('bg-', '', $colorClass);
                                             $bgColor = match($colorClass) {
                                                 'red-500' => '#dc3545',
@@ -279,7 +279,7 @@
                                             $actualLikelihood = $likelihoodIndex + 1; // Convert to 1-5 scale
                                             // Use weight 200 for empty cells, 500 for cells with risks
                                             $colorWeight = $count > 0 ? 500 : 200;
-                                            $colorClass = RiskResource::getRiskColor($actualLikelihood, $actualImpact, $colorWeight);
+                                            $colorClass = RiskLevel::getColor($actualLikelihood, $actualImpact, $colorWeight);
                                             $colorClass = str_replace('bg-', '', $colorClass);
                                             $bgColor = match($colorClass) {
                                                 'red-500' => '#dc3545',
@@ -327,7 +327,7 @@
                 @foreach($risks as $risk)
                     @php
                         // Get heatmap colors for the cells
-                        $inherentColorClass = RiskResource::getRiskColor($risk->inherent_likelihood, $risk->inherent_impact, 500);
+                        $inherentColorClass = RiskLevel::getColor($risk->inherent_likelihood, $risk->inherent_impact, 500);
                         $inherentColorClass = str_replace('bg-', '', $inherentColorClass);
                         $inherentBgColor = match($inherentColorClass) {
                             'red-500' => '#dc3545',
@@ -339,7 +339,7 @@
                         };
                         $inherentTextColor = in_array($inherentColorClass, ['yellow-500']) ? '#000' : '#fff';
 
-                        $residualColorClass = RiskResource::getRiskColor($risk->residual_likelihood, $risk->residual_impact, 500);
+                        $residualColorClass = RiskLevel::getColor($risk->residual_likelihood, $risk->residual_impact, 500);
                         $residualColorClass = str_replace('bg-', '', $residualColorClass);
                         $residualBgColor = match($residualColorClass) {
                             'red-500' => '#dc3545',

@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\PolicyResource\RelationManagers;
 
-use App\Filament\Resources\RiskResource;
+use App\Enums\RiskLevel;
 use App\Models\Risk;
 use Filament\Actions\AttachAction;
 use Filament\Actions\BulkActionGroup;
@@ -33,7 +33,7 @@ class RisksRelationManager extends RelationManager
                     ->label('Residual Risk')
                     ->badge()
                     ->color(function (Risk $record) {
-                        return RiskResource::getRiskColor($record->residual_likelihood, $record->residual_impact);
+                        return RiskLevel::getColor($record->residual_likelihood, $record->residual_impact);
                     })
                     ->sortable(),
 

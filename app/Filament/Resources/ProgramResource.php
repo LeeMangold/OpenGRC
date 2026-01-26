@@ -2,9 +2,10 @@
 
 namespace App\Filament\Resources;
 
-use Aliziodev\LaravelTaxonomy\Models\Taxonomy;
+use App\Filament\Columns\TaxonomyColumn;
 use App\Filament\Concerns\HasTaxonomyFields;
 use App\Filament\Exports\ProgramExporter;
+use App\Filament\Filters\TaxonomySelectFilter;
 use App\Filament\Resources\ProgramResource\Pages\CreateProgram;
 use App\Filament\Resources\ProgramResource\Pages\EditProgram;
 use App\Filament\Resources\ProgramResource\Pages\ListPrograms;
@@ -26,7 +27,6 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class ProgramResource extends Resource
@@ -118,51 +118,9 @@ class ProgramResource extends Resource
                 TextColumn::make('scope_status')
                     ->label(__('programs.table.scope_status'))
                     ->searchable(),
-                TextColumn::make('taxonomy_department')
-                    ->label('Department')
-                    ->getStateUsing(function (Program $record) {
-                        return self::getTaxonomyTerm($record, 'department')?->name ?? 'Not assigned';
-                    })
-                    ->sortable(query: function ($query, string $direction): void {
-                        $departmentParent = Taxonomy::where('slug', 'department')->whereNull('parent_id')->first();
-                        if (! $departmentParent) {
-                            return;
-                        }
-
-                        $query->leftJoin('taxonomables as dept_taxonomables', function ($join) {
-                            $join->on('programs.id', '=', 'dept_taxonomables.taxonomable_id')
-                                ->where('dept_taxonomables.taxonomable_type', '=', 'App\\Models\\Program');
-                        })
-                            ->leftJoin('taxonomies as dept_taxonomies', function ($join) use ($departmentParent) {
-                                $join->on('dept_taxonomables.taxonomy_id', '=', 'dept_taxonomies.id')
-                                    ->where('dept_taxonomies.parent_id', '=', $departmentParent->id);
-                            })
-                            ->orderBy('dept_taxonomies.name', $direction)
-                            ->select('programs.*');
-                    })
+                TaxonomyColumn::make('department')
                     ->toggleable(),
-                TextColumn::make('taxonomy_scope')
-                    ->label('Scope')
-                    ->getStateUsing(function (Program $record) {
-                        return self::getTaxonomyTerm($record, 'scope')?->name ?? 'Not assigned';
-                    })
-                    ->sortable(query: function ($query, string $direction): void {
-                        $scopeParent = Taxonomy::where('slug', 'scope')->whereNull('parent_id')->first();
-                        if (! $scopeParent) {
-                            return;
-                        }
-
-                        $query->leftJoin('taxonomables as scope_taxonomables', function ($join) {
-                            $join->on('programs.id', '=', 'scope_taxonomables.taxonomable_id')
-                                ->where('scope_taxonomables.taxonomable_type', '=', 'App\\Models\\Program');
-                        })
-                            ->leftJoin('taxonomies as scope_taxonomies', function ($join) use ($scopeParent) {
-                                $join->on('scope_taxonomables.taxonomy_id', '=', 'scope_taxonomies.id')
-                                    ->where('scope_taxonomies.parent_id', '=', $scopeParent->id);
-                            })
-                            ->orderBy('scope_taxonomies.name', $direction)
-                            ->select('programs.*');
-                    })
+                TaxonomyColumn::make('scope')
                     ->toggleable(),
                 TextColumn::make('created_at')
                     ->label(__('programs.table.created_at'))
@@ -176,52 +134,8 @@ class ProgramResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                SelectFilter::make('department')
-                    ->label('Department')
-                    ->options(function () {
-                        $taxonomy = self::getParentTaxonomy('department');
-
-                        if (! $taxonomy) {
-                            return [];
-                        }
-
-                        return Taxonomy::where('parent_id', $taxonomy->id)
-                            ->orderBy('name')
-                            ->pluck('name', 'id')
-                            ->toArray();
-                    })
-                    ->query(function ($query, array $data) {
-                        if (! $data['value']) {
-                            return;
-                        }
-
-                        $query->whereHas('taxonomies', function ($query) use ($data) {
-                            $query->where('taxonomy_id', $data['value']);
-                        });
-                    }),
-                SelectFilter::make('scope')
-                    ->label('Scope')
-                    ->options(function () {
-                        $taxonomy = self::getParentTaxonomy('scope');
-
-                        if (! $taxonomy) {
-                            return [];
-                        }
-
-                        return Taxonomy::where('parent_id', $taxonomy->id)
-                            ->orderBy('name')
-                            ->pluck('name', 'id')
-                            ->toArray();
-                    })
-                    ->query(function ($query, array $data) {
-                        if (! $data['value']) {
-                            return;
-                        }
-
-                        $query->whereHas('taxonomies', function ($query) use ($data) {
-                            $query->where('taxonomy_id', $data['value']);
-                        });
-                    }),
+                TaxonomySelectFilter::make('department'),
+                TaxonomySelectFilter::make('scope'),
             ])
             ->headerActions([
                 ExportAction::make()

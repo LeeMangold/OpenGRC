@@ -48,7 +48,7 @@
                                     if($count > 0) {
                                         $colorWeight = 500;
                                     }
-                                    $colorClass = \App\Filament\Resources\RiskResource::getRiskColor($likelihoodIndex + 1, sizeof($grid) - $impactIndex, $colorWeight);
+                                    $colorClass = \App\Enums\RiskLevel::getColor($likelihoodIndex + 1, sizeof($grid) - $impactIndex, $colorWeight);
 
                                     // Calculate actual likelihood and impact values (1-5)
                                     $likelihoodValue = $likelihoodIndex + 1;

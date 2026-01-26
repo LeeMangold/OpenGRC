@@ -169,6 +169,7 @@ return [
         // App\Providers\DigitalOceanStorageServiceProvider::class, // Replaced with direct env file writing in settings
         App\Providers\EventServiceProvider::class,
         App\Providers\SocialiteServiceProvider::class, // Must be before Filament panels for SSO config
+        App\Providers\FilamentDefaultsServiceProvider::class,
         App\Providers\Filament\AppPanelProvider::class,
         App\Providers\Filament\AdminPanelProvider::class,
         App\Providers\Filament\VendorPanelProvider::class,

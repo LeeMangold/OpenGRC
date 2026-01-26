@@ -2,11 +2,12 @@
 
 namespace App\Filament\Resources;
 
-use Aliziodev\LaravelTaxonomy\Models\Taxonomy;
 use App\Enums\Effectiveness;
 use App\Enums\ImplementationStatus;
+use App\Filament\Columns\TaxonomyColumn;
 use App\Filament\Concerns\HasTaxonomyFields;
 use App\Filament\Exports\ImplementationExporter;
+use App\Filament\Filters\TaxonomySelectFilter;
 use App\Filament\Resources\ImplementationResource\Pages\CreateImplementation;
 use App\Filament\Resources\ImplementationResource\Pages\EditImplementation;
 use App\Filament\Resources\ImplementationResource\Pages\ListImplementations;
@@ -232,51 +233,9 @@ class ImplementationResource extends Resource
                     ->sortable()
                     ->searchable()
                     ->toggleable(),
-                TextColumn::make('taxonomy_department')
-                    ->label('Department')
-                    ->getStateUsing(function (Implementation $record) {
-                        return self::getTaxonomyTerm($record, 'department')?->name ?? 'Not assigned';
-                    })
-                    ->sortable(query: function ($query, string $direction): void {
-                        $departmentParent = Taxonomy::where('slug', 'department')->whereNull('parent_id')->first();
-                        if (! $departmentParent) {
-                            return;
-                        }
-
-                        $query->leftJoin('taxonomables as dept_taxonomables', function ($join) {
-                            $join->on('implementations.id', '=', 'dept_taxonomables.taxonomable_id')
-                                ->where('dept_taxonomables.taxonomable_type', '=', 'App\\Models\\Implementation');
-                        })
-                            ->leftJoin('taxonomies as dept_taxonomies', function ($join) use ($departmentParent) {
-                                $join->on('dept_taxonomables.taxonomy_id', '=', 'dept_taxonomies.id')
-                                    ->where('dept_taxonomies.parent_id', '=', $departmentParent->id);
-                            })
-                            ->orderBy('dept_taxonomies.name', $direction)
-                            ->select('implementations.*');
-                    })
+                TaxonomyColumn::make('department')
                     ->toggleable(),
-                TextColumn::make('taxonomy_scope')
-                    ->label('Scope')
-                    ->getStateUsing(function (Implementation $record) {
-                        return self::getTaxonomyTerm($record, 'scope')?->name ?? 'Not assigned';
-                    })
-                    ->sortable(query: function ($query, string $direction): void {
-                        $scopeParent = Taxonomy::where('slug', 'scope')->whereNull('parent_id')->first();
-                        if (! $scopeParent) {
-                            return;
-                        }
-
-                        $query->leftJoin('taxonomables as scope_taxonomables', function ($join) {
-                            $join->on('implementations.id', '=', 'scope_taxonomables.taxonomable_id')
-                                ->where('scope_taxonomables.taxonomable_type', '=', 'App\\Models\\Implementation');
-                        })
-                            ->leftJoin('taxonomies as scope_taxonomies', function ($join) use ($scopeParent) {
-                                $join->on('scope_taxonomables.taxonomy_id', '=', 'scope_taxonomies.id')
-                                    ->where('scope_taxonomies.parent_id', '=', $scopeParent->id);
-                            })
-                            ->orderBy('scope_taxonomies.name', $direction)
-                            ->select('implementations.*');
-                    })
+                TaxonomyColumn::make('scope')
                     ->toggleable(),
                 TextColumn::make('created_at')
                     ->label(__('implementation.table.columns.created_at'))
@@ -305,52 +264,8 @@ class ImplementationResource extends Resource
                 SelectFilter::make('implementation_owner_id')
                     ->label('Owner')
                     ->options(User::pluck('name', 'id')->toArray()),
-                SelectFilter::make('department')
-                    ->label('Department')
-                    ->options(function () {
-                        $taxonomy = self::getParentTaxonomy('department');
-
-                        if (! $taxonomy) {
-                            return [];
-                        }
-
-                        return Taxonomy::where('parent_id', $taxonomy->id)
-                            ->orderBy('name')
-                            ->pluck('name', 'id')
-                            ->toArray();
-                    })
-                    ->query(function ($query, array $data) {
-                        if (! $data['value']) {
-                            return;
-                        }
-
-                        $query->whereHas('taxonomies', function ($query) use ($data) {
-                            $query->where('taxonomy_id', $data['value']);
-                        });
-                    }),
-                SelectFilter::make('scope')
-                    ->label('Scope')
-                    ->options(function () {
-                        $taxonomy = self::getParentTaxonomy('scope');
-
-                        if (! $taxonomy) {
-                            return [];
-                        }
-
-                        return Taxonomy::where('parent_id', $taxonomy->id)
-                            ->orderBy('name')
-                            ->pluck('name', 'id')
-                            ->toArray();
-                    })
-                    ->query(function ($query, array $data) {
-                        if (! $data['value']) {
-                            return;
-                        }
-
-                        $query->whereHas('taxonomies', function ($query) use ($data) {
-                            $query->where('taxonomy_id', $data['value']);
-                        });
-                    }),
+                TaxonomySelectFilter::make('department'),
+                TaxonomySelectFilter::make('scope'),
             ])
             ->headerActions([
                 ExportAction::make()
@@ -576,52 +491,8 @@ class ImplementationResource extends Resource
                 SelectFilter::make('implementation_owner_id')
                     ->label('Owner')
                     ->options(User::pluck('name', 'id')->toArray()),
-                SelectFilter::make('department')
-                    ->label('Department')
-                    ->options(function () {
-                        $taxonomy = self::getParentTaxonomy('department');
-
-                        if (! $taxonomy) {
-                            return [];
-                        }
-
-                        return Taxonomy::where('parent_id', $taxonomy->id)
-                            ->orderBy('name')
-                            ->pluck('name', 'id')
-                            ->toArray();
-                    })
-                    ->query(function ($query, array $data) {
-                        if (! $data['value']) {
-                            return;
-                        }
-
-                        $query->whereHas('taxonomies', function ($query) use ($data) {
-                            $query->where('taxonomy_id', $data['value']);
-                        });
-                    }),
-                SelectFilter::make('scope')
-                    ->label('Scope')
-                    ->options(function () {
-                        $taxonomy = self::getParentTaxonomy('scope');
-
-                        if (! $taxonomy) {
-                            return [];
-                        }
-
-                        return Taxonomy::where('parent_id', $taxonomy->id)
-                            ->orderBy('name')
-                            ->pluck('name', 'id')
-                            ->toArray();
-                    })
-                    ->query(function ($query, array $data) {
-                        if (! $data['value']) {
-                            return;
-                        }
-
-                        $query->whereHas('taxonomies', function ($query) use ($data) {
-                            $query->where('taxonomy_id', $data['value']);
-                        });
-                    }),
+                TaxonomySelectFilter::make('department'),
+                TaxonomySelectFilter::make('scope'),
             ])
             ->recordActions([
                 ViewAction::make(),

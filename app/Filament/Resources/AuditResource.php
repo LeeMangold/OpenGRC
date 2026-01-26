@@ -2,11 +2,11 @@
 
 namespace App\Filament\Resources;
 
-use Aliziodev\LaravelTaxonomy\Models\Taxonomy;
 use App\Enums\Effectiveness;
 use App\Enums\WorkflowStatus;
 use App\Filament\Concerns\HasTaxonomyFields;
 use App\Filament\Exports\AuditExporter;
+use App\Filament\Filters\TaxonomySelectFilter;
 use App\Filament\Resources\AuditResource\Pages\CreateAudit;
 use App\Filament\Resources\AuditResource\Pages\EditAudit;
 use App\Filament\Resources\AuditResource\Pages\ImportIrl;
@@ -146,56 +146,8 @@ class AuditResource extends Resource
                     ->label('Status')
                     ->options(WorkflowStatus::class)
                     ->searchable(),
-                SelectFilter::make('department')
-                    ->label('Department')
-                    ->options(function () {
-                        $taxonomy = Taxonomy::where('name', 'Department')
-                            ->whereNull('parent_id')
-                            ->first();
-
-                        if (! $taxonomy) {
-                            return [];
-                        }
-
-                        return Taxonomy::where('parent_id', $taxonomy->id)
-                            ->orderBy('name')
-                            ->pluck('name', 'id')
-                            ->toArray();
-                    })
-                    ->query(function ($query, array $data) {
-                        if (! $data['value']) {
-                            return;
-                        }
-
-                        $query->whereHas('taxonomies', function ($query) use ($data) {
-                            $query->where('taxonomy_id', $data['value']);
-                        });
-                    }),
-                SelectFilter::make('scope')
-                    ->label('Scope')
-                    ->options(function () {
-                        $taxonomy = Taxonomy::where('name', 'Scope')
-                            ->whereNull('parent_id')
-                            ->first();
-
-                        if (! $taxonomy) {
-                            return [];
-                        }
-
-                        return Taxonomy::where('parent_id', $taxonomy->id)
-                            ->orderBy('name')
-                            ->pluck('name', 'id')
-                            ->toArray();
-                    })
-                    ->query(function ($query, array $data) {
-                        if (! $data['value']) {
-                            return;
-                        }
-
-                        $query->whereHas('taxonomies', function ($query) use ($data) {
-                            $query->where('taxonomy_id', $data['value']);
-                        });
-                    }),
+                TaxonomySelectFilter::make('department'),
+                TaxonomySelectFilter::make('scope'),
             ])
             ->headerActions([
                 ExportAction::make()
