@@ -5,10 +5,9 @@ namespace App\Http\Controllers;
 use App\Enums\QuotaType;
 use App\Exceptions\QuotaExceededException;
 use App\Models\Application;
+use App\Services\Ai\AiService;
 use App\Services\AppLogger;
 use App\Services\QuotaService;
-use GuzzleHttp\Client;
-use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\HtmlString;
 
 class AiController extends Controller
@@ -81,7 +80,8 @@ class AiController extends Controller
             User also has the following applications currently: {$applications}.
             Evaluate the implementations against the following security control: {$record['description']}";
 
-        $response = self::chatCompletion($systemPrompt, $userPrompt);
+        $aiService = new AiService;
+        $response = $aiService->chatCompletion($systemPrompt, $userPrompt);
 
         // Record quota usage after successful API call
         if (isset($response['usage']['prompt_tokens'])) {
@@ -97,6 +97,7 @@ class AiController extends Controller
             'AI implementation check completed',
             [
                 'control_id' => $record->id,
+                'provider' => $aiService->getProvider()->value,
                 'model' => $response['model'],
                 'prompt_tokens' => $response['usage']['prompt_tokens'] ?? null,
                 'completion_tokens' => $response['usage']['completion_tokens'] ?? null,
@@ -153,7 +154,8 @@ class AiController extends Controller
             Provide a sample implementation description for
             the following security control: {$record['description']}";
 
-        $response = self::chatCompletion($systemPrompt, $userPrompt);
+        $aiService = new AiService;
+        $response = $aiService->chatCompletion($systemPrompt, $userPrompt);
 
         // Record quota usage after successful API call
         if (isset($response['usage']['prompt_tokens'])) {
@@ -164,80 +166,5 @@ class AiController extends Controller
         }
 
         return new HtmlString($response['content'].self::AI_DISCLAIMER);
-    }
-
-    /**
-     * Send a chat completion request to OpenAI.
-     */
-    protected static function chatCompletion(string $systemPrompt, string $userPrompt): array
-    {
-        $client = new Client;
-        $key = Crypt::decryptString(setting('ai.openai_key'));
-
-        $response = $client->request('POST', 'https://api.openai.com/v1/chat/completions', [
-            'headers' => [
-                'Content-Type' => 'application/json',
-                'Authorization' => "Bearer {$key}",
-            ],
-            'json' => [
-                'model' => 'gpt-4.1-mini',
-                'store' => true,
-                'messages' => [
-                    [
-                        'role' => 'system',
-                        'content' => $systemPrompt,
-                    ],
-                    [
-                        'role' => 'user',
-                        'content' => $userPrompt,
-                    ],
-                ],
-            ],
-        ]);
-
-        $body = $response->getBody();
-        $data = json_decode($body, true);
-
-        return [
-            'content' => $data['choices'][0]['message']['content'],
-            'model' => $data['model'] ?? 'unknown',
-            'usage' => $data['usage'] ?? [],
-        ];
-    }
-
-    protected static function ogChatCompletion(string $systemPrompt, string $userPrompt): array
-    {
-        $client = new Client;
-        // $key = Crypt::decryptString(setting('ai.openai_key'));
-        $key = env('AI_DO_KEY');
-
-        $response = $client->request('POST', 'https://inference.do-ai.run/v1/chat/completions', [
-            'headers' => [
-                'Content-Type' => 'application/json',
-                'Authorization' => "Bearer {$key}",
-            ],
-            'json' => [
-                'model' => 'alibaba-qwen3-32b',
-                'messages' => [
-                    [
-                        'role' => 'system',
-                        'content' => $systemPrompt,
-                    ],
-                    [
-                        'role' => 'user',
-                        'content' => $userPrompt,
-                    ],
-                ],
-            ],
-        ]);
-
-        $body = $response->getBody();
-        $data = json_decode($body, true);
-
-        return [
-            'content' => $data['choices'][0]['message']['content'],
-            'model' => $data['model'] ?? 'unknown',
-            'usage' => $data['usage'] ?? [],
-        ];
     }
 }
