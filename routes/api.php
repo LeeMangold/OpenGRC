@@ -4,6 +4,8 @@ use App\Http\Controllers\API\ApplicationController;
 use App\Http\Controllers\API\AssetController;
 use App\Http\Controllers\API\AuditController;
 use App\Http\Controllers\API\AuditItemController;
+use App\Http\Controllers\API\ChecklistController;
+use App\Http\Controllers\API\ChecklistTemplateController;
 use App\Http\Controllers\API\ControlController;
 use App\Http\Controllers\API\DataRequestController;
 use App\Http\Controllers\API\DataRequestResponseController;
@@ -51,6 +53,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('data-requests', DataRequestController::class);
     Route::apiResource('data-request-responses', DataRequestResponseController::class);
     Route::apiResource('file-attachments', FileAttachmentController::class);
+    Route::apiResource('checklists', ChecklistController::class);
+    Route::apiResource('checklist-templates', ChecklistTemplateController::class);
+
+    // Checklist approval
+    Route::post('/checklists/{id}/approve', [ChecklistController::class, 'approve']);
 
     // Restore soft-deleted resources
     Route::post('/users/{id}/restore', [UserController::class, 'restore']);

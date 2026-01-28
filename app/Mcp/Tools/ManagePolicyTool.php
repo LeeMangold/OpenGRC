@@ -11,7 +11,7 @@ class ManagePolicyTool extends BaseManageEntityTool
 {
     protected string $name = 'ManagePolicy';
 
-    protected string $description = 'Manages Policy entities (security and compliance policies). Use action="create" with data, action="update" with id and data, or action="delete" with id and confirm=true. Codes are auto-generated (POL-001) if not provided.';
+    protected string $description = 'Manage policies: list, get, create, update, delete. Codes auto-generate.';
 
     protected function entityType(): string
     {
