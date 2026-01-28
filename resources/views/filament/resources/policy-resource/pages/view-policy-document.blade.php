@@ -72,9 +72,13 @@
 
             {{-- Policy Body Section --}}
             @if($record->body)
-                <div class="mb-8">
-                    <!-- <h2 class="text-2xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Policy</h2> -->
-                    <div class="text-gray-800 dark:text-gray-200">
+                <div class="mb-8 policy-body">
+                    <div class="text-gray-800 dark:text-gray-200
+                        [&_h1]:text-3xl [&_h1]:font-bold [&_h1]:mt-8 [&_h1]:mb-4 [&_h1]:text-gray-900 dark:[&_h1]:text-gray-100
+                        [&_h2]:text-2xl [&_h2]:font-semibold [&_h2]:mt-6 [&_h2]:mb-3 [&_h2]:text-gray-900 dark:[&_h2]:text-gray-100
+                        [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:mt-5 [&_h3]:mb-2 [&_h3]:text-gray-900 dark:[&_h3]:text-gray-100
+                        [&_h4]:text-lg [&_h4]:font-medium [&_h4]:mt-4 [&_h4]:mb-2 [&_h4]:text-gray-900 dark:[&_h4]:text-gray-100
+                        [&_p]:mb-4 [&_ul]:mb-4 [&_ol]:mb-4 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:list-decimal [&_ol]:pl-6">
                         {!! $record->body !!}
                     </div>
                 </div>
