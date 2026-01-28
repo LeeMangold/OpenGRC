@@ -84,7 +84,7 @@ abstract class BaseManageEntityTool extends Tool
         $label = $config['label'] ?? Str::title(str_replace('_', ' ', $this->entityType()));
         $plural = $config['plural'] ?? Str::plural($label);
 
-        return "Manages {$label} entities ({$plural}). Actions: list (paginated), get (by id), create (with data), update (id + data), delete (id + confirm=true).";
+        return "Manage {$plural}: list, get, create, update, delete.";
     }
 
     /**

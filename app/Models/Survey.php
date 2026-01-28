@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Enums\SurveyStatus;
 use App\Enums\SurveyType;
+use App\Models\Concerns\Approvable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -16,7 +18,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 
 class Survey extends Model
 {
-    use HasFactory, LogsActivity, SoftDeletes;
+    use Approvable, HasFactory, LogsActivity, SoftDeletes;
 
     protected $fillable = [
         'survey_template_id',
@@ -27,6 +29,7 @@ class Survey extends Model
         'respondent_email',
         'respondent_name',
         'assigned_to_id',
+        'approver_id',
         'vendor_id',
         'due_date',
         'expiration_date',
@@ -79,6 +82,22 @@ class Survey extends Model
     public function vendor(): BelongsTo
     {
         return $this->belongsTo(Vendor::class);
+    }
+
+    /**
+     * Scope a query to only include checklists.
+     */
+    public function scopeChecklists(Builder $query): Builder
+    {
+        return $query->where('type', SurveyType::INTERNAL_CHECKLIST);
+    }
+
+    /**
+     * Check if this survey is a checklist.
+     */
+    public function isChecklist(): bool
+    {
+        return $this->type === SurveyType::INTERNAL_CHECKLIST;
     }
 
     public function getDisplayTitleAttribute(): string
@@ -181,7 +200,7 @@ class Survey extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->logOnly(['title', 'status', 'type', 'respondent_email', 'respondent_name', 'assigned_to_id', 'due_date', 'expiration_date', 'completed_at'])
+            ->logOnly(['title', 'status', 'type', 'respondent_email', 'respondent_name', 'assigned_to_id', 'approver_id', 'due_date', 'expiration_date', 'completed_at'])
             ->logOnlyDirty()
             ->dontSubmitEmptyLogs();
     }

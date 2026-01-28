@@ -12,7 +12,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
+        // Generate recurring checklists daily at 6:00 AM
+        $schedule->command('checklists:generate-recurring')->dailyAt('06:00');
     }
 
     /**
