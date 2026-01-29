@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Carbon;
@@ -164,11 +165,26 @@ class Implementation extends Model
     }
 
     /**
+     * Eager-loadable relationship for the latest completed audit item.
+     */
+    public function latestCompletedAudit(): MorphOne
+    {
+        return $this->morphOne(AuditItem::class, 'auditable')
+            ->where('status', '=', 'Completed')
+            ->latestOfMany('created_at');
+    }
+
+    /**
      * Get the effectiveness of the implementation.
      */
     public function getEffectiveness(): Effectiveness
     {
-        return $this->completedAuditItems->pluck('effectiveness')->last() ? $this->auditItems->pluck('effectiveness')->last() : Effectiveness::UNKNOWN;
+        // Use eager-loaded relationship if available
+        if ($this->relationLoaded('latestCompletedAudit')) {
+            return $this->latestCompletedAudit?->effectiveness ?? Effectiveness::UNKNOWN;
+        }
+
+        return $this->completedAuditItems->pluck('effectiveness')->last() ?? Effectiveness::UNKNOWN;
     }
 
     /**
@@ -176,7 +192,14 @@ class Implementation extends Model
      */
     public function getEffectivenessDate(): string
     {
-        return $this->completedAuditItems->pluck('effectiveness')->last() ? $this->auditItems->pluck('updated_at')->last()->format('M d, Y') : '';
+        // Use eager-loaded relationship if available
+        if ($this->relationLoaded('latestCompletedAudit')) {
+            return $this->latestCompletedAudit?->updated_at?->format('M d, Y') ?? '';
+        }
+
+        $lastAuditItem = $this->completedAuditItems->last();
+
+        return $lastAuditItem?->updated_at?->format('M d, Y') ?? '';
     }
 
     /**

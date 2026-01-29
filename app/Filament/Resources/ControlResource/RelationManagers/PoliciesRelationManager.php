@@ -19,6 +19,7 @@ class PoliciesRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn (Builder $query) => $query->with(['status', 'department']))
             ->recordTitleAttribute('name')
             ->columns([
                 TextColumn::make('code')

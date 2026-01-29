@@ -590,7 +590,8 @@ class PolicyResource extends Resource
         return parent::getEloquentQuery()
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
-            ]);
+            ])
+            ->with(['status', 'scope', 'department', 'owner', 'creator', 'updater']);
     }
 
     public static function getGlobalSearchResultTitle($record): string

@@ -102,26 +102,32 @@ class AuditResource extends Resource
                 TextColumn::make('department')
                     ->label('Department')
                     ->formatStateUsing(function (Audit $record) {
-                        $department = $record->taxonomies()
-                            ->whereHas('parent', function ($query) {
-                                $query->where('name', 'Department');
-                            })
-                            ->first();
+                        // Use eager-loaded taxonomies to avoid N+1
+                        if ($record->relationLoaded('taxonomies')) {
+                            $department = $record->taxonomies->first(function ($tax) {
+                                return $tax->parent && $tax->parent->name === 'Department';
+                            });
 
-                        return $department?->name ?? 'Not assigned';
+                            return $department?->name ?? 'Not assigned';
+                        }
+
+                        return self::getTaxonomyTerm($record, 'department')?->name ?? 'Not assigned';
                     })
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('scope')
                     ->label('Scope')
                     ->formatStateUsing(function (Audit $record) {
-                        $scope = $record->taxonomies()
-                            ->whereHas('parent', function ($query) {
-                                $query->where('name', 'Scope');
-                            })
-                            ->first();
+                        // Use eager-loaded taxonomies to avoid N+1
+                        if ($record->relationLoaded('taxonomies')) {
+                            $scope = $record->taxonomies->first(function ($tax) {
+                                return $tax->parent && $tax->parent->name === 'Scope';
+                            });
 
-                        return $scope?->name ?? 'Not assigned';
+                            return $scope?->name ?? 'Not assigned';
+                        }
+
+                        return self::getTaxonomyTerm($record, 'scope')?->name ?? 'Not assigned';
                     })
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -192,24 +198,12 @@ class AuditResource extends Resource
                         TextEntry::make('taxonomies')
                             ->label('Department')
                             ->formatStateUsing(function (Audit $record) {
-                                $department = $record->taxonomies()
-                                    ->whereHas('parent', function ($query) {
-                                        $query->where('name', 'Department');
-                                    })
-                                    ->first();
-
-                                return $department?->name ?? 'Not assigned';
+                                return self::getTaxonomyTerm($record, 'department')?->name ?? 'Not assigned';
                             }),
                         TextEntry::make('taxonomies')
                             ->label('Scope')
                             ->formatStateUsing(function (Audit $record) {
-                                $scope = $record->taxonomies()
-                                    ->whereHas('parent', function ($query) {
-                                        $query->where('name', 'Scope');
-                                    })
-                                    ->first();
-
-                                return $scope?->name ?? 'Not assigned';
+                                return self::getTaxonomyTerm($record, 'scope')?->name ?? 'Not assigned';
                             }),
                         TextEntry::make('description')
                             ->columnSpanFull()
@@ -254,7 +248,8 @@ class AuditResource extends Resource
         return parent::getEloquentQuery()
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
-            ]);
+            ])
+            ->with(['taxonomies.parent', 'manager']);
     }
 
     public static function completeAudit(Audit $audit): void

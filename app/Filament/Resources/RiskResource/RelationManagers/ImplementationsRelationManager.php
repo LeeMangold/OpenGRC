@@ -7,6 +7,7 @@ use Filament\Actions\ViewAction;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class ImplementationsRelationManager extends RelationManager
 {
@@ -20,6 +21,7 @@ class ImplementationsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         $table = ImplementationResource::getTable($table);
+        $table->modifyQueryUsing(fn (Builder $query) => $query->with(['latestCompletedAudit', 'implementationOwner']));
         $table->recordActions([
             ViewAction::make()->hidden(),
         ]);

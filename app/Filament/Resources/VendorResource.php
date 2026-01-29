@@ -43,6 +43,7 @@ use Filament\Support\Enums\TextSize;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
@@ -307,7 +308,7 @@ class VendorResource extends Resource
                     ->options(collect(VendorRiskRating::cases())->mapWithKeys(fn ($case) => [$case->value => $case->getLabel()])),
                 SelectFilter::make('vendor_manager_id')
                     ->label(__('Vendor Manager'))
-                    ->options(User::all()->pluck('name', 'id')),
+                    ->options(User::pluck('name', 'id')),
             ])
             ->headerActions([
                 ExportAction::make()
@@ -398,5 +399,11 @@ class VendorResource extends Resource
             'view' => ViewVendor::route('/{record}'),
             'edit' => EditVendor::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->with(['vendorManager']);
     }
 }

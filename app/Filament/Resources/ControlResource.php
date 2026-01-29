@@ -289,7 +289,8 @@ class ControlResource extends Resource
         return parent::getEloquentQuery()
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
-            ]);
+            ])
+            ->with(['taxonomies', 'latestCompletedAudit', 'controlOwner', 'standard']);
     }
 
     public static function infolist(Schema $schema): Schema

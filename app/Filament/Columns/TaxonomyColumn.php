@@ -5,12 +5,20 @@ namespace App\Filament\Columns;
 use Aliziodev\LaravelTaxonomy\Models\Taxonomy;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 
 class TaxonomyColumn extends TextColumn
 {
     protected string $taxonomyType = '';
 
     protected string $notAssignedText = 'Not assigned';
+
+    /**
+     * Runtime cache for parent taxonomy lookups within a single request.
+     *
+     * @var array<string, Taxonomy|null>
+     */
+    protected static array $parentTaxonomyCache = [];
 
     public static function make(?string $name = null): static
     {
@@ -50,9 +58,15 @@ class TaxonomyColumn extends TextColumn
                 return $this->notAssignedText;
             }
 
-            $term = $record->taxonomies()
-                ->where('parent_id', $parent->id)
-                ->first();
+            // Use the already-loaded taxonomies relation if available (eager loaded)
+            // to avoid N+1 queries
+            if ($record->relationLoaded('taxonomies')) {
+                $term = $record->taxonomies->firstWhere('parent_id', $parent->id);
+            } else {
+                $term = $record->taxonomies()
+                    ->where('parent_id', $parent->id)
+                    ->first();
+            }
 
             return $term?->name ?? $this->notAssignedText;
         });
@@ -94,12 +108,17 @@ class TaxonomyColumn extends TextColumn
 
     protected function getParentTaxonomy(string $type): ?Taxonomy
     {
+        // Check runtime cache first
+        if (array_key_exists($type, static::$parentTaxonomyCache)) {
+            return static::$parentTaxonomyCache[$type];
+        }
+
         $taxonomy = Taxonomy::where('slug', $type)
             ->whereNull('parent_id')
             ->first();
 
         if ($taxonomy) {
-            return $taxonomy;
+            return static::$parentTaxonomyCache[$type] = $taxonomy;
         }
 
         $taxonomy = Taxonomy::where('slug', $type.'s')
@@ -107,7 +126,7 @@ class TaxonomyColumn extends TextColumn
             ->first();
 
         if ($taxonomy) {
-            return $taxonomy;
+            return static::$parentTaxonomyCache[$type] = $taxonomy;
         }
 
         $taxonomy = Taxonomy::where('type', $type)
@@ -115,11 +134,13 @@ class TaxonomyColumn extends TextColumn
             ->first();
 
         if ($taxonomy) {
-            return $taxonomy;
+            return static::$parentTaxonomyCache[$type] = $taxonomy;
         }
 
-        return Taxonomy::where('type', $type.'s')
+        $taxonomy = Taxonomy::where('type', $type.'s')
             ->whereNull('parent_id')
             ->first();
+
+        return static::$parentTaxonomyCache[$type] = $taxonomy;
     }
 }

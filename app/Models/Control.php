@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Spatie\Activitylog\LogOptions;
@@ -152,9 +153,24 @@ class Control extends Model
      */
     public function latestCompletedAuditItem(): ?AuditItem
     {
+        // Use the eager-loaded relationship if available
+        if ($this->relationLoaded('latestCompletedAudit')) {
+            return $this->latestCompletedAudit;
+        }
+
         $latestCompletedAuditItem = $this->completedAuditItems()->latest()->first();
 
         return $latestCompletedAuditItem instanceof AuditItem ? $latestCompletedAuditItem : null;
+    }
+
+    /**
+     * Eager-loadable relationship for the latest completed audit item.
+     */
+    public function latestCompletedAudit(): MorphOne
+    {
+        return $this->morphOne(AuditItem::class, 'auditable')
+            ->where('status', '=', 'Completed')
+            ->latestOfMany('created_at');
     }
 
     /**

@@ -40,8 +40,10 @@ class ControlsRelationManager extends RelationManager
         $allControls = $program->getAllControls();
         $controlIds = $allControls->pluck('id')->toArray();
 
-        // Override the query to show all controls
-        return Control::query()->whereIn('id', $controlIds);
+        // Override the query to show all controls with eager loading
+        return Control::query()
+            ->whereIn('id', $controlIds)
+            ->with(['standard', 'latestCompletedAudit']);
     }
 
     public function table(Table $table): Table

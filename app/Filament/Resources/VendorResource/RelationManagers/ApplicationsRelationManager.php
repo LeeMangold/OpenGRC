@@ -11,6 +11,7 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class ApplicationsRelationManager extends RelationManager
 {
@@ -24,6 +25,7 @@ class ApplicationsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn (Builder $query) => $query->with(['owner']))
             ->columns([
                 TextColumn::make('name')->searchable(),
                 TextColumn::make('owner.name')->label('Owner')->searchable(),
