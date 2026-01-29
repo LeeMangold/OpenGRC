@@ -1,0 +1,11 @@
+{
+    "name": "DataManager",
+    "alias": "datamanager",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\DataManager\\Providers\\DataManagerServiceProvider"
+    ],
+    "files": []
+}
