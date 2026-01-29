@@ -74,7 +74,7 @@
                                 @if($answerValue)
                                     <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-sm">
                                         <x-heroicon-m-check class="w-4 h-4 text-primary-500" />
-                                        {{ $answerValue }}
+                                        {{ $answer->display_value }}
                                     </div>
                                 @else
                                     <span class="text-sm text-gray-400 dark:text-gray-500 italic">{{ __('Not answered') }}</span>
@@ -111,14 +111,14 @@
 
                             @elseif($question->question_type === QuestionType::LONG_TEXT)
                                 @if($answerValue)
-                                    <div class="text-sm text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-800 rounded-md p-3 whitespace-pre-wrap">{{ $answerValue }}</div>
+                                    <div class="text-sm text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-800 rounded-md p-3 whitespace-pre-wrap">{{ $answer->display_value }}</div>
                                 @else
                                     <span class="text-sm text-gray-400 dark:text-gray-500 italic">{{ __('Not answered') }}</span>
                                 @endif
 
                             @else
                                 @if($answerValue)
-                                    <p class="text-sm text-gray-700 dark:text-gray-300">{{ $answerValue }}</p>
+                                    <p class="text-sm text-gray-700 dark:text-gray-300">{{ $answer->display_value }}</p>
                                 @else
                                     <span class="text-sm text-gray-400 dark:text-gray-500 italic">{{ __('Not answered') }}</span>
                                 @endif
