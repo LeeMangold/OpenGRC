@@ -1350,6 +1350,17 @@ class AssetResource extends Resource
         return parent::getEloquentQuery()
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
+            ])
+            ->with([
+                'assetType',
+                'status',
+                'assignedToUser',
+                'condition',
+                'complianceStatus',
+                'dataClassification',
+                'parentAsset',
+                'creator',
+                'updater',
             ]);
     }
 

@@ -20,6 +20,7 @@ class ControlsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn (Builder $query) => $query->with(['standard']))
             ->recordTitleAttribute('title')
             ->columns([
                 TextColumn::make('code')

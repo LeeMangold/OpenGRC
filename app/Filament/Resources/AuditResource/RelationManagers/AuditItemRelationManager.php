@@ -182,6 +182,7 @@ class AuditItemRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn (Builder $query) => $query->with(['auditable', 'audit']))
             ->columns([
                 TextColumn::make('auditable.type')
                     ->getStateUsing(function ($record) {

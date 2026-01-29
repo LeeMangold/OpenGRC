@@ -25,9 +25,17 @@ class Risk extends Model
     ];
 
     protected $fillable = [
+        'code',
         'name',
-        'likelihood',
-        'impact',
+        'description',
+        'status',
+        'inherent_likelihood',
+        'inherent_impact',
+        'inherent_risk',
+        'residual_likelihood',
+        'residual_impact',
+        'residual_risk',
+        'is_active',
     ];
 
     public function implementations(): BelongsToMany

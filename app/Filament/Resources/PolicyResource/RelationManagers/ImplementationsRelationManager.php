@@ -19,6 +19,7 @@ class ImplementationsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn (Builder $query) => $query->with(['implementationOwner']))
             ->recordTitleAttribute('title')
             ->columns([
                 TextColumn::make('title')

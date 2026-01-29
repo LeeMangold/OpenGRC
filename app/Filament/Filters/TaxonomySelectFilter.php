@@ -9,6 +9,13 @@ class TaxonomySelectFilter extends SelectFilter
 {
     protected string $taxonomyType = '';
 
+    /**
+     * Runtime cache for parent taxonomy lookups within a single request.
+     *
+     * @var array<string, Taxonomy|null>
+     */
+    protected static array $parentTaxonomyCache = [];
+
     public static function make(?string $name = null): static
     {
         $taxonomyType = $name ?? '';
@@ -60,12 +67,17 @@ class TaxonomySelectFilter extends SelectFilter
 
     protected function getParentTaxonomy(string $type): ?Taxonomy
     {
+        // Check runtime cache first
+        if (array_key_exists($type, static::$parentTaxonomyCache)) {
+            return static::$parentTaxonomyCache[$type];
+        }
+
         $taxonomy = Taxonomy::where('slug', $type)
             ->whereNull('parent_id')
             ->first();
 
         if ($taxonomy) {
-            return $taxonomy;
+            return static::$parentTaxonomyCache[$type] = $taxonomy;
         }
 
         $taxonomy = Taxonomy::where('slug', $type.'s')
@@ -73,7 +85,7 @@ class TaxonomySelectFilter extends SelectFilter
             ->first();
 
         if ($taxonomy) {
-            return $taxonomy;
+            return static::$parentTaxonomyCache[$type] = $taxonomy;
         }
 
         $taxonomy = Taxonomy::where('type', $type)
@@ -81,11 +93,13 @@ class TaxonomySelectFilter extends SelectFilter
             ->first();
 
         if ($taxonomy) {
-            return $taxonomy;
+            return static::$parentTaxonomyCache[$type] = $taxonomy;
         }
 
-        return Taxonomy::where('type', $type.'s')
+        $taxonomy = Taxonomy::where('type', $type.'s')
             ->whereNull('parent_id')
             ->first();
+
+        return static::$parentTaxonomyCache[$type] = $taxonomy;
     }
 }

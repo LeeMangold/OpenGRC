@@ -37,6 +37,7 @@ class ImplementationRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn (Builder $query) => $query->with(['latestCompletedAudit']))
             ->recordTitleAttribute('details')
             ->columns([
                 TextColumn::make('details')

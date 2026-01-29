@@ -60,7 +60,7 @@ class SurveysRelationManager extends RelationManager
     {
         return $table
             ->recordTitleAttribute('title')
-            ->modifyQueryUsing(fn (Builder $query) => $query->where(function ($q) {
+            ->modifyQueryUsing(fn (Builder $query) => $query->with(['template'])->where(function ($q) {
                 $q->where('type', SurveyType::VENDOR_ASSESSMENT)
                     ->orWhereNull('type');
             }))

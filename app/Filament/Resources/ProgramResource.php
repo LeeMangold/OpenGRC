@@ -28,6 +28,7 @@ use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class ProgramResource extends Resource
 {
@@ -176,5 +177,11 @@ class ProgramResource extends Resource
             'view' => ProgramPage::route('/{record}'),
             'edit' => EditProgram::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->with(['taxonomies', 'programManager']);
     }
 }
