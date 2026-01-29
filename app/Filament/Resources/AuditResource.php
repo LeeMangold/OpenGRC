@@ -33,7 +33,9 @@ use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Storage;
 
@@ -286,5 +288,38 @@ class AuditResource extends Resource
         // Mark the audit as completed
         $audit->update(['status' => WorkflowStatus::COMPLETED]);
 
+    }
+
+    /**
+     * @param  Audit  $record
+     */
+    public static function getGlobalSearchResultTitle(Model $record): string|Htmlable
+    {
+        return $record->title;
+    }
+
+    /**
+     * @param  Audit  $record
+     */
+    public static function getGlobalSearchResultUrl(Model $record): string
+    {
+        return AuditResource::getUrl('view', ['record' => $record]);
+    }
+
+    /**
+     * @param  Audit  $record
+     */
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        /** @var Audit $record */
+        return [
+            'Status' => $record->status?->getLabel() ?? 'Unknown',
+            'Manager' => $record->manager?->getAttribute('name') ?? 'Unassigned',
+        ];
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['title', 'description', 'audit_type'];
     }
 }

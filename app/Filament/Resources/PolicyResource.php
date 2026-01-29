@@ -601,6 +601,6 @@ class PolicyResource extends Resource
 
     public static function getGloballySearchableAttributes(): array
     {
-        return ['code', 'name', 'policy_scope', 'purpose'];
+        return ['code', 'name', 'policy_scope', 'purpose', 'body'];
     }
 }

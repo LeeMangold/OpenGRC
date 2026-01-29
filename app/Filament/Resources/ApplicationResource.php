@@ -27,7 +27,9 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 
 class ApplicationResource extends Resource
@@ -204,5 +206,38 @@ class ApplicationResource extends Resource
     {
         return parent::getEloquentQuery()
             ->with(['owner', 'vendor']);
+    }
+
+    /**
+     * @param  Application  $record
+     */
+    public static function getGlobalSearchResultTitle(Model $record): string|Htmlable
+    {
+        return $record->name;
+    }
+
+    /**
+     * @param  Application  $record
+     */
+    public static function getGlobalSearchResultUrl(Model $record): string
+    {
+        return ApplicationResource::getUrl('view', ['record' => $record]);
+    }
+
+    /**
+     * @param  Application  $record
+     */
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        /** @var Application $record */
+        return [
+            'Type' => $record->type?->getLabel() ?? 'Unknown',
+            'Vendor' => $record->vendor?->getAttribute('name') ?? 'None',
+        ];
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['name', 'description', 'url', 'notes'];
     }
 }
