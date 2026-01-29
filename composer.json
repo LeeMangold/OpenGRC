@@ -40,6 +40,7 @@
         "league/flysystem-aws-s3-v3": "^3.30.1",
         "leandrocfe/filament-apex-charts": "^4.0",
         "mangoldsecurity/filament-settings": "^2.4",
+        "nwidart/laravel-modules": "^11.0",
         "pxlrbt/filament-activity-log": "^2.0",
         "socialiteproviders/auth0": "^4.2",
         "socialiteproviders/google": "^4.1",
@@ -102,6 +103,18 @@
     "extra": {
         "laravel": {
             "dont-discover": []
+        },
+        "merge-plugin": {
+            "include": [
+                "Modules/*/composer.json"
+            ],
+            "recurse": true,
+            "replace": false,
+            "ignore-duplicates": false,
+            "merge-dev": true,
+            "merge-extra": false,
+            "merge-extra-deep": false,
+            "merge-scripts": false
         }
     },
     "config": {
@@ -112,7 +125,8 @@
         "allow-plugins": {
             "pestphp/pest-plugin": true,
             "php-http/discovery": true,
-            "cyclonedx/cyclonedx-php-composer": true
+            "cyclonedx/cyclonedx-php-composer": true,
+            "wikimedia/composer-merge-plugin": true
         }
     },
     "minimum-stability": "stable",

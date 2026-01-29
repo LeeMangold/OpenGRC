@@ -24,6 +24,7 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use MangoldSecurity\FilamentSettings\SettingsPlugin;
+use Modules\DataManager\Filament\DataManagerPlugin;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -90,6 +91,7 @@ class AdminPanelProvider extends PanelProvider
                         \App\Filament\Admin\Pages\Settings\VendorPortalSettings::class,
                         \App\Filament\Admin\Pages\Settings\TrustCenterSettings::class,
                     ]),
+                DataManagerPlugin::make(),
             ])
             ->renderHook(
                 PanelsRenderHook::BODY_END,
