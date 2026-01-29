@@ -28,7 +28,9 @@ use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 class ProgramResource extends Resource
 {
@@ -183,5 +185,38 @@ class ProgramResource extends Resource
     {
         return parent::getEloquentQuery()
             ->with(['taxonomies', 'programManager']);
+    }
+
+    /**
+     * @param  Program  $record
+     */
+    public static function getGlobalSearchResultTitle(Model $record): string|Htmlable
+    {
+        return $record->name;
+    }
+
+    /**
+     * @param  Program  $record
+     */
+    public static function getGlobalSearchResultUrl(Model $record): string
+    {
+        return ProgramResource::getUrl('view', ['record' => $record]);
+    }
+
+    /**
+     * @param  Program  $record
+     */
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        /** @var Program $record */
+        return [
+            'Manager' => $record->programManager?->getAttribute('name') ?? 'Unassigned',
+            'Scope Status' => $record->scope_status ?? 'Unknown',
+        ];
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['name', 'description', 'scope_status'];
     }
 }

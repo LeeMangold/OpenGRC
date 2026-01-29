@@ -41,7 +41,9 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
+use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ChecklistResource extends Resource
@@ -351,5 +353,38 @@ class ChecklistResource extends Resource
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);
+    }
+
+    /**
+     * @param  Survey  $record
+     */
+    public static function getGlobalSearchResultTitle(Model $record): string|Htmlable
+    {
+        return $record->display_title;
+    }
+
+    /**
+     * @param  Survey  $record
+     */
+    public static function getGlobalSearchResultUrl(Model $record): string
+    {
+        return ChecklistResource::getUrl('view', ['record' => $record]);
+    }
+
+    /**
+     * @param  Survey  $record
+     */
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        /** @var Survey $record */
+        return [
+            'Status' => $record->status?->getLabel() ?? 'Unknown',
+            'Assigned To' => $record->assignedTo?->getAttribute('name') ?? 'Unassigned',
+        ];
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['title', 'description'];
     }
 }
