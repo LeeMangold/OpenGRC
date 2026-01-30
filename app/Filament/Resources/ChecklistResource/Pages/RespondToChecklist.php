@@ -79,8 +79,18 @@ class RespondToChecklist extends Page implements HasForms
                     $data["question_{$question->id}"] = $answer->attachments
                         ->pluck('file_path')
                         ->toArray();
-                } else {
+                } elseif ($question->question_type === QuestionType::MULTIPLE_CHOICE) {
+                    // Multiple choice expects an array
                     $data["question_{$question->id}"] = $answer->answer_value;
+                } else {
+                    // Single-value fields (TEXT, LONG_TEXT, BOOLEAN, SINGLE_CHOICE) expect a string
+                    // answer_value is cast to array, so extract the first value or convert to string
+                    $value = $answer->answer_value;
+                    if (is_array($value)) {
+                        $data["question_{$question->id}"] = $value[0] ?? null;
+                    } else {
+                        $data["question_{$question->id}"] = $value;
+                    }
                 }
                 $data["comment_{$question->id}"] = $answer->comment;
             }

@@ -46,6 +46,11 @@ trait Approvable
      */
     public function isApproved(): bool
     {
+        // Use loaded relation if available to avoid N+1 queries
+        if ($this->relationLoaded('latestApproval')) {
+            return $this->latestApproval !== null;
+        }
+
         return $this->latestApproval()->exists();
     }
 

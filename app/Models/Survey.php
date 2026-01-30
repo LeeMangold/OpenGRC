@@ -116,15 +116,17 @@ class Survey extends Model
 
     public function getProgressAttribute(): int
     {
-        $totalQuestions = $this->template?->questions()->count() ?? 0;
+        // Use eager-loaded counts if available, otherwise fall back to queries
+        $totalQuestions = $this->template?->questions_count
+            ?? $this->template?->questions()->count()
+            ?? 0;
 
         if ($totalQuestions === 0) {
             return 0;
         }
 
-        $answeredQuestions = $this->answers()
-            ->whereNotNull('answer_value')
-            ->count();
+        $answeredQuestions = $this->answered_questions_count
+            ?? $this->answers()->whereNotNull('answer_value')->count();
 
         return (int) round(($answeredQuestions / $totalQuestions) * 100);
     }
