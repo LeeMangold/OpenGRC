@@ -4,9 +4,11 @@ namespace App\Filament\Resources\ChecklistResource\Pages;
 
 use App\Enums\SurveyStatus;
 use App\Filament\Resources\ChecklistResource;
+use App\Models\Survey;
 use Filament\Actions\Action;
 use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
+use Illuminate\Database\Eloquent\Model;
 
 class ViewChecklist extends ViewRecord
 {
@@ -14,18 +16,22 @@ class ViewChecklist extends ViewRecord
 
     protected string $view = 'filament.pages.view-checklist';
 
-    public function mount(int|string $record): void
+    /**
+     * Resolve the record with all necessary eager loading in a single query.
+     */
+    protected function resolveRecord(int|string $key): Model
     {
-        parent::mount($record);
-
-        // Eager load relationships for the responses display
-        $this->record->load([
+        return Survey::with([
+            'template' => fn ($q) => $q->withCount('questions'),
             'template.questions',
             'answers.attachments',
             'assignedTo',
+            'createdBy',
             'latestApproval',
             'approver',
-        ]);
+        ])
+            ->withCount(['answers as answered_questions_count' => fn ($q) => $q->whereNotNull('answer_value')])
+            ->findOrFail($key);
     }
 
     protected function getHeaderActions(): array

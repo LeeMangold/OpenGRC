@@ -22,7 +22,7 @@
 
     {{-- Checklist Items --}}
     <div class="divide-y divide-gray-100 dark:divide-gray-800">
-        @foreach($survey->template->questions()->orderBy('sort_order')->get() as $index => $question)
+        @foreach($survey->template->questions->sortBy('sort_order') as $index => $question)
             @php
                 $answer = $survey->answers->where('survey_question_id', $question->id)->first();
                 $answerValue = $answer?->answer_value;

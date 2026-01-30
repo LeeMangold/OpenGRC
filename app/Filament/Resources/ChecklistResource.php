@@ -350,6 +350,13 @@ class ChecklistResource extends Resource
     {
         return parent::getEloquentQuery()
             ->where('type', SurveyType::INTERNAL_CHECKLIST)
+            ->with([
+                'template' => fn ($query) => $query->withCount('questions'),
+                'assignedTo',
+                'createdBy',
+                'latestApproval',
+            ])
+            ->withCount(['answers as answered_questions_count' => fn ($query) => $query->whereNotNull('answer_value')])
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);
