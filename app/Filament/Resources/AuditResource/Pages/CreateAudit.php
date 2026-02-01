@@ -30,6 +30,90 @@ class CreateAudit extends CreateRecord
 
     protected static string $resource = AuditResource::class;
 
+    /**
+     * Cache for audit items data to prevent repeated queries during Livewire updates.
+     *
+     * @var array<string, array{controls: array, metadata: array}>
+     */
+    protected array $auditItemsCache = [];
+
+    /**
+     * Get the controls and metadata for the audit, with caching.
+     *
+     * @return array{controls: array, metadata: array}
+     */
+    protected function getAuditItemsData(?string $auditType, ?string $standardId, ?string $programId): array
+    {
+        $cacheKey = "{$auditType}:{$standardId}:{$programId}";
+
+        if (isset($this->auditItemsCache[$cacheKey])) {
+            return $this->auditItemsCache[$cacheKey];
+        }
+
+        $controls = [];
+        $metadata = [];
+
+        if ($auditType === 'standards' && $standardId) {
+            $controlModels = Control::where('standard_id', '=', $standardId)
+                ->with('latestCompletedAudit')
+                ->get();
+            $controls = $controlModels->mapWithKeys(function ($control) {
+                return [$control->id => $control->code.' - '.$control->title];
+            })->toArray();
+            $metadata = $controlModels->mapWithKeys(function ($control) {
+                $latestAudit = $control->latestCompletedAudit;
+
+                return [$control->id => [
+                    'effectiveness' => $control->getEffectiveness(),
+                    'applicability' => $control->applicability,
+                    'control_owner_id' => $control->control_owner_id,
+                    'standard_id' => $control->standard_id,
+                    'last_assessed_at' => $latestAudit?->updated_at?->toDateTimeString(),
+                ]];
+            })->toArray();
+        } elseif ($auditType === 'implementations') {
+            $implementationModels = Implementation::query()
+                ->with('latestCompletedAudit')
+                ->get();
+            $controls = $implementationModels->mapWithKeys(function ($implementation) {
+                return [$implementation->id => $implementation->code.' - '.$implementation->title];
+            })->toArray();
+            $metadata = $implementationModels->mapWithKeys(function ($implementation) {
+                $latestAudit = $implementation->latestCompletedAudit;
+
+                return [$implementation->id => [
+                    'effectiveness' => $implementation->getEffectiveness(),
+                    'status' => $implementation->status,
+                    'implementation_owner_id' => $implementation->implementation_owner_id,
+                    'last_assessed_at' => $latestAudit?->updated_at?->toDateTimeString(),
+                ]];
+            })->toArray();
+        } elseif ($auditType === 'program' && $programId) {
+            $program = Program::find($programId);
+            if ($program) {
+                $controlModels = $program->getAllControls(['latestCompletedAudit']);
+                $controls = $controlModels->mapWithKeys(function ($control) {
+                    return [$control->id => $control->code.' - '.$control->title];
+                })->toArray();
+                $metadata = $controlModels->mapWithKeys(function ($control) {
+                    $latestAudit = $control->latestCompletedAudit;
+
+                    return [$control->id => [
+                        'effectiveness' => $control->getEffectiveness(),
+                        'applicability' => $control->applicability,
+                        'control_owner_id' => $control->control_owner_id,
+                        'standard_id' => $control->standard_id,
+                        'last_assessed_at' => $latestAudit?->updated_at?->toDateTimeString(),
+                    ]];
+                })->toArray();
+            }
+        }
+
+        $this->auditItemsCache[$cacheKey] = ['controls' => $controls, 'metadata' => $metadata];
+
+        return $this->auditItemsCache[$cacheKey];
+    }
+
     public function getSteps(): array
     {
         return [
@@ -132,71 +216,13 @@ class CreateAudit extends CreateRecord
                     Grid::make(1)
                         ->schema(
                             function (Get $get): array {
-                                $audit_type = $get('audit_type');
-                                $standard_id = $get('sid');
-                                $implementation_ids = $get('implementation_ids');
-                                $allDefaults = [];
+                                $auditType = $get('audit_type');
+                                $standardId = $get('sid');
+                                $programId = $get('program_id');
 
-                                $metadata = [];
-
-                                if ($audit_type == 'standards') {
-                                    $controlModels = Control::where('standard_id', '=', $standard_id)->get();
-                                    $controls = $controlModels->mapWithKeys(function ($control) {
-                                        return [$control->id => $control->code.' - '.$control->title];
-                                    })->toArray();
-                                    $metadata = $controlModels->mapWithKeys(function ($control) {
-                                        $latestAudit = $control->latestCompletedAuditItem();
-
-                                        return [$control->id => [
-                                            'effectiveness' => $control->getEffectiveness(),
-                                            'applicability' => $control->applicability,
-                                            'control_owner_id' => $control->control_owner_id,
-                                            'standard_id' => $control->standard_id,
-                                            'last_assessed_at' => $latestAudit?->updated_at?->toDateTimeString(),
-                                        ]];
-                                    })->toArray();
-                                } elseif ($audit_type == 'implementations') {
-                                    $implementationModels = Implementation::query()->get();
-                                    $controls = $implementationModels->mapWithKeys(function ($implementation) {
-                                        return [$implementation->id => $implementation->code.' - '.$implementation->title];
-                                    })->toArray();
-                                    $metadata = $implementationModels->mapWithKeys(function ($implementation) {
-                                        $latestAudit = $implementation->completedAuditItems()
-                                            ->latest('updated_at')
-                                            ->first();
-
-                                        return [$implementation->id => [
-                                            'effectiveness' => $implementation->getEffectiveness(),
-                                            'status' => $implementation->status,
-                                            'implementation_owner_id' => $implementation->implementation_owner_id,
-                                            'last_assessed_at' => $latestAudit?->updated_at?->toDateTimeString(),
-                                        ]];
-                                    })->toArray();
-                                } elseif ($audit_type == 'program') {
-                                    $program_id = $get('program_id');
-                                    if ($program_id) {
-                                        $program = Program::find($program_id);
-                                        $controlModels = $program->getAllControls();
-                                        $controls = $controlModels->mapWithKeys(function ($control) {
-                                            return [$control->id => $control->code.' - '.$control->title];
-                                        })->toArray();
-                                        $metadata = $controlModels->mapWithKeys(function ($control) {
-                                            $latestAudit = $control->latestCompletedAuditItem();
-
-                                            return [$control->id => [
-                                                'effectiveness' => $control->getEffectiveness(),
-                                                'applicability' => $control->applicability,
-                                                'control_owner_id' => $control->control_owner_id,
-                                                'standard_id' => $control->standard_id,
-                                                'last_assessed_at' => $latestAudit?->updated_at?->toDateTimeString(),
-                                            ]];
-                                        })->toArray();
-                                    } else {
-                                        $controls = [];
-                                    }
-                                } else {
-                                    $controls = [];
-                                }
+                                $data = $this->getAuditItemsData($auditType, $standardId, $programId);
+                                $controls = $data['controls'];
+                                $metadata = $data['metadata'];
 
                                 return [
                                     ActionableMultiselectTwoSides::make('controls')
@@ -205,7 +231,7 @@ class CreateAudit extends CreateRecord
                                         ->selectableLabel('Available Items')
                                         ->selectedLabel('Selected Items')
                                         ->enableSearch()
-                                        ->default(! is_array($controls) ? $controls->toArray() : $controls)
+                                        ->default($controls)
                                         ->required()
                                         ->addDropdownAction(
                                             name: 'randomSelect',
