@@ -184,7 +184,8 @@ class Implementation extends Model
             return $this->latestCompletedAudit?->effectiveness ?? Effectiveness::UNKNOWN;
         }
 
-        return $this->completedAuditItems->pluck('effectiveness')->last() ?? Effectiveness::UNKNOWN;
+        // Fallback to querying only the latest completed audit item
+        return $this->latestCompletedAudit()->first()?->effectiveness ?? Effectiveness::UNKNOWN;
     }
 
     /**
@@ -197,9 +198,8 @@ class Implementation extends Model
             return $this->latestCompletedAudit?->updated_at?->format('M d, Y') ?? '';
         }
 
-        $lastAuditItem = $this->completedAuditItems->last();
-
-        return $lastAuditItem?->updated_at?->format('M d, Y') ?? '';
+        // Fallback to querying only the latest completed audit item
+        return $this->latestCompletedAudit()->first()?->updated_at?->format('M d, Y') ?? '';
     }
 
     /**

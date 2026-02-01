@@ -53,15 +53,20 @@ class Program extends Model
         return $this->hasMany(Audit::class);
     }
 
-    public function getAllControls()
+    /**
+     * Get all controls from standards and direct controls.
+     *
+     * @param  array<string>  $with  Relationships to eager load on controls
+     */
+    public function getAllControls(array $with = []): \Illuminate\Support\Collection
     {
         $standardControls = $this->standards()
-            ->with('controls')
+            ->with(['controls' => fn ($query) => $query->with($with)])
             ->get()
             ->pluck('controls')
             ->flatten();
 
-        $directControls = $this->controls;
+        $directControls = $this->controls()->with($with)->get();
 
         return $standardControls->concat($directControls)
             ->unique('id')
