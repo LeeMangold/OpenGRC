@@ -45,6 +45,7 @@ class AuditItemRelationManager extends RelationManager
                             ->content(fn (AuditItem $record): string => $record->control->title),
                         Placeholder::make('control_desc')
                             ->label('Control Description')
+                            ->extraAttributes(['class' => 'control-description-text'])
                             ->content(fn (AuditItem $record): HtmlString => new HtmlString(optional($record->control)->description ?? ''))
                             ->columnSpanFull(),
                         Placeholder::make('control_discussion')
