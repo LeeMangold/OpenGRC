@@ -118,7 +118,7 @@ class RespondToSurvey extends Page implements HasForms
         return $form
             ->components([
                 Section::make($this->record->template->title)
-                    ->description($this->record->template->description)
+                    ->description(new \Illuminate\Support\HtmlString($this->record->template->description))
                     ->schema($schema),
             ])
             ->statePath('data');

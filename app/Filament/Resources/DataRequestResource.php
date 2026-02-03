@@ -224,6 +224,7 @@ class DataRequestResource extends Resource
                                 Placeholder::make('control_description')
                                     ->label('Control Description(s)')
                                     ->columnSpanFull()
+                                    ->extraAttributes(['class' => 'control-description-text'])
                                     ->content(function ($record) {
                                         // Try many-to-many relationship first
                                         $descriptions = $record->auditItems->map(function ($item) {

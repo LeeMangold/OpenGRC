@@ -147,6 +147,7 @@ class EditAuditItem extends EditRecord
                             ->content(fn (AuditItem $record): ?string => $record->auditable->title),
                         Placeholder::make('control_desc')
                             ->label('Description')
+                            ->extraAttributes(['class' => 'control-description-text'])
                             ->content(fn (AuditItem $record): HtmlString => new HtmlString(optional($record->auditable)->description ?? optional($record->auditable)->details ?? ''))
                             ->columnSpanFull(),
                         Placeholder::make('control_discussion')
