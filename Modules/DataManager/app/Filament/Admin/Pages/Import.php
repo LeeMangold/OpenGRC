@@ -8,6 +8,7 @@ use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\ViewField;
 use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Schemas\Components\Section;
@@ -16,17 +17,21 @@ use Filament\Schemas\Components\Wizard;
 use Filament\Schemas\Components\Wizard\Step;
 use Filament\Schemas\Schema;
 use Illuminate\Support\HtmlString;
-use Livewire\WithFileUploads;
 use Modules\DataManager\Services\EntityRegistry;
 use Modules\DataManager\Services\ImportService;
 use Modules\DataManager\Services\SchemaInspector;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
-class Import extends Page
+/**
+ * @property mixed $form
+ */
+class Import extends Page implements HasForms
 {
     use HasWizard;
     use InteractsWithForms;
-    use WithFileUploads;
+
+    // Exclude form from Livewire serialization to prevent JSON errors
+    protected $except = ['form'];
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-arrow-up-tray';
 
@@ -47,7 +52,7 @@ class Import extends Page
 
     public ?string $entity_type = null;
 
-    /** @var array<int, string>|null */
+    //public $upload_file;
     public ?array $upload_file = [];
 
     public ?string $upload_file_path = null;
@@ -62,11 +67,11 @@ class Import extends Page
 
     public ?array $required_fields = [];
 
-    public ?int $total_rows = 0;
+    public int $total_rows = 0;
 
     public ?array $mapping_errors = [];
 
-    public ?bool $is_importing = false;
+    public bool $is_importing = false;
 
     public ?array $import_result = null;
 
@@ -132,13 +137,12 @@ class Import extends Page
                         FileUpload::make('upload_file')
                             ->label('CSV File')
                             ->required()
-                            ->disk('local')
-                            ->directory('imports')
-                            ->acceptedFileTypes(['text/csv', 'application/csv', 'text/plain'])
-                            ->maxSize(10240) // 10MB
-                            ->helperText('Upload a CSV file with headers in the first row. Maximum 10MB.')
+                            //->acceptedFileTypes(['text/csv'])
+                            //->rules([])
+                            ->helperText('Upload a CSV file with headers in the first row.')
                             ->afterStateUpdated(function ($state) {
                                 if ($state) {
+                                    //Debug
                                     $this->parseUploadedFile($state);
                                 }
                             }),
@@ -286,7 +290,7 @@ class Import extends Page
 
     protected function resetImportState(): void
     {
-        $this->upload_file = [];
+        $this->upload_file = null;
         $this->upload_file_path = null;
         $this->csv_headers = [];
         $this->column_mapping = [];
@@ -340,6 +344,11 @@ class Import extends Page
 
             $this->upload_file_path = $path;
 
+            // Validate file encoding before parsing
+            if (! $this->validateFileEncoding($path)) {
+                return;
+            }
+
             $importService = app(ImportService::class);
             $parsed = $importService->parseFile($path);
 
@@ -356,6 +365,54 @@ class Import extends Page
             $this->resetErrorBag('upload_file');
         } catch (\Exception $e) {
             $this->addError('upload_file', 'Error parsing file: '.$e->getMessage());
+        }
+    }
+
+    /**
+     * Validate that the file is properly encoded UTF-8 without special characters that would break parsing.
+     */
+    protected function validateFileEncoding(string $path): bool
+    {
+        try {
+            $contents = file_get_contents($path);
+
+            if ($contents === false) {
+                $this->addError('upload_file', 'Unable to read file contents.');
+
+                return false;
+            }
+
+            // Remove BOM if present
+            $contents = preg_replace('/^\xEF\xBB\xBF/', '', $contents);
+
+            // Check if the file is valid UTF-8
+            if (! mb_check_encoding($contents, 'UTF-8')) {
+                $this->addError('upload_file', new HtmlString(
+                    '<strong>File encoding error:</strong> The file contains non-UTF8 characters.<br><br>'.
+                    'This often happens with files exported from Excel or containing special characters like em-dashes (—), curly quotes, or other non-standard characters.<br><br>'.
+                    '<strong>To fix:</strong> Open the file in a text editor and save it as UTF-8, or re-export from your spreadsheet application using UTF-8 encoding.'
+                ));
+
+                return false;
+            }
+
+            // Check if JSON encoding would fail (catches other problematic characters)
+            $testEncode = json_encode($contents);
+            if ($testEncode === false) {
+                $this->addError('upload_file', new HtmlString(
+                    '<strong>File contains invalid characters:</strong> The file contains characters that cannot be processed.<br><br>'.
+                    'Please check for special characters, control characters, or binary data in your CSV file.'
+                ));
+
+                return false;
+            }
+
+            return true;
+
+        } catch (\Exception $e) {
+            $this->addError('upload_file', 'Error checking file encoding: '.$e->getMessage());
+
+            return false;
         }
     }
 
