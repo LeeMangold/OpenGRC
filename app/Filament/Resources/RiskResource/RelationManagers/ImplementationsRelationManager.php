@@ -21,7 +21,7 @@ class ImplementationsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         $table = ImplementationResource::getTable($table);
-        $table->modifyQueryUsing(fn (Builder $query) => $query->with(['latestCompletedAudit', 'implementationOwner']));
+        $table->modifyQueryUsing(fn (Builder $query) => $query->with(['latestCompletedAudit', 'implementationOwner' => fn ($q) => $q->withTrashed()]));
         $table->recordActions([
             ViewAction::make()->hidden(),
         ]);

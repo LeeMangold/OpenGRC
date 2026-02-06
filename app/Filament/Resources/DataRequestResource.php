@@ -55,7 +55,7 @@ class DataRequestResource extends Resource
             ->components([
                 Select::make('user_id')
                     ->label('Assigned To')
-                    ->options(User::whereNotNull('name')->pluck('name', 'id')->toArray())
+                    ->options(fn (string $operation): array => $operation === 'create' ? User::activeOptions() : User::optionsWithDeactivated())
                     ->searchable(),
                 Select::make('audit_item_id')
                     ->label('Audit name')
@@ -69,7 +69,7 @@ class DataRequestResource extends Resource
                     ->nullable(),
                 Select::make('created_by_id')
                     ->label('Created By')
-                    ->options(User::whereNotNull('name')->pluck('name', 'id')->toArray())
+                    ->options(fn (string $operation): array => $operation === 'create' ? User::activeOptions() : User::optionsWithDeactivated())
                     ->default(auth()->id())
                     ->searchable()
                     ->required(),
@@ -349,13 +349,7 @@ class DataRequestResource extends Resource
                 ->schema([
                     Select::make('new_assignee_id')
                         ->label('Reassign To')
-                        ->options(
-                            User::query()
-                                ->whereNotNull('name')
-                                ->whereNull('deleted_at')
-                                ->pluck('name', 'id')
-                                ->toArray()
-                        )
+                        ->options(User::activeOptions())
                         ->searchable()
                         ->required()
                         ->helperText('Select the user to reassign this request to'),
@@ -491,13 +485,7 @@ class DataRequestResource extends Resource
                 ->schema([
                     Select::make('new_assignee_id')
                         ->label('Reassign To')
-                        ->options(
-                            User::query()
-                                ->whereNotNull('name')
-                                ->whereNull('deleted_at')
-                                ->pluck('name', 'id')
-                                ->toArray()
-                        )
+                        ->options(User::activeOptions())
                         ->searchable()
                         ->required()
                         ->helperText('Select the user to reassign this request to'),
@@ -677,13 +665,7 @@ class DataRequestResource extends Resource
                 ->schema([
                     Select::make('new_assignee_id')
                         ->label('Reassign To')
-                        ->options(
-                            User::query()
-                                ->whereNotNull('name')
-                                ->whereNull('deleted_at')
-                                ->pluck('name', 'id')
-                                ->toArray()
-                        )
+                        ->options(User::activeOptions())
                         ->searchable()
                         ->required()
                         ->helperText('Select the user to reassign this request to'),

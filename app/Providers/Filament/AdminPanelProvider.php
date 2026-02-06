@@ -23,6 +23,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Jeffgreco13\FilamentBreezy\BreezyCore;
 use MangoldSecurity\FilamentSettings\SettingsPlugin;
 use Modules\DataManager\Filament\DataManagerPlugin;
 
@@ -79,6 +80,15 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             ->plugins([
+                BreezyCore::make()
+                    ->myProfile(
+                        shouldRegisterUserMenu: false,
+                        shouldRegisterNavigation: false,
+                        hasAvatars: false,
+                    )
+                    ->enableTwoFactorAuthentication(
+                        force: false,
+                    ),
                 SettingsPlugin::make()
                     ->pages([
                         \App\Filament\Admin\Pages\Settings\Settings::class,

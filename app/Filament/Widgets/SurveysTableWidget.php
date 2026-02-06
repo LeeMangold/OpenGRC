@@ -28,13 +28,13 @@ class SurveysTableWidget extends BaseWidget
     public function table(Table $table): Table
     {
         return $table
-            ->query(Survey::query()->with(['template', 'assignedTo', 'createdBy']))
+            ->query(Survey::query()->with(['template', 'assignedTo' => fn ($q) => $q->withTrashed(), 'createdBy' => fn ($q) => $q->withTrashed()]))
             ->heading(__('survey.manager.tabs.surveys'))
             ->columns([
                 TextColumn::make('display_title')
                     ->label(__('survey.survey.table.columns.title'))
                     ->searchable(['title'])
-                    ->sortable('title')
+                    ->sortable()
                     ->wrap(),
                 TextColumn::make('template.title')
                     ->label(__('survey.survey.table.columns.template'))
@@ -42,7 +42,23 @@ class SurveysTableWidget extends BaseWidget
                     ->toggleable(),
                 TextColumn::make('respondent_display')
                     ->label(__('survey.survey.table.columns.respondent'))
-                    ->getStateUsing(fn (Survey $record): string => $record->respondent_name ?? $record->respondent_email ?? $record->assignedTo?->name ?? '-'),
+                    ->getStateUsing(function (Survey $record): string {
+                        if ($record->respondent_name) {
+                            return $record->respondent_name;
+                        }
+                        if ($record->respondent_email) {
+                            return $record->respondent_email;
+                        }
+                        /** @var \App\Models\User|null $assignedTo */
+                        $assignedTo = $record->assignedTo;
+                        if ($assignedTo) {
+                            return $assignedTo->trashed()
+                                ? $assignedTo->name.' (Deactivated)'
+                                : $assignedTo->name;
+                        }
+
+                        return '-';
+                    }),
                 TextColumn::make('status')
                     ->label(__('survey.survey.table.columns.status'))
                     ->badge()

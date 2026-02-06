@@ -29,7 +29,7 @@ class VendorsTableWidget extends BaseWidget
     public function table(Table $table): Table
     {
         return $table
-            ->query(Vendor::query()->with(['vendorManager']))
+            ->query(Vendor::query()->with(['vendorManager' => fn ($q) => $q->withTrashed()]))
             ->heading(__('Vendors'))
             ->columns([
                 TextColumn::make('name')
@@ -38,6 +38,14 @@ class VendorsTableWidget extends BaseWidget
                     ->sortable(),
                 TextColumn::make('vendorManager.name')
                     ->label(__('Vendor Manager'))
+                    ->formatStateUsing(function (Vendor $record): string {
+                        /** @var \App\Models\User|null $vendorManager */
+                        $vendorManager = $record->vendorManager;
+
+                        return $vendorManager
+                            ? ($vendorManager->trashed() ? $vendorManager->name.' (Deactivated)' : $vendorManager->name)
+                            : '';
+                    })
                     ->searchable()
                     ->toggleable(),
                 TextColumn::make('status')
@@ -75,7 +83,7 @@ class VendorsTableWidget extends BaseWidget
                     ->options(collect(VendorRiskRating::cases())->mapWithKeys(fn ($case) => [$case->value => $case->getLabel()])),
                 SelectFilter::make('vendor_manager_id')
                     ->label(__('Vendor Manager'))
-                    ->options(User::all()->pluck('name', 'id')),
+                    ->options(User::optionsWithDeactivated()),
             ])
             ->recordActions([
                 ActionGroup::make([

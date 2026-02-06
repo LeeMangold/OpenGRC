@@ -19,7 +19,7 @@ class AuditsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn (Builder $query) => $query->with(['manager']))
+            ->modifyQueryUsing(fn (Builder $query) => $query->with(['manager' => fn ($q) => $q->withTrashed()]))
             ->recordTitleAttribute('name')
             ->columns([
                 TextColumn::make('title'),
@@ -30,7 +30,7 @@ class AuditsRelationManager extends RelationManager
                     ->searchable(),
                 TextColumn::make('manager.name')
                     ->label(__('audit.table.columns.manager'))
-                    ->default('Unassigned')
+                    ->formatStateUsing(fn ($record): string => $record->manager?->displayName() ?? 'Unassigned')
                     ->sortable(),
                 TextColumn::make('start_date')
                     ->label(__('audit.table.columns.start_date'))

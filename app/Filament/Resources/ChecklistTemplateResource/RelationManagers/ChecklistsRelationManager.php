@@ -42,6 +42,7 @@ class ChecklistsRelationManager extends RelationManager
                     ->sortable(['title']),
                 TextColumn::make('assignedTo.name')
                     ->label(__('checklist.checklist.table.columns.assigned_to'))
+                    ->formatStateUsing(fn ($record): string => $record->assignedTo?->displayName() ?? '-')
                     ->wrap(),
                 TextColumn::make('status')
                     ->label(__('checklist.checklist.table.columns.status'))

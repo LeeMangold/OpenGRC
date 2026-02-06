@@ -15,6 +15,7 @@ use App\Filament\Resources\PolicyResource\RelationManagers\ExceptionsRelationMan
 use App\Filament\Resources\PolicyResource\RelationManagers\ImplementationsRelationManager;
 use App\Filament\Resources\PolicyResource\RelationManagers\RisksRelationManager;
 use App\Models\Policy;
+use App\Models\User;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
@@ -264,6 +265,7 @@ class PolicyResource extends Resource
 
                 TextColumn::make('creator.name')
                     ->label('Created By')
+                    ->formatStateUsing(fn ($record): string => $record->creator?->displayName() ?? '')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
@@ -274,6 +276,7 @@ class PolicyResource extends Resource
 
                 TextColumn::make('updater.name')
                     ->label('Updated By')
+                    ->formatStateUsing(fn ($record): string => $record->updater?->displayName() ?? '')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
@@ -544,6 +547,7 @@ class PolicyResource extends Resource
                     ->schema([
                         TextEntry::make('creator.name')
                             ->label('Created By')
+                            ->formatStateUsing(fn ($record): string => $record->creator?->displayName() ?? '')
                             ->icon('heroicon-o-user'),
 
                         TextEntry::make('created_at')
@@ -552,6 +556,7 @@ class PolicyResource extends Resource
 
                         TextEntry::make('updater.name')
                             ->label('Last Updated By')
+                            ->formatStateUsing(fn ($record): string => $record->updater?->displayName() ?? '')
                             ->icon('heroicon-o-user'),
 
                         TextEntry::make('updated_at')
@@ -591,7 +596,7 @@ class PolicyResource extends Resource
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ])
-            ->with(['status', 'scope', 'department', 'owner', 'creator', 'updater']);
+            ->with(['status', 'scope', 'department', 'owner' => fn ($q) => $q->withTrashed(), 'creator' => fn ($q) => $q->withTrashed(), 'updater' => fn ($q) => $q->withTrashed()]);
     }
 
     public static function getGlobalSearchResultTitle($record): string

@@ -79,6 +79,7 @@ class ApproveChecklist extends Page implements HasForms, HasInfolists
             return;
         }
 
+        /** @phpstan-ignore-next-line */
         $this->form->fill();
     }
 
@@ -121,7 +122,7 @@ class ApproveChecklist extends Page implements HasForms, HasInfolists
                             ->badge(),
                         TextEntry::make('assignedTo.name')
                             ->label(__('checklist.checklist.form.assigned_to.label'))
-                            ->default('-'),
+                            ->formatStateUsing(fn ($record): string => $record->assignedTo?->displayName() ?? '-'),
                         TextEntry::make('completed_at')
                             ->label(__('checklist.checklist.table.columns.completed_at'))
                             ->dateTime(),
@@ -134,6 +135,7 @@ class ApproveChecklist extends Page implements HasForms, HasInfolists
 
     public function approve(): void
     {
+        /** @phpstan-ignore-next-line */
         $data = $this->form->getState();
 
         if (empty($data['approval_signature'])) {
@@ -147,6 +149,7 @@ class ApproveChecklist extends Page implements HasForms, HasInfolists
         }
 
         // Use the Approvable trait's approve method
+        assert($this->record instanceof Survey);
         $this->record->approve(
             auth()->user(),
             $data['approval_signature'],
@@ -169,11 +172,13 @@ class ApproveChecklist extends Page implements HasForms, HasInfolists
 
     public function getSubheading(): ?string
     {
+        assert($this->record instanceof Survey);
         return $this->record->display_title;
     }
 
     public function getBreadcrumbs(): array
     {
+        assert($this->record instanceof Survey);
         return [
             ChecklistResource::getUrl() => __('checklist.checklist.navigation.label'),
             ChecklistResource::getUrl('view', ['record' => $this->record]) => $this->record?->display_title ?? __('Checklist'),

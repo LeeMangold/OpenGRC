@@ -47,7 +47,7 @@ class EditAudit extends EditRecord
                         Select::make('manager_id')
                             ->label('Audit Manager')
                             ->hint('Who will be managing this audit?')
-                            ->options(User::query()->pluck('name', 'id')->toArray())
+                            ->options(User::optionsWithDeactivated())
                             ->columns(1)
                             ->searchable(),
                         Select::make('members')
@@ -55,7 +55,7 @@ class EditAudit extends EditRecord
                             ->label('Additional Members')
                             ->hint('Who else should have full access to the Audit?')
                             ->helperText('Note: You don\'t need to add evidence people who are only fulfilling requests here.')
-                            ->options(User::query()->pluck('name', 'id')->toArray())
+                            ->options(User::optionsWithDeactivated())
                             ->columns(1)
                             ->multiple()
                             ->searchable(),

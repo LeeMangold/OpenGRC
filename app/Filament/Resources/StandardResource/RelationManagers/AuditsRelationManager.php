@@ -16,12 +16,13 @@ class AuditsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn (Builder $query) => $query->with(['manager']))
+            ->modifyQueryUsing(fn (Builder $query) => $query->with(['manager' => fn ($q) => $q->withTrashed()]))
             ->recordTitleAttribute('title')
             ->columns([
                 TextColumn::make('title'),
                 TextColumn::make('status'),
-                TextColumn::make('manager.name')->label('Manager'),
+                TextColumn::make('manager.name')->label('Manager')
+                    ->formatStateUsing(fn ($record): string => $record->manager?->displayName() ?? ''),
             ])
             ->recordActions([
                 ViewAction::make()->hiddenLabel()

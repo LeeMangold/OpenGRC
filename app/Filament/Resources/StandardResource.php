@@ -272,12 +272,12 @@ class StandardResource extends Resource
                         TextEntry::make('status'),
                         TextEntry::make('taxonomies')
                             ->label('Department')
-                            ->formatStateUsing(function (Standard $record) {
+                            ->getStateUsing(function (Standard $record) {
                                 return self::getTaxonomyTerm($record, 'department')?->name ?? 'Not assigned';
                             }),
                         TextEntry::make('taxonomies')
                             ->label('Scope')
-                            ->formatStateUsing(function (Standard $record) {
+                            ->getStateUsing(function (Standard $record) {
                                 return self::getTaxonomyTerm($record, 'scope')?->name ?? 'Not assigned';
                             }),
                         TextEntry::make('description')

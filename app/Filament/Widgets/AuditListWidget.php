@@ -19,7 +19,7 @@ class AuditListWidget extends BaseWidget
     {
         return $table
             ->query(
-                Audit::query()->with('manager')->latest('updated_at')->limit(5)
+                Audit::query()->with(['manager' => fn ($q) => $q->withTrashed()])->latest('updated_at')->limit(5)
             )
             ->heading(trans('widgets.audit_list.heading'))
             ->emptyStateHeading(new HtmlString(trans('widgets.audit_list.empty_heading')))
@@ -30,7 +30,14 @@ class AuditListWidget extends BaseWidget
                     ->url(fn (Audit $audit) => route('filament.app.resources.audits.view', $audit)),
                 TextColumn::make('manager_id')
                     ->label(trans('widgets.audit_list.manager'))
-                    ->state(fn (Audit $audit) => $audit->manager->name),
+                    ->formatStateUsing(function ($state, Audit $audit): string {
+                        if ($state === null) {
+                            return 'Unassigned';
+                        }
+                        $manager = $audit->manager;
+
+                        return $manager->trashed() ? $manager->name.' (Deactivated)' : $manager->name;
+                    }),
                 TextColumn::make('status')
                     ->badge()
                     ->wrap(),

@@ -27,7 +27,7 @@ class ApplicationsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn (Builder $query) => $query->with(['owner', 'vendor']))
+            ->modifyQueryUsing(fn (Builder $query) => $query->with(['owner' => fn ($q) => $q->withTrashed(), 'vendor']))
             ->recordTitleAttribute('name')
             ->columns([
                 TextColumn::make('name')
@@ -49,6 +49,7 @@ class ApplicationsRelationManager extends RelationManager
 
                 TextColumn::make('owner.name')
                     ->label(__('Owner'))
+                    ->formatStateUsing(fn ($record): string => $record->owner?->displayName() ?? '')
                     ->searchable()
                     ->sortable(),
 

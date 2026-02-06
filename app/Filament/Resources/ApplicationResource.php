@@ -11,6 +11,7 @@ use App\Filament\Resources\ApplicationResource\Pages\ListApplications;
 use App\Filament\Resources\ApplicationResource\Pages\ViewApplication;
 use App\Filament\Resources\ApplicationResource\RelationManagers\ImplementationsRelationManager;
 use App\Models\Application;
+use App\Models\User;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -120,7 +121,8 @@ class ApplicationResource extends Resource
                 TextEntry::make('name')
                     ->label(__('Name')),
                 TextEntry::make('owner.name')
-                    ->label(__('Owner')),
+                    ->label(__('Owner'))
+                    ->formatStateUsing(fn ($record): string => $record->owner?->displayName() ?? ''),
                 TextEntry::make('type')
                     ->label(__('Type'))
                     ->badge()
@@ -153,7 +155,7 @@ class ApplicationResource extends Resource
             ->deferLoading()
             ->columns([
                 TextColumn::make('name')->label(__('Name'))->searchable(),
-                TextColumn::make('owner.name')->label(__('Owner'))->searchable(),
+                TextColumn::make('owner.name')->label(__('Owner'))->formatStateUsing(fn ($record): string => $record->owner?->displayName() ?? '')->searchable(),
                 TextColumn::make('type')->label(__('Type'))->badge()->color(fn ($record) => $record->type->getColor()),
                 TextColumn::make('vendor.name')->label(__('Vendor'))->searchable(),
                 TextColumn::make('status')->label(__('Status'))->badge()->color(fn ($record) => $record->status->getColor()),
@@ -205,7 +207,7 @@ class ApplicationResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
-            ->with(['owner', 'vendor']);
+            ->with(['owner' => fn ($q) => $q->withTrashed(), 'vendor']);
     }
 
     /**

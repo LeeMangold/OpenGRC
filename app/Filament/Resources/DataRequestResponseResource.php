@@ -262,9 +262,11 @@ class DataRequestResponseResource extends Resource
                                     ->default(Auth::id()),
                                 Hidden::make('audit_id')
                                     ->default(function ($livewire) {
+                                        /** @var DataRequestResponse|null $drr */
                                         $drr = DataRequestResponse::where('id', $livewire->data['id'])->first();
-
-                                        return $drr->dataRequest->audit_id;
+                                        /** @var \App\Models\DataRequest|null $dataRequest */
+                                        $dataRequest = $drr?->dataRequest;
+                                        return $dataRequest?->audit_id;
                                     }),
                             ]),
 
@@ -319,9 +321,11 @@ class DataRequestResponseResource extends Resource
                     ->html()
                     ->limit(200),
                 TextColumn::make('requester.name')
-                    ->label('Requester'),
+                    ->label('Requester')
+                    ->formatStateUsing(fn ($record): string => $record->requester?->displayName() ?? ''),
                 TextColumn::make('requestee.name')
-                    ->label('Requestee'),
+                    ->label('Requestee')
+                    ->formatStateUsing(fn ($record): string => $record->requestee?->displayName() ?? ''),
                 TextColumn::make('status')
                     ->badge()
                     ->label('Status'),

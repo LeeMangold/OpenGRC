@@ -11,6 +11,7 @@ use App\Filament\Resources\ChecklistResource\Pages\EditChecklist;
 use App\Filament\Resources\ChecklistResource\Pages\ListChecklists;
 use App\Filament\Resources\ChecklistResource\Pages\RespondToChecklist;
 use App\Filament\Resources\ChecklistResource\Pages\ViewChecklist;
+use App\Models\Approval;
 use App\Models\Survey;
 use App\Models\SurveyTemplate;
 use App\Models\User;
@@ -130,14 +131,14 @@ class ChecklistResource extends Resource
                     ->schema([
                         Select::make('assigned_to_id')
                             ->label(__('checklist.checklist.form.assigned_to.label'))
-                            ->options(User::whereNotNull('name')->pluck('name', 'id'))
+                            ->options(fn (string $operation): array => $operation === 'create' ? User::activeOptions() : User::optionsWithDeactivated())
                             ->searchable()
                             ->required()
                             ->disabled(fn (?Survey $record): bool => $record?->status === SurveyStatus::COMPLETED)
                             ->helperText(__('checklist.checklist.form.assigned_to.helper')),
                         Select::make('approver_id')
                             ->label(__('checklist.checklist.form.approver.label'))
-                            ->options(User::whereNotNull('name')->pluck('name', 'id'))
+                            ->options(fn (string $operation): array => $operation === 'create' ? User::activeOptions() : User::optionsWithDeactivated())
                             ->searchable()
                             ->helperText(__('checklist.checklist.form.approver.helper')),
                         DatePicker::make('due_date')
@@ -156,22 +157,31 @@ class ChecklistResource extends Resource
             ->columns([
                 TextColumn::make('display_title')
                     ->label(__('checklist.checklist.table.columns.title'))
-                    ->description(fn (Survey $record) => "{$record->template->title} Template")
+                    ->description(function (Survey $record): string {
+                        /** @var SurveyTemplate|null $template */
+                        $template = $record->template;
+                        return ($template?->title ?? 'Unknown').' Template';
+                    })
                     ->searchable(['title'])
                     ->sortable(['title'])
                     ->wrap(),
                 TextColumn::make('assignedTo.name')
                     ->label(__('checklist.checklist.table.columns.assigned_to'))
+                    ->formatStateUsing(fn ($record): string => $record->assignedTo?->displayName() ?? '-')
                     ->sortable()
-                    ->searchable()
-                    ->placeholder('-'),
+                    ->searchable(),
                 TextColumn::make('status')
                     ->label(__('checklist.checklist.table.columns.status'))
                     ->badge()
                     ->sortable()
-                    ->description(fn (Survey $record): ?string => $record->status === SurveyStatus::COMPLETED && $record->assignedTo
-                        ? "by {$record->assignedTo->name}"
-                        : null),
+                    ->description(function (Survey $record): ?string {
+                        if ($record->status === SurveyStatus::COMPLETED && $record->relationLoaded('assignedTo')) {
+                            /** @var User|null $assignedTo */
+                            $assignedTo = $record->assignedTo;
+                            return $assignedTo ? "by {$assignedTo->displayName()}" : null;
+                        }
+                        return null;
+                    }),
                 TextColumn::make('progress')
                     ->label(__('checklist.checklist.table.columns.progress'))
                     ->suffix('%')
@@ -185,9 +195,18 @@ class ChecklistResource extends Resource
                     ->state(fn (Survey $record): string => $record->isApproved() ? __('Yes') : __('No'))
                     ->icon(fn (Survey $record): string => $record->isApproved() ? 'heroicon-o-check-badge' : 'heroicon-o-x-circle')
                     ->color(fn (Survey $record): string => $record->isApproved() ? 'success' : 'gray')
-                    ->description(fn (Survey $record): ?string => $record->isApproved()
-                        ? "by {$record->latestApproval->approver_name} on {$record->latestApproval->approved_at->format('M j, Y')}"
-                        : null),
+                    ->description(function (Survey $record): ?string {
+                        if ($record->isApproved() && $record->relationLoaded('latestApproval')) {
+                            /** @var \App\Models\Approval|null $approval */
+                            $approval = $record->latestApproval;
+                            if ($approval && $approval->approved_at) {
+                                /** @var \Illuminate\Support\Carbon $approvedAt */
+                                $approvedAt = $approval->approved_at;
+                                return "by {$approval->approver_name} on {$approvedAt->format('M j, Y')}";
+                            }
+                        }
+                        return null;
+                    }),
                 TextColumn::make('due_date')
                     ->label(__('checklist.checklist.table.columns.due_date'))
                     ->date()
@@ -200,6 +219,7 @@ class ChecklistResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('createdBy.name')
                     ->label(__('checklist.checklist.table.columns.created_by'))
+                    ->formatStateUsing(fn ($record): string => $record->createdBy?->displayName() ?? '')
                     ->sortable()
                     ->toggleable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -293,10 +313,10 @@ class ChecklistResource extends Resource
                             ->badge(),
                         TextEntry::make('assignedTo.name')
                             ->label(__('checklist.checklist.form.assigned_to.label'))
-                            ->default('-'),
+                            ->formatStateUsing(fn ($record): string => $record->assignedTo?->displayName() ?? '-'),
                         TextEntry::make('approver.name')
                             ->label(__('checklist.checklist.form.approver.label'))
-                            ->placeholder(__('checklist.checklist.infolist.no_approver_assigned')),
+                            ->formatStateUsing(fn ($record): string => $record->approver?->displayName() ?? __('checklist.checklist.infolist.no_approver_assigned')),
                         TextEntry::make('due_date')
                             ->label(__('checklist.checklist.form.due_date.label'))
                             ->date()
@@ -319,7 +339,8 @@ class ChecklistResource extends Resource
                     ->columns(3)
                     ->schema([
                         TextEntry::make('createdBy.name')
-                            ->label(__('checklist.checklist.table.columns.created_by')),
+                            ->label(__('checklist.checklist.table.columns.created_by'))
+                            ->formatStateUsing(fn ($record): string => $record->createdBy?->displayName() ?? ''),
                         TextEntry::make('description')
                             ->label(__('checklist.checklist.form.description.label'))
                             ->html()
@@ -352,8 +373,8 @@ class ChecklistResource extends Resource
             ->where('type', SurveyType::INTERNAL_CHECKLIST)
             ->with([
                 'template' => fn ($query) => $query->withCount('questions'),
-                'assignedTo',
-                'createdBy',
+                'assignedTo' => fn ($q) => $q->withTrashed(),
+                'createdBy' => fn ($q) => $q->withTrashed(),
                 'latestApproval',
             ])
             ->withCount(['answers as answered_questions_count' => fn ($query) => $query->whereNotNull('answer_value')])

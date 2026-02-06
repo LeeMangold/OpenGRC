@@ -103,7 +103,7 @@ class EditAuditItem extends EditRecord
                         ->schema([
                             Select::make('user_id')
                                 ->label('Assigned To')
-                                ->options(User::pluck('name', 'id'))
+                                ->options(User::activeOptions())
                                 ->default($this->record->audit->manager_id)
                                 ->required()
                                 ->searchable(),

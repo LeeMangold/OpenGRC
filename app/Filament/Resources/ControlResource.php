@@ -133,7 +133,7 @@ class ControlResource extends Resource
                     ->required(),
                 Select::make('control_owner_id')
                     ->label('Control Owner')
-                    ->options(User::pluck('name', 'id')->toArray())
+                    ->options(fn (string $operation): array => $operation === 'create' ? User::activeOptions() : User::optionsWithDeactivated())
 
                     ->nullable()
                     ->columnSpan(1),
@@ -207,7 +207,8 @@ class ControlResource extends Resource
                         return $record->getEffectivenessDate();
                     }),
                 TextColumn::make('controlOwner.name')
-                    ->label('Owner'),
+                    ->label('Owner')
+                    ->formatStateUsing(fn ($record): string => $record->controlOwner?->displayName() ?? ''),
                 TaxonomyColumn::make('department'),
                 TaxonomyColumn::make('scope'),
                 TextColumn::make('created_at')
@@ -243,7 +244,7 @@ class ControlResource extends Resource
                     ->label(__('control.table.filters.applicability')),
                 SelectFilter::make('control_owner_id')
                     ->label('Owner')
-                    ->options(User::pluck('name', 'id')->toArray()),
+                    ->options(User::optionsWithDeactivated()),
                 TaxonomySelectFilter::make('department'),
                 TaxonomySelectFilter::make('scope'),
             ])
@@ -290,7 +291,7 @@ class ControlResource extends Resource
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ])
-            ->with(['taxonomies', 'latestCompletedAudit', 'controlOwner', 'standard']);
+            ->with(['taxonomies', 'latestCompletedAudit', 'controlOwner' => fn ($q) => $q->withTrashed(), 'standard']);
     }
 
     public static function infolist(Schema $schema): Schema
@@ -314,12 +315,12 @@ class ControlResource extends Resource
                             }),
                         TextEntry::make('taxonomies')
                             ->label('Department')
-                            ->formatStateUsing(function (Control $record) {
+                            ->getStateUsing(function (Control $record) {
                                 return self::getTaxonomyTerm($record, 'department')?->name ?? 'Not assigned';
                             }),
                         TextEntry::make('taxonomies')
                             ->label('Scope')
-                            ->formatStateUsing(function (Control $record) {
+                            ->getStateUsing(function (Control $record) {
                                 return self::getTaxonomyTerm($record, 'scope')?->name ?? 'Not assigned';
                             }),
                         TextEntry::make('title')->columnSpanFull(),

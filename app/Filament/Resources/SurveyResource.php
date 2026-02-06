@@ -135,7 +135,7 @@ class SurveyResource extends Resource
                             ->maxLength(255),
                         Select::make('assigned_to_id')
                             ->label(__('survey.survey.form.assigned_to.label'))
-                            ->options(User::whereNotNull('name')->pluck('name', 'id'))
+                            ->options(fn (string $operation): array => $operation === 'create' ? User::activeOptions() : User::optionsWithDeactivated())
                             ->searchable()
                             ->helperText(__('survey.survey.form.assigned_to.helper')),
                         DatePicker::make('due_date')
@@ -234,6 +234,7 @@ class SurveyResource extends Resource
                     ->toggleable(),
                 TextColumn::make('createdBy.name')
                     ->label(__('survey.survey.table.columns.created_by'))
+                    ->formatStateUsing(fn ($record): string => $record->createdBy?->displayName() ?? '')
                     ->sortable()
                     ->toggleable(),
                 TextColumn::make('created_at')
@@ -421,7 +422,7 @@ class SurveyResource extends Resource
                             ->label(__('survey.survey.table.columns.respondent')),
                         TextEntry::make('assignedTo.name')
                             ->label(__('survey.survey.form.assigned_to.label'))
-                            ->default('-'),
+                            ->formatStateUsing(fn ($record): string => $record->assignedTo?->displayName() ?? '-'),
                         TextEntry::make('due_date')
                             ->label(__('survey.survey.form.due_date.label'))
                             ->date()
@@ -451,7 +452,8 @@ class SurveyResource extends Resource
                             })
                             ->formatStateUsing(fn (?int $state): string => $state !== null ? "{$state}/100" : '-'),
                         TextEntry::make('createdBy.name')
-                            ->label(__('survey.survey.table.columns.created_by')),
+                            ->label(__('survey.survey.table.columns.created_by'))
+                            ->formatStateUsing(fn ($record): string => $record->createdBy?->displayName() ?? ''),
                         TextEntry::make('public_url')
                             ->label(fn (Survey $record): string => $record->isInternal()
                                 ? __('Internal Assessment Link')

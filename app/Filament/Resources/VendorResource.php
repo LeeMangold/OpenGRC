@@ -206,6 +206,7 @@ class VendorResource extends Resource
                             }),
                         TextEntry::make('vendorManager.name')
                             ->label(__('Relationship Manager'))
+                            ->formatStateUsing(fn ($record): string => $record->vendorManager?->displayName() ?? '')
                             ->icon('heroicon-o-user'),
                     ])
                     ->columns(4),
@@ -276,6 +277,7 @@ class VendorResource extends Resource
                 TextColumn::make('name')->label(__('Name'))->searchable(),
                 TextColumn::make('vendorManager.name')
                     ->label(__('Vendor Manager'))
+                    ->formatStateUsing(fn ($record): string => $record->vendorManager?->displayName() ?? '')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: false),
                 TextColumn::make('status')->label(__('Status'))->badge()->color(fn ($record) => $record->status->getColor()),
@@ -308,7 +310,7 @@ class VendorResource extends Resource
                     ->options(collect(VendorRiskRating::cases())->mapWithKeys(fn ($case) => [$case->value => $case->getLabel()])),
                 SelectFilter::make('vendor_manager_id')
                     ->label(__('Vendor Manager'))
-                    ->options(User::pluck('name', 'id')),
+                    ->options(User::optionsWithDeactivated()),
             ])
             ->headerActions([
                 ExportAction::make()
@@ -404,6 +406,6 @@ class VendorResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
-            ->with(['vendorManager']);
+            ->with(['vendorManager' => fn ($q) => $q->withTrashed()]);
     }
 }

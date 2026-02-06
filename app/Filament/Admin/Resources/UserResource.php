@@ -15,10 +15,8 @@ use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
-use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ForceDeleteAction;
-use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreAction;
 use Filament\Actions\RestoreBulkAction;
 use Filament\Actions\ViewAction;
@@ -79,7 +77,7 @@ class UserResource extends Resource
                     ->label('Roles'),
                 Placeholder::make('last_activity')
                     ->content(
-                        function (Model $record) {
+                        function (User $record) {
                             return $record->last_activity ? $record->last_activity->format('Y-m-d H:i:s') : null;
                         }
                     )
@@ -146,8 +144,6 @@ class UserResource extends Resource
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                    ForceDeleteBulkAction::make(),
                     RestoreBulkAction::make(),
                 ]),
             ]);

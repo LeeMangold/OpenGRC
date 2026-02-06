@@ -75,7 +75,7 @@ class ImportIrl extends Page implements HasForms
 
     public function form(Schema $schema): Schema
     {
-        $this->users = User::query()->pluck('name', 'id')->toArray();
+        $this->users = User::optionsWithDeactivated();
         $this->currentDataRequests = DataRequest::query()->where('audit_id', $this->record->id)->get();
         $this->auditItems = $this->record->auditItems()->with('control')->get();
         $this->controlCodes = $this->auditItems->pluck('auditable.code')->toArray();
