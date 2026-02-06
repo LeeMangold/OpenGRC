@@ -20,6 +20,9 @@ use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Permission\Traits\HasRoles;
 
+/**
+ * @property \Illuminate\Support\Carbon|null $last_activity
+ */
 class User extends Authenticatable implements Commenter, FilamentUser
 {
     use HasApiTokens, HasFactory, HasRoles, HasSuperAdmin, LogsActivity, Notifiable, softDeletes, TwoFactorAuthenticatable;
@@ -113,5 +116,41 @@ class User extends Authenticatable implements Commenter, FilamentUser
             ->logOnly(['name', 'email'])
             ->logOnlyDirty()
             ->dontSubmitEmptyLogs();
+    }
+
+    /**
+     * Get the display name, appending (Deactivated) for soft-deleted users.
+     */
+    public function displayName(): string
+    {
+        return $this->trashed() ? $this->name.' (Deactivated)' : $this->name;
+    }
+
+    /**
+     * Get active (non-deleted) user options for select fields.
+     *
+     * @return array<int, string>
+     */
+    public static function activeOptions(): array
+    {
+        return static::whereNotNull('name')
+            ->pluck('name', 'id')
+            ->toArray();
+    }
+
+    /**
+     * Get user options for select fields, including soft-deleted users with (Deactivated) label.
+     *
+     * @return array<int, string>
+     */
+    public static function optionsWithDeactivated(): array
+    {
+        return static::withTrashed()
+            ->whereNotNull('name')
+            ->get()
+            ->mapWithKeys(fn (User $user) => [
+                $user->id => $user->trashed() ? "{$user->name} (Deactivated)" : $user->name,
+            ])
+            ->toArray();
     }
 }

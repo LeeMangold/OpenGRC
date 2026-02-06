@@ -169,7 +169,7 @@ class AssetResource extends Resource
                     ->schema([
                         Select::make('assigned_to_user_id')
                             ->label('Assigned To')
-                            ->options(User::pluck('name', 'id'))
+                            ->options(fn (string $operation): array => $operation === 'create' ? User::activeOptions() : User::optionsWithDeactivated())
                             ->searchable(),
 
                         DatePicker::make('assigned_at')
@@ -749,7 +749,7 @@ class AssetResource extends Resource
 
                 SelectFilter::make('assigned_to_user_id')
                     ->label('Assigned To')
-                    ->options(fn () => User::pluck('name', 'id'))
+                    ->options(fn () => User::optionsWithDeactivated())
                     ->searchable(),
 
                 TernaryFilter::make('is_active')

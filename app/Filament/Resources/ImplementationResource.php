@@ -151,7 +151,7 @@ class ImplementationResource extends Resource
                     ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Enter a title for this implementation.'),
                 Select::make('implementation_owner_id')
                     ->label('Owner')
-                    ->options(User::pluck('name', 'id')->toArray())
+                    ->options(fn (string $operation): array => $operation === 'create' ? User::activeOptions() : User::optionsWithDeactivated())
                     ->searchable()
                     ->nullable()
                     ->columnSpan(1),
@@ -230,6 +230,7 @@ class ImplementationResource extends Resource
                     ->searchable(),
                 TextColumn::make('implementationOwner.name')
                     ->label('Owner')
+                    ->formatStateUsing(fn ($record): string => $record->implementationOwner?->displayName() ?? '')
                     ->sortable()
                     ->searchable()
                     ->toggleable(),
@@ -263,7 +264,7 @@ class ImplementationResource extends Resource
                     }),
                 SelectFilter::make('implementation_owner_id')
                     ->label('Owner')
-                    ->options(User::pluck('name', 'id')->toArray()),
+                    ->options(User::optionsWithDeactivated()),
                 TaxonomySelectFilter::make('department'),
                 TaxonomySelectFilter::make('scope'),
             ])
@@ -358,7 +359,7 @@ class ImplementationResource extends Resource
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ])
-            ->with(['taxonomies', 'latestCompletedAudit', 'implementationOwner']);
+            ->with(['taxonomies', 'latestCompletedAudit', 'implementationOwner' => fn ($q) => $q->withTrashed()]);
     }
 
     /**
@@ -464,6 +465,7 @@ class ImplementationResource extends Resource
                     ->searchable(),
                 TextColumn::make('implementationOwner.name')
                     ->label('Owner')
+                    ->formatStateUsing(fn ($record): string => $record->implementationOwner?->displayName() ?? '')
                     ->sortable()
                     ->searchable()
                     ->toggleable(),
@@ -491,7 +493,7 @@ class ImplementationResource extends Resource
                     }),
                 SelectFilter::make('implementation_owner_id')
                     ->label('Owner')
-                    ->options(User::pluck('name', 'id')->toArray()),
+                    ->options(User::optionsWithDeactivated()),
                 TaxonomySelectFilter::make('department'),
                 TaxonomySelectFilter::make('scope'),
             ])

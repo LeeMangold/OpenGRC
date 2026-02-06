@@ -27,7 +27,7 @@ class VendorsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn (Builder $query) => $query->with(['vendorManager']))
+            ->modifyQueryUsing(fn (Builder $query) => $query->with(['vendorManager' => fn ($q) => $q->withTrashed()]))
             ->recordTitleAttribute('name')
             ->columns([
                 TextColumn::make('name')
@@ -49,6 +49,7 @@ class VendorsRelationManager extends RelationManager
 
                 TextColumn::make('vendorManager.name')
                     ->label(__('Vendor Manager'))
+                    ->formatStateUsing(fn ($record): string => $record->vendorManager?->displayName() ?? '')
                     ->searchable()
                     ->sortable()
                     ->toggleable(),

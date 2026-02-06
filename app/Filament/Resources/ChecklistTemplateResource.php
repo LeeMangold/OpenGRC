@@ -284,6 +284,7 @@ class ChecklistTemplateResource extends Resource
                     ->toggleable(),
                 TextColumn::make('createdBy.name')
                     ->label(__('checklist.template.table.columns.created_by'))
+                    ->formatStateUsing(fn ($record): string => $record->createdBy?->displayName() ?? '')
                     ->sortable()
                     ->toggleable(),
                 TextColumn::make('created_at')
@@ -325,6 +326,7 @@ class ChecklistTemplateResource extends Resource
                             $newTemplate->save();
 
                             foreach ($record->questions as $question) {
+                                /** @var \App\Models\SurveyQuestion $question */
                                 $newQuestion = $question->replicate();
                                 $newQuestion->survey_template_id = $newTemplate->id;
                                 $newQuestion->save();
@@ -366,9 +368,11 @@ class ChecklistTemplateResource extends Resource
                             ->label(__('checklist.template.form.status.label'))
                             ->badge(),
                         TextEntry::make('defaultAssignee.name')
-                            ->label(__('checklist.template.form.default_assignee.label')),
+                            ->label(__('checklist.template.form.default_assignee.label'))
+                            ->formatStateUsing(fn ($record): string => $record->defaultAssignee?->displayName() ?? ''),
                         TextEntry::make('createdBy.name')
-                            ->label(__('checklist.template.table.columns.created_by')),
+                            ->label(__('checklist.template.table.columns.created_by'))
+                            ->formatStateUsing(fn ($record): string => $record->createdBy?->displayName() ?? ''),
                         TextEntry::make('recurrence_frequency')
                             ->label(__('checklist.template.form.recurrence_frequency.label'))
                             ->badge(),

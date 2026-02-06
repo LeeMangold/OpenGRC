@@ -51,6 +51,7 @@ class SurveyTemplatesTableWidget extends BaseWidget
                     ->sortable(),
                 TextColumn::make('createdBy.name')
                     ->label(__('survey.template.table.columns.created_by'))
+                    ->formatStateUsing(fn ($record): string => $record->createdBy?->displayName() ?? '')
                     ->sortable()
                     ->toggleable(),
                 TextColumn::make('created_at')
@@ -94,6 +95,7 @@ class SurveyTemplatesTableWidget extends BaseWidget
                             $newTemplate->save();
 
                             foreach ($record->questions as $question) {
+                                /** @var \App\Models\SurveyQuestion $question */
                                 $newQuestion = $question->replicate();
                                 $newQuestion->survey_template_id = $newTemplate->id;
                                 $newQuestion->save();

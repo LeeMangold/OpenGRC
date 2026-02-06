@@ -91,7 +91,9 @@ class AuditResource extends Resource
                     ->searchable(),
                 TextColumn::make('manager.name')
                     ->label(__('audit.table.columns.manager'))
-                    ->default('Unassigned')
+                    ->formatStateUsing(fn (Audit $record): string => $record->manager
+                        ? ($record->manager->trashed() ? $record->manager->name.' (Deactivated)' : $record->manager->name)
+                        : 'Unassigned')
                     ->sortable(),
                 TextColumn::make('start_date')
                     ->label(__('audit.table.columns.start_date'))
@@ -147,7 +149,7 @@ class AuditResource extends Resource
             ->filters([
                 SelectFilter::make('manager_id')
                     ->label('Manager')
-                    ->options(User::query()->pluck('name', 'id')->toArray())
+                    ->options(User::optionsWithDeactivated())
                     ->searchable(),
 
                 SelectFilter::make('status')
@@ -192,7 +194,10 @@ class AuditResource extends Resource
                             ->label(__('audit.table.columns.status'))
                             ->badge(),
                         TextEntry::make('manager.name')
-                            ->label(__('audit.table.columns.manager')),
+                            ->label(__('audit.table.columns.manager'))
+                            ->formatStateUsing(fn (Audit $record): string => $record->manager
+                                ? ($record->manager->trashed() ? $record->manager->name.' (Deactivated)' : $record->manager->name)
+                                : 'Unassigned'),
                         TextEntry::make('start_date')
                             ->label(__('audit.table.columns.start_date')),
                         TextEntry::make('end_date')
@@ -251,7 +256,7 @@ class AuditResource extends Resource
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ])
-            ->with(['taxonomies.parent', 'manager']);
+            ->with(['taxonomies.parent', 'manager' => fn ($q) => $q->withTrashed()]);
     }
 
     public static function completeAudit(Audit $audit): void
@@ -261,15 +266,18 @@ class AuditResource extends Resource
             $auditItem->update(['status' => WorkflowStatus::COMPLETED]);
 
             // We don't want to overwrite the effectiveness if it's already set AND we're not assessing
+            $updateData = [];
             if ($auditItem->effectiveness !== Effectiveness::UNKNOWN) {
 
-                $updateData = ['effectiveness' => $auditItem->effectiveness->value];
+                $updateData['effectiveness'] = $auditItem->effectiveness->value;
             }
             if ($auditItem->auditable_type == Control::class) {
                 $updateData['applicability'] = $auditItem->applicability->value;
             }
 
-            $auditItem->auditable->update($updateData);
+            if (! empty($updateData)) {
+                $auditItem->auditable->update($updateData);
+            }
 
         }
 

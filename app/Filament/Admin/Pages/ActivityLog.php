@@ -42,7 +42,7 @@ class ActivityLog extends Page implements HasTable
     public function table(Table $table): Table
     {
         return $table
-            ->query(Activity::query()->with(['causer', 'subject'])->latest())
+            ->query(Activity::query()->with(['causer' => fn ($q) => $q->withTrashed(), 'subject'])->latest())
             ->columns([
                 TextColumn::make('created_at')
                     ->label('Date/Time')
@@ -83,7 +83,7 @@ class ActivityLog extends Page implements HasTable
                     ->formatStateUsing(fn (?string $state): string => $state ?? '-'),
                 TextColumn::make('causer.name')
                     ->label('User')
-                    ->default('-')
+                    ->formatStateUsing(fn ($record): string => $record->causer?->displayName() ?? '-')
                     ->sortable(),
             ])
             ->filters([

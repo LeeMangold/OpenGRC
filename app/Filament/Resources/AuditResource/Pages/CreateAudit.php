@@ -187,7 +187,7 @@ class CreateAudit extends CreateRecord
                         ->label('Audit Manager')
                         ->required()
                         ->hint('Who will be managing this audit?')
-                        ->options(User::query()->pluck('name', 'id')->toArray())
+                        ->options(User::activeOptions())
                         ->columns(1)
                         ->default(fn () => auth()->id())
                         ->searchable(),

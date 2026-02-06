@@ -102,7 +102,7 @@ class ExceptionsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn (Builder $query) => $query->with(['requester', 'approver']))
+            ->modifyQueryUsing(fn (Builder $query) => $query->with(['requester' => fn ($q) => $q->withTrashed(), 'approver' => fn ($q) => $q->withTrashed()]))
             ->recordTitleAttribute('name')
             ->columns([
                 TextColumn::make('name')
@@ -116,6 +116,7 @@ class ExceptionsRelationManager extends RelationManager
                     ->sortable(),
                 TextColumn::make('requester.name')
                     ->label('Requested By')
+                    ->formatStateUsing(fn ($record): string => $record->requester?->displayName() ?? '')
                     ->sortable()
                     ->toggleable(),
                 TextColumn::make('requested_date')
@@ -136,6 +137,7 @@ class ExceptionsRelationManager extends RelationManager
                     ->placeholder('No expiration'),
                 TextColumn::make('approver.name')
                     ->label('Approved By')
+                    ->formatStateUsing(fn ($record): string => $record->approver?->displayName() ?? '')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])

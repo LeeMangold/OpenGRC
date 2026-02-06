@@ -241,6 +241,7 @@ class SurveyTemplateResource extends Resource
                     ->sortable(),
                 TextColumn::make('createdBy.name')
                     ->label(__('survey.template.table.columns.created_by'))
+                    ->formatStateUsing(fn ($record): string => $record->createdBy?->displayName() ?? '')
                     ->sortable()
                     ->toggleable(),
                 TextColumn::make('created_at')
@@ -285,6 +286,7 @@ class SurveyTemplateResource extends Resource
                             $newTemplate->save();
 
                             foreach ($record->questions as $question) {
+                                /** @var \App\Models\SurveyQuestion $question */
                                 $newQuestion = $question->replicate();
                                 $newQuestion->survey_template_id = $newTemplate->id;
                                 $newQuestion->save();
@@ -325,7 +327,8 @@ class SurveyTemplateResource extends Resource
                             ->label(__('Type'))
                             ->badge(),
                         TextEntry::make('createdBy.name')
-                            ->label(__('survey.template.table.columns.created_by')),
+                            ->label(__('survey.template.table.columns.created_by'))
+                            ->formatStateUsing(fn ($record): string => $record->createdBy?->displayName() ?? ''),
                         TextEntry::make('description')
                             ->label(__('survey.template.form.description.label'))
                             ->html()

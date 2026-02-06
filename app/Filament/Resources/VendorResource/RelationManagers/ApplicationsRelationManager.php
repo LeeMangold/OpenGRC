@@ -25,10 +25,10 @@ class ApplicationsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn (Builder $query) => $query->with(['owner']))
+            ->modifyQueryUsing(fn (Builder $query) => $query->with(['owner' => fn ($q) => $q->withTrashed()]))
             ->columns([
                 TextColumn::make('name')->searchable(),
-                TextColumn::make('owner.name')->label('Owner')->searchable(),
+                TextColumn::make('owner.name')->label('Owner')->formatStateUsing(fn ($record): string => $record->owner?->displayName() ?? '')->searchable(),
                 TextColumn::make('type')->badge()->color(fn ($record) => $record->type->getColor()),
                 TextColumn::make('status')->badge()->color(fn ($record) => $record->status->getColor()),
                 TextColumn::make('url')->url(fn ($record) => $record->url, true),

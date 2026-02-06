@@ -127,8 +127,12 @@ class DataRequestsRelationManager extends RelationManager
                     }),
                 SelectFilter::make('assigned_to')
                     ->options(function () {
-                        return User::whereHas('todos')
-                            ->pluck('name', 'id')
+                        return User::withTrashed()
+                            ->whereHas('todos')
+                            ->get()
+                            ->mapWithKeys(fn (User $user) => [
+                                $user->id => $user->trashed() ? "{$user->name} (Deactivated)" : $user->name,
+                            ])
                             ->toArray();
                     })
                     ->label('Assigned To')
@@ -189,7 +193,7 @@ class DataRequestsRelationManager extends RelationManager
                             ->helperText('Describe what information or evidence is being requested'),
                         Select::make('assigned_to_id')
                             ->label('Assign To')
-                            ->options(User::whereNotNull('name')->pluck('name', 'id')->toArray())
+                            ->options(User::activeOptions())
                             ->searchable()
                             ->required()
                             ->helperText('User responsible for responding to this request'),
@@ -337,7 +341,7 @@ class DataRequestsRelationManager extends RelationManager
                         ->form([
                             Select::make('requestee_id')
                                 ->label('Assign to User')
-                                ->options(User::pluck('name', 'id')->toArray())
+                                ->options(User::activeOptions())
                                 ->searchable()
                                 ->required(),
                         ])
