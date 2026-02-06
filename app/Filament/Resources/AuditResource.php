@@ -204,12 +204,12 @@ class AuditResource extends Resource
                             ->label(__('audit.table.columns.end_date')),
                         TextEntry::make('taxonomies')
                             ->label('Department')
-                            ->formatStateUsing(function (Audit $record) {
+                            ->getStateUsing(function (Audit $record) {
                                 return self::getTaxonomyTerm($record, 'department')?->name ?? 'Not assigned';
                             }),
                         TextEntry::make('taxonomies')
                             ->label('Scope')
-                            ->formatStateUsing(function (Audit $record) {
+                            ->getStateUsing(function (Audit $record) {
                                 return self::getTaxonomyTerm($record, 'scope')?->name ?? 'Not assigned';
                             }),
                         TextEntry::make('description')

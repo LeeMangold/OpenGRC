@@ -315,12 +315,12 @@ class ControlResource extends Resource
                             }),
                         TextEntry::make('taxonomies')
                             ->label('Department')
-                            ->formatStateUsing(function (Control $record) {
+                            ->getStateUsing(function (Control $record) {
                                 return self::getTaxonomyTerm($record, 'department')?->name ?? 'Not assigned';
                             }),
                         TextEntry::make('taxonomies')
                             ->label('Scope')
-                            ->formatStateUsing(function (Control $record) {
+                            ->getStateUsing(function (Control $record) {
                                 return self::getTaxonomyTerm($record, 'scope')?->name ?? 'Not assigned';
                             }),
                         TextEntry::make('title')->columnSpanFull(),
