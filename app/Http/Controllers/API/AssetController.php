@@ -11,9 +11,9 @@ class AssetController extends BaseApiController
 
     protected string $resourceName = 'Assets';
 
-    protected array $indexRelations = ['assetOwner'];
+    protected array $indexRelations = ['assignedToUser'];
 
-    protected array $showRelations = ['assetOwner', 'implementations'];
+    protected array $showRelations = ['assignedToUser', 'implementations'];
 
     protected array $searchableFields = ['name', 'description', 'asset_tag'];
 
