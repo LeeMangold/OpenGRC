@@ -59,6 +59,7 @@ class Asset extends Model
         'floor',
         'room',
         'department_id',
+        'cloud_provider',
 
         // Financial Information
         'purchase_date',
@@ -70,6 +71,7 @@ class Asset extends Model
         'depreciation_rate',
         'current_value',
         'residual_value',
+        'cost_per_hour',
 
         // Warranty & Support
         'warranty_start_date',
@@ -107,6 +109,7 @@ class Asset extends Model
         'last_security_scan',
         'compliance_status_id',
         'data_classification_id',
+        'endpoint_agent_id',
 
         // Relationships & Dependencies
         'parent_asset_id',
@@ -117,6 +120,7 @@ class Asset extends Model
         'tags',
         'image_url',
         'qr_code',
+        'alternative_name',
         'is_active',
     ];
 
@@ -144,6 +148,7 @@ class Asset extends Model
         'purchase_price' => 'decimal:2',
         'current_value' => 'decimal:2',
         'residual_value' => 'decimal:2',
+        'cost_per_hour' => 'decimal:2',
         'depreciation_rate' => 'decimal:2',
         'screen_size' => 'decimal:2',
         'encryption_enabled' => 'boolean',
@@ -199,38 +204,6 @@ class Asset extends Model
     }
 
     /**
-     * Get the category this asset belongs to.
-     */
-    public function category(): BelongsTo
-    {
-        return $this->belongsTo(Category::class);
-    }
-
-    /**
-     * Get the location of this asset.
-     */
-    public function location(): BelongsTo
-    {
-        return $this->belongsTo(Location::class);
-    }
-
-    /**
-     * Get the department this asset belongs to.
-     */
-    public function department(): BelongsTo
-    {
-        return $this->belongsTo(Department::class);
-    }
-
-    /**
-     * Get the supplier of this asset.
-     */
-    public function supplier(): BelongsTo
-    {
-        return $this->belongsTo(Supplier::class);
-    }
-
-    /**
      * Get the parent asset (for hierarchical assets).
      */
     public function parentAsset(): BelongsTo
@@ -248,6 +221,8 @@ class Asset extends Model
 
     /**
      * Get the asset type taxonomy term.
+     *
+     * @return BelongsTo<Taxonomy, Asset>
      */
     public function assetType(): BelongsTo
     {
@@ -256,6 +231,8 @@ class Asset extends Model
 
     /**
      * Get the status taxonomy term.
+     *
+     * @return BelongsTo<Taxonomy, Asset>
      */
     public function status(): BelongsTo
     {
@@ -264,6 +241,8 @@ class Asset extends Model
 
     /**
      * Get the condition taxonomy term.
+     *
+     * @return BelongsTo<Taxonomy, Asset>
      */
     public function condition(): BelongsTo
     {
@@ -272,6 +251,8 @@ class Asset extends Model
 
     /**
      * Get the compliance status taxonomy term.
+     *
+     * @return BelongsTo<Taxonomy, Asset>
      */
     public function complianceStatus(): BelongsTo
     {
@@ -280,6 +261,8 @@ class Asset extends Model
 
     /**
      * Get the data classification taxonomy term.
+     *
+     * @return BelongsTo<Taxonomy, Asset>
      */
     public function dataClassification(): BelongsTo
     {
