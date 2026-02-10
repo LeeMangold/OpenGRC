@@ -183,6 +183,10 @@ class AssetResource extends Resource
 
                         TextInput::make('room')
                             ->maxLength(255),
+
+                        TextInput::make('cloud_provider')
+                            ->maxLength(255)
+                            ->label('Cloud Provider'),
                     ])
                     ->columns(2)
                     ->collapsible(),
@@ -228,6 +232,12 @@ class AssetResource extends Resource
                             ->prefix('$')
                             ->step(0.01)
                             ->label('Residual Value'),
+
+                        TextInput::make('cost_per_hour')
+                            ->numeric()
+                            ->prefix('$')
+                            ->step(0.01)
+                            ->label('Cost Per Hour'),
                     ])
                     ->columns(2)
                     ->collapsible(),
@@ -363,6 +373,10 @@ class AssetResource extends Resource
                             ->label('Data Classification')
                             ->options(fn () => Taxonomy::where('slug', 'data-classification')->first()?->children()->pluck('name', 'id') ?? collect())
                             ->searchable(),
+
+                        TextInput::make('endpoint_agent_id')
+                            ->maxLength(255)
+                            ->label('Endpoint Agent ID'),
                     ])
                     ->columns(2)
                     ->collapsible(),
@@ -375,6 +389,10 @@ class AssetResource extends Resource
                             ->label('Parent Asset')
                             ->options(fn () => Asset::pluck('name', 'id'))
                             ->searchable(),
+
+                        TextInput::make('alternative_name')
+                            ->maxLength(255)
+                            ->label('Alternative Name'),
 
                         Toggle::make('is_active')
                             ->label('Active')
@@ -537,6 +555,12 @@ class AssetResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
+                TextColumn::make('cloud_provider')
+                    ->label('Cloud Provider')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
                 TextColumn::make('assigned_at')
                     ->label('Assigned Date')
                     ->dateTime()
@@ -570,6 +594,12 @@ class AssetResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('residual_value')
+                    ->money('USD')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('cost_per_hour')
+                    ->label('Cost Per Hour')
                     ->money('USD')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -703,7 +733,19 @@ class AssetResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
+                TextColumn::make('endpoint_agent_id')
+                    ->label('Endpoint Agent ID')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
                 // Relationships
+                TextColumn::make('alternative_name')
+                    ->label('Alternative Name')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
                 TextColumn::make('parentAsset.name')
                     ->label('Parent Asset')
                     ->searchable()
@@ -1087,6 +1129,10 @@ class AssetResource extends Resource
 
                         TextEntry::make('room')
                             ->placeholder('Not specified'),
+
+                        TextEntry::make('cloud_provider')
+                            ->label('Cloud Provider')
+                            ->placeholder('Not specified'),
                     ])
                     ->columns(3)
                     ->collapsed(),
@@ -1132,6 +1178,11 @@ class AssetResource extends Resource
                         TextEntry::make('invoice_number')
                             ->label('Invoice Number')
                             ->copyable()
+                            ->placeholder('Not specified'),
+
+                        TextEntry::make('cost_per_hour')
+                            ->label('Cost Per Hour')
+                            ->money('USD')
                             ->placeholder('Not specified'),
                     ])
                     ->columns(3)
@@ -1290,6 +1341,11 @@ class AssetResource extends Resource
                                 default => 'gray',
                             })
                             ->placeholder('Not classified'),
+
+                        TextEntry::make('endpoint_agent_id')
+                            ->label('Endpoint Agent ID')
+                            ->copyable()
+                            ->placeholder('Not specified'),
                     ])
                     ->columns(3)
                     ->collapsed(),
@@ -1298,6 +1354,10 @@ class AssetResource extends Resource
                 Section::make('Additional Information')
                     ->columnSpanFull()
                     ->schema([
+                        TextEntry::make('alternative_name')
+                            ->label('Alternative Name')
+                            ->placeholder('Not specified'),
+
                         TextEntry::make('notes')
                             ->columnSpanFull()
                             ->placeholder('No additional notes')
