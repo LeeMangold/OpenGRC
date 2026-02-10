@@ -109,6 +109,8 @@ class Asset extends Model
         'last_security_scan',
         'compliance_status_id',
         'data_classification_id',
+        'asset_exposure_id',
+        'asset_criticality_id',
         'endpoint_agent_id',
 
         // Relationships & Dependencies
@@ -267,6 +269,26 @@ class Asset extends Model
     public function dataClassification(): BelongsTo
     {
         return $this->belongsTo(Taxonomy::class, 'data_classification_id');
+    }
+
+    /**
+     * Get the asset exposure taxonomy term.
+     *
+     * @return BelongsTo<Taxonomy, Asset>
+     */
+    public function assetExposure(): BelongsTo
+    {
+        return $this->belongsTo(Taxonomy::class, 'asset_exposure_id');
+    }
+
+    /**
+     * Get the asset criticality taxonomy term.
+     *
+     * @return BelongsTo<Taxonomy, Asset>
+     */
+    public function assetCriticality(): BelongsTo
+    {
+        return $this->belongsTo(Taxonomy::class, 'asset_criticality_id');
     }
 
     /**

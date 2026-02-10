@@ -374,6 +374,16 @@ class AssetResource extends Resource
                             ->options(fn () => Taxonomy::where('slug', 'data-classification')->first()?->children()->pluck('name', 'id') ?? collect())
                             ->searchable(),
 
+                        Select::make('asset_exposure_id')
+                            ->label('Asset Exposure')
+                            ->options(fn () => Taxonomy::where('slug', 'asset-exposure')->first()?->children()->pluck('name', 'id') ?? collect())
+                            ->searchable(),
+
+                        Select::make('asset_criticality_id')
+                            ->label('Asset Criticality')
+                            ->options(fn () => Taxonomy::where('slug', 'asset-criticality')->first()?->children()->pluck('name', 'id') ?? collect())
+                            ->searchable(),
+
                         TextInput::make('endpoint_agent_id')
                             ->maxLength(255)
                             ->label('Endpoint Agent ID'),
@@ -730,6 +740,25 @@ class AssetResource extends Resource
                 TextColumn::make('dataClassification.name')
                     ->label('Data Classification')
                     ->badge()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('assetExposure.name')
+                    ->label('Exposure')
+                    ->badge()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('assetCriticality.name')
+                    ->label('Criticality')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'Low' => 'success',
+                        'Medium' => 'warning',
+                        'High' => 'danger',
+                        'Critical' => 'danger',
+                        default => 'gray',
+                    })
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
@@ -1342,6 +1371,23 @@ class AssetResource extends Resource
                             })
                             ->placeholder('Not classified'),
 
+                        TextEntry::make('assetExposure.name')
+                            ->label('Asset Exposure')
+                            ->badge()
+                            ->placeholder('Not specified'),
+
+                        TextEntry::make('assetCriticality.name')
+                            ->label('Asset Criticality')
+                            ->badge()
+                            ->color(fn (string $state): string => match ($state) {
+                                'Low' => 'success',
+                                'Medium' => 'warning',
+                                'High' => 'danger',
+                                'Critical' => 'danger',
+                                default => 'gray',
+                            })
+                            ->placeholder('Not specified'),
+
                         TextEntry::make('endpoint_agent_id')
                             ->label('Endpoint Agent ID')
                             ->copyable()
@@ -1418,6 +1464,8 @@ class AssetResource extends Resource
                 'condition',
                 'complianceStatus',
                 'dataClassification',
+                'assetExposure',
+                'assetCriticality',
                 'parentAsset',
                 'creator',
                 'updater',
