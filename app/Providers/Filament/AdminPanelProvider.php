@@ -49,11 +49,17 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->loginRouteSlug('login')
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::Slate,
             ])
             ->brandName(name: 'OpenGRC Admin')
             ->viteTheme('resources/css/filament/app/theme.css')
             ->brandLogo(fn () => view('filament.admin.logo'))
+            ->globalSearch(true)
+            ->databaseNotifications()
+            ->databaseNotificationsPolling('30s')
+            ->readOnlyRelationManagersOnResourceViewPagesByDefault(false)
+            ->viteTheme('resources/css/filament/app/theme.css')
+            ->sidebarCollapsibleOnDesktop()
             ->spa()
             ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'App\\Filament\\Admin\\Resources')
             ->discoverPages(in: app_path('Filament/Admin/Pages'), for: 'App\\Filament\\Admin\\Pages')
@@ -82,9 +88,11 @@ class AdminPanelProvider extends PanelProvider
             ->plugins([
                 BreezyCore::make()
                     ->myProfile(
-                        shouldRegisterUserMenu: false,
+                        shouldRegisterUserMenu: true,
                         shouldRegisterNavigation: false,
                         hasAvatars: false,
+                        slug: 'me',
+                        navigationGroup: 'Settings',
                     )
                     ->enableTwoFactorAuthentication(
                         force: false,
