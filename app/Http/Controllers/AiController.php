@@ -73,12 +73,20 @@ class AiController extends Controller
         - For any lists, use: <ul class="mt-1 text-sm text-gray-600 dark:text-gray-400 list-disc list-inside space-y-1"> with <li> items
         PROMPT;
 
-        $implementations = json_encode($record->implementations()->pluck('details')->join("\n") ?? 'None');
-        $applications = json_encode(Application::get()->pluck('name')->toArray());
+        $implementations = $record->implementations()->pluck('details')->join("\n") ?: 'None';
+        $applicationNames = Application::get()->pluck('name')->toArray();
+        $applications = !empty($applicationNames) ? json_encode($applicationNames) : 'None';
+
+        $description = $record['description'] ?: 'None';
+        $discussion = $record['discussion'] ?: 'None';
+        $testProcedures = $record['test_procedures'] ?: 'None';
 
         $userPrompt = "User has the following implementations currently: {$implementations}.
             User also has the following applications currently: {$applications}.
-            Evaluate the implementations against the following security control: {$record['description']}";
+            Evaluate the implementations against the following security control: {$description}
+            Security Control Discussion: {$discussion}
+            Security Control Test Procedures: {$testProcedures}
+            ";
 
         $aiService = new AiService;
         $response = $aiService->chatCompletion($systemPrompt, $userPrompt);
@@ -148,11 +156,19 @@ class AiController extends Controller
         - Do not include headers, bullet points, or markdown formatting
         PROMPT;
 
-        $applications = json_encode(Application::get()->pluck('name')->toArray());
+        $applicationNames = Application::get()->pluck('name')->toArray();
+        $applications = !empty($applicationNames) ? json_encode($applicationNames) : 'None';
+
+        $description = $record['description'] ?: 'None';
+        $discussion = $record['discussion'] ?: 'None';
+        $testProcedures = $record['test_procedures'] ?: 'None';
 
         $userPrompt = "User has the following applications currently: {$applications}.
             Provide a sample implementation description for
-            the following security control: {$record['description']}";
+            the following security control: {$description}
+            Control Discussion: {$discussion}
+            Control Test Procedures: {$testProcedures}
+            ";
 
         $aiService = new AiService;
         $response = $aiService->chatCompletion($systemPrompt, $userPrompt);
