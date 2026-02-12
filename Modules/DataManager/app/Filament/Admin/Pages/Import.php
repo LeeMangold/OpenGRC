@@ -321,19 +321,21 @@ class Import extends Page implements HasForms
             $path = null;
 
             if ($state instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile) {
-                // Fresh upload - get the real path
                 $path = $state->getRealPath();
             } elseif (is_string($state)) {
-                // Already stored file path
-                $path = storage_path('app/'.$state);
+                $path = $state;
             } elseif (is_array($state) && ! empty($state)) {
-                // Array of files - take the first one
                 $firstFile = reset($state);
                 if ($firstFile instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile) {
                     $path = $firstFile->getRealPath();
                 } elseif (is_string($firstFile)) {
-                    $path = storage_path('app/'.$firstFile);
+                    $path = $firstFile;
                 }
+            }
+
+            // Resolve relative paths against the storage directory
+            if ($path && ! str_starts_with($path, DIRECTORY_SEPARATOR)) {
+                $path = storage_path('app/'.$path);
             }
 
             if (! $path || ! file_exists($path)) {
