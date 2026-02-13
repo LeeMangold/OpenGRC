@@ -159,6 +159,7 @@ class RiskResource extends Resource
                     ->label('Mitigation')
                     ->getStateUsing(fn (Risk $record) => $record->mitigations()->exists() ? 'Applied' : 'None')
                     ->badge()
+                    ->searchable(false)
                     ->color(fn (string $state) => $state === 'Applied' ? 'success' : 'gray')
                     ->sortable(query: function ($query, string $direction) {
                         return $query->withCount('mitigations')

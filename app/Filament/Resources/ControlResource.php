@@ -195,6 +195,7 @@ class ControlResource extends Resource
                 TextColumn::make('LatestAuditEffectiveness')
                     ->label(__('control.table.columns.effectiveness'))
                     ->badge()
+                    ->searchable(false)
                     ->default(function (Control $record) {
                         return $record->getEffectiveness();
                     }),
@@ -203,6 +204,7 @@ class ControlResource extends Resource
                     ->badge(),
                 TextColumn::make('LatestAuditDate')
                     ->label(__('control.table.columns.assessed'))
+                    ->searchable(false)
                     ->default(function (Control $record) {
                         return $record->getEffectivenessDate();
                     }),

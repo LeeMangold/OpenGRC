@@ -216,11 +216,13 @@ class ImplementationResource extends Resource
                 TextColumn::make('effectiveness')
                     ->label(__('implementation.table.columns.effectiveness'))
                     ->getStateUsing(fn ($record) => $record->getEffectiveness())
+                    ->searchable(false)
                     ->sortable()
                     ->badge(),
                 TextColumn::make('last_assessed')
                     ->label(__('implementation.table.columns.last_assessed'))
                     ->getStateUsing(fn ($record) => $record->getEffectivenessDate() ? $record->getEffectivenessDate() : 'Not yet audited')
+                    ->searchable(false)
                     ->sortable()
                     ->badge(),
                 TextColumn::make('status')
@@ -454,10 +456,12 @@ class ImplementationResource extends Resource
                     ->getStateUsing(function ($record) {
                         return $record->getEffectiveness();
                     })
+                    ->searchable(false)
                     ->badge(),
                 TextColumn::make('last_assessed')
                     ->label('Last Audit')
                     ->getStateUsing(fn ($record) => $record->getEffectivenessDate() ? $record->getEffectivenessDate() : 'Not yet audited')
+                    ->searchable(false)
                     ->badge(),
                 TextColumn::make('status')
                     ->toggleable()
