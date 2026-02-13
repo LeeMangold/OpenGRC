@@ -115,6 +115,9 @@ class VendorRiskScoringService
      */
     protected function scoreBooleanAnswer(mixed $value, RiskImpact $impact): int
     {
+        if (is_array($value)) {
+            $value = $value['value'] ?? $value[0] ?? false;
+        }
         $isYes = filter_var($value, FILTER_VALIDATE_BOOLEAN);
 
         // POSITIVE impact: Yes = good (0 risk), No = bad (100 risk)
@@ -137,8 +140,12 @@ class VendorRiskScoringService
             return 0;
         }
 
-        // Try to find the score for this option
-        $stringValue = is_string($value) ? $value : (string) $value;
+        // Extract string value from array-cast answer_value
+        if (is_array($value)) {
+            $stringValue = isset($value['value']) ? (string) $value['value'] : (string) ($value[0] ?? '');
+        } else {
+            $stringValue = (string) $value;
+        }
 
         return isset($optionScores[$stringValue])
             ? (int) $optionScores[$stringValue]

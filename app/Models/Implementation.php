@@ -63,7 +63,7 @@ class Implementation extends Model
      */
     public bool $asYouType = true;
 
-    protected $fillable = ['details', 'status', 'notes', 'effectiveness', 'test_procedure'];
+    protected $fillable = ['code', 'title', 'details', 'status', 'notes', 'effectiveness', 'test_procedure', 'implementation_owner_id'];
 
     /**
      * The attributes that should be cast.
