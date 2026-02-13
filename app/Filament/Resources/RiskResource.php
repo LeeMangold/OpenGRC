@@ -104,7 +104,8 @@ class RiskResource extends Resource
                 Select::make('implementations')
                     ->label('Related Implementations')
                     ->helperText('What are we doing to mitigate this risk?')
-                    ->relationship(name: 'implementations', titleAttribute: 'title')
+                    ->relationship(name: 'implementations')
+                    ->getOptionLabelFromRecordUsing(fn ($record) => "({$record->code}) {$record->title}")
                     ->searchable(['title', 'code'])
                     ->multiple(),
 

@@ -3,6 +3,9 @@
 namespace App\Filament\Resources\RiskResource\RelationManagers;
 
 use App\Filament\Resources\ImplementationResource;
+use Filament\Actions\AttachAction;
+use Filament\Actions\CreateAction;
+use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
@@ -22,8 +25,24 @@ class ImplementationsRelationManager extends RelationManager
     {
         $table = ImplementationResource::getTable($table);
         $table->modifyQueryUsing(fn (Builder $query) => $query->with(['latestCompletedAudit', 'implementationOwner' => fn ($q) => $q->withTrashed()]));
+        $table->headerActions([
+            CreateAction::make()
+                ->label('New Implementation'),
+            AttachAction::make()
+                ->label('Add Existing Implementation')
+                ->preloadRecordSelect()
+                ->recordSelectOptionsQuery(function (Builder $query) {
+                    $query->select(['implementations.id', 'code', 'title']);
+                })
+                ->recordTitle(function ($record) {
+                    return strip_tags("({$record->code}) {$record->title}");
+                })
+                ->recordSelectSearchColumns(['code', 'title']),
+        ]);
         $table->recordActions([
             ViewAction::make()->hidden(),
+            EditAction::make()
+                ->modalHeading('Edit Implementation'),
         ]);
 
         return $table;
