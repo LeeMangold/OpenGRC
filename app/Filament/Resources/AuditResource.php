@@ -105,6 +105,7 @@ class AuditResource extends Resource
                     ->sortable(),
                 TextColumn::make('department')
                     ->label('Department')
+                    ->searchable(false)
                     ->formatStateUsing(function (Audit $record) {
                         // Use eager-loaded taxonomies to avoid N+1
                         if ($record->relationLoaded('taxonomies')) {
@@ -121,6 +122,7 @@ class AuditResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('scope')
                     ->label('Scope')
+                    ->searchable(false)
                     ->formatStateUsing(function (Audit $record) {
                         // Use eager-loaded taxonomies to avoid N+1
                         if ($record->relationLoaded('taxonomies')) {
