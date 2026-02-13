@@ -40,6 +40,7 @@ class TaxonomyColumn extends TextColumn
 
         $this->configureTaxonomyDisplay();
         $this->configureTaxonomySorting();
+        $this->configureTaxonomySearching();
     }
 
     public function notAssignedText(string $text): static
@@ -69,6 +70,22 @@ class TaxonomyColumn extends TextColumn
             }
 
             return $term?->name ?? $this->notAssignedText;
+        });
+    }
+
+    protected function configureTaxonomySearching(): void
+    {
+        $this->searchable(query: function ($query, string $search) {
+            $parentTaxonomy = $this->getParentTaxonomy($this->taxonomyType);
+
+            if (! $parentTaxonomy) {
+                return $query;
+            }
+
+            return $query->whereHas('taxonomies', function ($q) use ($parentTaxonomy, $search) {
+                $q->where('parent_id', $parentTaxonomy->id)
+                    ->where('name', 'like', "%{$search}%");
+            });
         });
     }
 
