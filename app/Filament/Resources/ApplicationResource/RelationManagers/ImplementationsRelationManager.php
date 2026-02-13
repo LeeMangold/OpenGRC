@@ -43,7 +43,8 @@ class ImplementationsRelationManager extends RelationManager
                 TextColumn::make('details')
                     ->label(__('Details'))
                     ->searchable()
-                    ->limit(50),
+                    ->html()
+                    ->wrap(),
 
                 TextColumn::make('status')
                     ->label(__('Status'))

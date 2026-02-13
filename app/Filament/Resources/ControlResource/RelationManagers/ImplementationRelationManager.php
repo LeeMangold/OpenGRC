@@ -68,7 +68,7 @@ class ImplementationRelationManager extends RelationManager
                     ->label('Add Existing Implementation')
                     ->preloadRecordSelect()
                     ->recordSelectOptionsQuery(function (Builder $query) {
-                        $query->select(['id', 'code', 'title']); // Select only necessary columns
+                        $query->select(['implementations.id', 'code', 'title']);
                     })
                     ->recordTitle(function ($record) {
                         // Concatenate code and title for the option label
