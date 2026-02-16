@@ -33,7 +33,6 @@ class ListUsers extends ListRecords
                         ->unique('users', 'email')
                         ->required(),
                     Select::make('role')
-                        ->relationship('roles', 'name')
                         ->label('Role')
                         ->options(
                             Role::all()->pluck('name', 'name')
