@@ -1,0 +1,50 @@
+services:
+  db:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: opengrc
+      MYSQL_USER: opengrc_user
+      MYSQL_PASSWORD: opengrc_password
+    volumes:
+      - opengrc_db:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpassword"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  app:
+    image: opengrc
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8080:80"
+    environment:
+      APP_NAME: OpenGRC
+      APP_ENV: local
+      APP_DEBUG: "true"
+      APP_KEY: base64:kR3VG+FmVBNmFqt6Y1INBwK5r4dLK+S7RP7hGGn1JQo=
+      APP_URL: http://localhost:8080
+
+      DB_CONNECTION: mysql
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: opengrc
+      DB_USERNAME: opengrc_user
+      DB_PASSWORD: opengrc_password
+
+      ADMIN_EMAIL: admin@opengrc.local
+      ADMIN_PASSWORD: admin123
+
+      CACHE_DRIVER: file
+      SESSION_DRIVER: file
+      QUEUE_CONNECTION: sync
+
+      MAIL_MAILER: log
+
+volumes:
+  opengrc_db:
