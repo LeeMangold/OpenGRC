@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\MitigationType;
 use App\Enums\RiskLevel;
 use App\Enums\RiskStatus;
 use App\Filament\Columns\TaxonomyColumn;
@@ -157,10 +158,14 @@ class RiskResource extends Resource
                 TaxonomyColumn::make('scope'),
                 TextColumn::make('mitigation_status')
                     ->label('Mitigation')
-                    ->getStateUsing(fn (Risk $record) => $record->mitigations()->exists() ? 'Applied' : 'None')
+                    ->getStateUsing(function (Risk $record) {
+                        $strategies = $record->mitigations()->pluck('strategy')->unique()->map(fn ($s) => $s->value)->values()->toArray();
+
+                        return empty($strategies) ? ['None'] : $strategies;
+                    })
                     ->badge()
                     ->searchable(false)
-                    ->color(fn (string $state) => $state === 'Applied' ? 'success' : 'gray')
+                    ->color(fn (string $state) => MitigationType::tryFrom($state)?->getColor() ?? 'gray')
                     ->sortable(query: function ($query, string $direction) {
                         return $query->withCount('mitigations')
                             ->orderBy('mitigations_count', $direction);
