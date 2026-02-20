@@ -4,7 +4,10 @@ namespace App\Filament\Resources\RiskResource\RelationManagers;
 
 use App\Filament\Resources\ImplementationResource;
 use Filament\Actions\AttachAction;
+use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
+use Filament\Actions\DetachAction;
+use Filament\Actions\DetachBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -43,6 +46,12 @@ class ImplementationsRelationManager extends RelationManager
             ViewAction::make()->hidden(),
             EditAction::make()
                 ->modalHeading('Edit Implementation'),
+            DetachAction::make(),
+        ]);
+        $table->toolbarActions([
+            BulkActionGroup::make([
+                DetachBulkAction::make()->label('Detach from Risk'),
+            ]),
         ]);
 
         return $table;
