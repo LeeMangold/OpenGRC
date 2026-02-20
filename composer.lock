@@ -6559,41 +6559,6 @@
             "time": "2025-02-18T09:58:04+00:00"
         },
         {
-            "name": "opengrc/workflow-module",
-            "version": "dev-main",
-            "dist": {
-                "type": "path",
-                "url": "/home/lmangold/projects/OGModules/WorkflowModule",
-                "reference": "3db9c9c4aa12fef8bc7fc0dd73bd889917f44b04"
-            },
-            "require": {
-                "filament/filament": "^4.0",
-                "illuminate/support": "^11.0|^12.0",
-                "livewire/livewire": "^3.0",
-                "php": "^8.2"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "OpenGrc\\WorkflowModule\\Providers\\WorkflowModuleServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "OpenGrc\\WorkflowModule\\": "src/"
-                }
-            },
-            "license": [
-                "proprietary"
-            ],
-            "description": "Workflow engine module for OpenGRC",
-            "transport-options": {
-                "relative": false
-            }
-        },
-        {
             "name": "openspout/openspout",
             "version": "v4.32.0",
             "source": {
@@ -17709,9 +17674,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "opengrc/workflow-module": 20
-    },
+    "stability-flags": {},
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

@@ -11,10 +11,6 @@
         {
             "type": "vcs",
             "url": "https://github.com/MangoldSecurity/filament-settings"
-        },
-        {
-            "type": "path",
-            "url": "/home/lmangold/projects/OGModules/WorkflowModule"
         }
     ],
     "require": {
@@ -51,7 +47,6 @@
         "socialiteproviders/google": "^4.1",
         "socialiteproviders/microsoft-azure": "^5.2",
         "socialiteproviders/okta": "^4.5",
-        "opengrc/workflow-module": "@dev",
         "spatie/laravel-permission": "^6.24.1"
     },
     "require-dev": {
