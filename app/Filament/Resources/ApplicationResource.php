@@ -207,7 +207,7 @@ class ApplicationResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
-            ->with(['owner' => fn ($q) => $q->withTrashed(), 'vendor']);
+            ->with(['owner', 'vendor']);
     }
 
     /**

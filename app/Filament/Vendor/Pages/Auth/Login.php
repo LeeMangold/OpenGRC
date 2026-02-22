@@ -41,7 +41,7 @@ class Login extends \Filament\Auth\Pages\Login
     protected function throwFailureValidationException(): never
     {
         throw ValidationException::withMessages([
-            'data.email' => __('filament-panels::pages/auth/login.messages.failed'),
+            'data.email' => __('filament-panels::auth/pages/login.messages.failed'),
         ]);
     }
 

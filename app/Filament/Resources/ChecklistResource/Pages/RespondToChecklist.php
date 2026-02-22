@@ -208,7 +208,7 @@ class RespondToChecklist extends Page implements HasForms
 
     public function save(): void
     {
-        $data = $this->form->getState();
+        $data = $this->form->getRawState();
 
         if (in_array($this->record->status, [SurveyStatus::DRAFT, SurveyStatus::SENT])) {
             $this->record->update(['status' => SurveyStatus::IN_PROGRESS]);

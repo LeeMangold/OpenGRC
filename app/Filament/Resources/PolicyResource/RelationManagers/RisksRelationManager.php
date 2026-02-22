@@ -33,7 +33,7 @@ class RisksRelationManager extends RelationManager
                     ->label('Residual Risk')
                     ->badge()
                     ->color(function (Risk $record) {
-                        return RiskLevel::getColor($record->residual_likelihood, $record->residual_impact);
+                        return RiskLevel::getFilamentColor($record->residual_likelihood, $record->residual_impact);
                     })
                     ->sortable(),
 

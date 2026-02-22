@@ -48,7 +48,6 @@ use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class AssetResource extends Resource
 {
@@ -459,7 +458,6 @@ class AssetResource extends Resource
 
                 TextColumn::make('assignedToUser.name')
                     ->label('Assigned To')
-                    ->searchable()
                     ->sortable(),
 
                 IconColumn::make('is_active')
@@ -468,17 +466,14 @@ class AssetResource extends Resource
                     ->sortable(),
 
                 TextColumn::make('manufacturer')
-                    ->searchable()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('model')
-                    ->searchable()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('serial_number')
-                    ->searchable()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
@@ -494,7 +489,6 @@ class AssetResource extends Resource
 
                 // Hardware Specifications
                 TextColumn::make('processor')
-                    ->searchable()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
@@ -513,7 +507,6 @@ class AssetResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('graphics_card')
-                    ->searchable()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
@@ -524,7 +517,6 @@ class AssetResource extends Resource
 
                 TextColumn::make('mac_address')
                     ->label('MAC Address')
-                    ->searchable()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
@@ -541,19 +533,16 @@ class AssetResource extends Resource
 
                 TextColumn::make('operating_system')
                     ->label('OS')
-                    ->searchable()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('os_version')
                     ->label('OS Version')
-                    ->searchable()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 // Location Details
                 TextColumn::make('building')
-                    ->searchable()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
@@ -567,7 +556,6 @@ class AssetResource extends Resource
 
                 TextColumn::make('cloud_provider')
                     ->label('Cloud Provider')
-                    ->searchable()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
@@ -585,12 +573,10 @@ class AssetResource extends Resource
 
                 TextColumn::make('purchase_order_number')
                     ->label('PO Number')
-                    ->searchable()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('invoice_number')
-                    ->searchable()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
@@ -630,12 +616,10 @@ class AssetResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('warranty_provider')
-                    ->searchable()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('support_contract_number')
-                    ->searchable()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
@@ -764,20 +748,17 @@ class AssetResource extends Resource
 
                 TextColumn::make('endpoint_agent_id')
                     ->label('Endpoint Agent ID')
-                    ->searchable()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 // Relationships
                 TextColumn::make('alternative_name')
                     ->label('Alternative Name')
-                    ->searchable()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('parentAsset.name')
                     ->label('Parent Asset')
-                    ->searchable()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
@@ -1454,9 +1435,6 @@ class AssetResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
-            ->withoutGlobalScopes([
-                SoftDeletingScope::class,
-            ])
             ->with([
                 'assetType',
                 'status',
