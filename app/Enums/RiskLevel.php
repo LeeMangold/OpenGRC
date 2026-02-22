@@ -76,6 +76,23 @@ enum RiskLevel: int implements HasLabel
     }
 
     /**
+     * Get the Filament color name for a risk based on likelihood and impact.
+     * Used by Filament badge columns for proper light/dark mode support.
+     */
+    public static function getFilamentColor(int $likelihood, int $impact): string
+    {
+        $score = $likelihood * $impact;
+
+        return match (true) {
+            $score >= 18 => 'danger',    // Very High risk
+            $score >= 13 => 'warning',   // High risk
+            $score >= 9 => 'info',       // Moderate risk
+            $score >= 5 => 'primary',    // Low risk
+            default => 'success',        // Very Low risk
+        };
+    }
+
+    /**
      * Get the Tailwind background color class for a risk based on likelihood and impact.
      *
      * Note: These classes are referenced to prevent Tailwind from purging them:

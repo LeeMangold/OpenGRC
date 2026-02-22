@@ -141,17 +141,18 @@ class RiskResource extends Resource
                     ->limit(100),
                 TextColumn::make('description')
                     ->wrap()
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->limit(250),
                 TextColumn::make('inherent_risk')
                     ->label('Inherent Risk')
                     ->getStateUsing(fn (Risk $record) => RiskLevel::formatRisk($record->inherent_likelihood, $record->inherent_impact))
-                    ->color(fn (Risk $record) => RiskLevel::getColor($record->inherent_likelihood, $record->inherent_impact))
+                    ->color(fn (Risk $record) => RiskLevel::getFilamentColor($record->inherent_likelihood, $record->inherent_impact))
                     ->badge()
                     ->sortable(),
                 TextColumn::make('residual_risk')
                     ->label('Residual Risk')
                     ->getStateUsing(fn (Risk $record) => RiskLevel::formatRisk($record->residual_likelihood, $record->residual_impact))
-                    ->color(fn (Risk $record) => RiskLevel::getColor($record->residual_likelihood, $record->residual_impact))
+                    ->color(fn (Risk $record) => RiskLevel::getFilamentColor($record->residual_likelihood, $record->residual_impact))
                     ->badge()
                     ->sortable(),
                 TaxonomyColumn::make('department'),

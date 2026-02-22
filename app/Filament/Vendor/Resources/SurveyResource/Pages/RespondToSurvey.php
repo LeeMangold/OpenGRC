@@ -215,7 +215,7 @@ class RespondToSurvey extends Page implements HasForms
 
     public function save(): void
     {
-        $data = $this->form->getState();
+        $data = $this->form->getRawState();
 
         // Update status to in progress if it was sent
         if ($this->record->status === SurveyStatus::SENT) {
