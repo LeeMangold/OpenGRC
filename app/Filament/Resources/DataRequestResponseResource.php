@@ -28,6 +28,7 @@ use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\HtmlString;
@@ -40,6 +41,11 @@ class DataRequestResponseResource extends Resource
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static bool $shouldRegisterNavigation = false;
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->where('requestee_id', Auth::id());
+    }
 
     public static function form(Schema $schema): Schema
     {
@@ -323,9 +329,6 @@ class DataRequestResponseResource extends Resource
                 TextColumn::make('requester.name')
                     ->label('Requester')
                     ->formatStateUsing(fn ($record): string => $record->requester?->displayName() ?? ''),
-                TextColumn::make('requestee.name')
-                    ->label('Requestee')
-                    ->formatStateUsing(fn ($record): string => $record->requestee?->displayName() ?? ''),
                 TextColumn::make('status')
                     ->badge()
                     ->label('Status'),
