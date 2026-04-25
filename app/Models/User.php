@@ -16,8 +16,8 @@ use Illuminate\Support\Facades\DB;
 use Jeffgreco13\FilamentBreezy\Traits\TwoFactorAuthenticatable;
 use Kirschbaum\Commentions\Contracts\Commenter;
 use Laravel\Sanctum\HasApiTokens;
-use Spatie\Activitylog\LogOptions;
-use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
@@ -115,7 +115,7 @@ class User extends Authenticatable implements Commenter, FilamentUser
         return LogOptions::defaults()
             ->logOnly(['name', 'email'])
             ->logOnlyDirty()
-            ->dontSubmitEmptyLogs();
+            ->dontLogEmptyChanges();
     }
 
     /**

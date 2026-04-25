@@ -13,8 +13,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
-use Spatie\Activitylog\LogOptions;
-use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
 
 class Survey extends Model
 {
@@ -204,7 +204,7 @@ class Survey extends Model
         return LogOptions::defaults()
             ->logOnly(['title', 'status', 'type', 'respondent_email', 'respondent_name', 'assigned_to_id', 'approver_id', 'due_date', 'expiration_date', 'completed_at'])
             ->logOnlyDirty()
-            ->dontSubmitEmptyLogs();
+            ->dontLogEmptyChanges();
     }
 
     public function isVendorAssessment(): bool

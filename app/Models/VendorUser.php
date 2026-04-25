@@ -11,8 +11,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\URL;
-use Spatie\Activitylog\LogOptions;
-use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
 
 class VendorUser extends Authenticatable implements FilamentUser
 {
@@ -71,7 +71,7 @@ class VendorUser extends Authenticatable implements FilamentUser
         return LogOptions::defaults()
             ->logOnly(['name', 'email', 'is_primary', 'vendor_id'])
             ->logOnlyDirty()
-            ->dontSubmitEmptyLogs();
+            ->dontLogEmptyChanges();
     }
 
     /**
