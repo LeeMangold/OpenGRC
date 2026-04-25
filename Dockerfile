@@ -5,7 +5,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=UTC
 
 # Set versions
-ENV PHP_VERSION=8.3
+ENV PHP_VERSION=8.4
 ENV NODE_VERSION=20.x
 
 ENV COMPOSER_ALLOW_SUPERUSER=1
@@ -70,7 +70,7 @@ RUN sed -i 's/pm = dynamic/pm = ondemand/' /etc/php/${PHP_VERSION}/fpm/pool.d/ww
     && sed -i 's/max_execution_time = .*/max_execution_time = 60/' /etc/php/${PHP_VERSION}/fpm/php.ini
 
 # Configure PHP-FPM to log to file
-RUN sed -i 's|;error_log = log/php8.3-fpm.log|error_log = /var/log/php8.3-fpm.log|' /etc/php/${PHP_VERSION}/fpm/php-fpm.conf \
+RUN sed -i "s|;error_log = log/php${PHP_VERSION}-fpm.log|error_log = /var/log/php${PHP_VERSION}-fpm.log|" /etc/php/${PHP_VERSION}/fpm/php-fpm.conf \
     && sed -i 's|;catch_workers_output = yes|catch_workers_output = yes|' /etc/php/${PHP_VERSION}/fpm/pool.d/www.conf
 
 # Enable Apache modules for PHP-FPM
@@ -114,7 +114,7 @@ RUN echo '<VirtualHost *:80>\n\
     </Directory>\n\
     \n\
     <FilesMatch \\.php$>\n\
-        SetHandler "proxy:unix:/run/php/php8.3-fpm.sock|fcgi://localhost"\n\
+        SetHandler "proxy:unix:/run/php/php'${PHP_VERSION}'-fpm.sock|fcgi://localhost"\n\
     </FilesMatch>\n\
     \n\
     ErrorLog ${APACHE_LOG_DIR}/error.log\n\

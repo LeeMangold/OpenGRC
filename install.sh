@@ -43,6 +43,16 @@ echo ""
 echo -e "################################################################"
 echo ""
 
+# Check PHP version
+php_version=$(php -r "echo PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION;")
+required_php="8.4"
+if [[ "$(printf '%s\n' "$required_php" "$php_version" | sort -V | head -n 1)" != "$required_php" ]]; then
+  echo "Checking PHP version... FAILED! PHP version 8.4 or higher is required. You have $php_version"
+  exit 1
+else
+  echo -e "Checking PHP version... \033[32mGOOD!\033[0m"
+fi
+
 # Check Node.js version
 node_version=$(node -v | cut -c 2-)
 if [[ "$node_version" < "16" ]]; then

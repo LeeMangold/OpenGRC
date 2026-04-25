@@ -43,6 +43,13 @@ USER_COUNT=$(php -r "
 
 if [ "$USER_COUNT" = "0" ]; then
     echo "First run detected - seeding database and creating admin user..."
+
+    # Generate APP_KEY if not set
+    if [ -z "$APP_KEY" ]; then
+        echo "Generating application key..."
+        php artisan key:generate --force
+    fi
+
     php artisan db:seed --class=SettingsSeeder --force
     php artisan opengrc:create-user "${ADMIN_EMAIL:-admin@opengrc.local}" "${ADMIN_PASSWORD:-admin123}"
     php artisan db:seed --class=RolePermissionSeeder --force
@@ -71,7 +78,7 @@ service cron start
 
 # Start PHP-FPM
 echo "Starting PHP-FPM..."
-service php8.3-fpm start
+service php8.4-fpm start
 
 # Start Apache in foreground
 echo "Starting Apache..."

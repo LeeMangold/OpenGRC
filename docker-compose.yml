@@ -27,7 +27,7 @@ services:
       APP_NAME: OpenGRC
       APP_ENV: local
       APP_DEBUG: "true"
-      APP_KEY: base64:kR3VG+FmVBNmFqt6Y1INBwK5r4dLK+S7RP7hGGn1JQo=
+      APP_KEY: ${APP_KEY:-}
       APP_URL: http://localhost:8080
 
       DB_CONNECTION: mysql

@@ -14,7 +14,7 @@
         }
     ],
     "require": {
-        "php": "^8.2",
+        "php": "^8.4",
         "ext-fileinfo": "*",
         "aliziodev/laravel-taxonomy": "^2.10.0",
         "barryvdh/laravel-dompdf": "^3.1.2",
