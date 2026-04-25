@@ -43,6 +43,20 @@ class AppServiceProvider extends ServiceProvider
             || $argv[1] === 'filament:upgrade'
             || $argv[1] === 'vendor:publish'
             || $argv[1] === 'test'
+            || $argv[1] === 'migrate'
+            || str_starts_with($argv[1], 'migrate:')
+            || $argv[1] === 'config:cache'
+            || $argv[1] === 'config:clear'
+            || $argv[1] === 'route:cache'
+            || $argv[1] === 'route:clear'
+            || $argv[1] === 'view:cache'
+            || $argv[1] === 'view:clear'
+            || $argv[1] === 'cache:clear'
+            || $argv[1] === 'key:generate'
+            || $argv[1] === 'storage:link'
+            || $argv[1] === 'db:seed'
+            || $argv[1] === 'opengrc:create-user'
+            || $argv[1] === 'settings:set'
             )) {
                 $isInstaller = true;
             }
