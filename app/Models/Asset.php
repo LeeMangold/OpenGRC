@@ -292,6 +292,46 @@ class Asset extends Model
     }
 
     /**
+     * Get the category taxonomy term.
+     *
+     * @return BelongsTo<Taxonomy, Asset>
+     */
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Taxonomy::class, 'category_id');
+    }
+
+    /**
+     * Get the location taxonomy term.
+     *
+     * @return BelongsTo<Taxonomy, Asset>
+     */
+    public function location(): BelongsTo
+    {
+        return $this->belongsTo(Taxonomy::class, 'location_id');
+    }
+
+    /**
+     * Get the department taxonomy term.
+     *
+     * @return BelongsTo<Taxonomy, Asset>
+     */
+    public function department(): BelongsTo
+    {
+        return $this->belongsTo(Taxonomy::class, 'department_id');
+    }
+
+    /**
+     * Get the supplier taxonomy term.
+     *
+     * @return BelongsTo<Taxonomy, Asset>
+     */
+    public function supplier(): BelongsTo
+    {
+        return $this->belongsTo(Taxonomy::class, 'supplier_id');
+    }
+
+    /**
      * Get the implementations associated with this asset.
      */
     public function implementations(): BelongsToMany

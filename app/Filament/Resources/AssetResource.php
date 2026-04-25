@@ -96,6 +96,11 @@ class AssetResource extends Resource
                             ->options(fn () => Taxonomy::where('slug', 'asset-status')->first()?->children()->pluck('name', 'id') ?? collect())
                             ->searchable()
                             ->required(),
+
+                        Select::make('category_id')
+                            ->label('Category')
+                            ->options(fn () => Taxonomy::where('slug', 'asset-category')->first()?->children()->pluck('name', 'id') ?? collect())
+                            ->searchable(),
                     ])
                     ->columns(2),
 
@@ -183,6 +188,16 @@ class AssetResource extends Resource
                         TextInput::make('room')
                             ->maxLength(255),
 
+                        Select::make('location_id')
+                            ->label('Location')
+                            ->options(fn () => Taxonomy::where('slug', 'asset-location')->first()?->children()->pluck('name', 'id') ?? collect())
+                            ->searchable(),
+
+                        Select::make('department_id')
+                            ->label('Department')
+                            ->options(fn () => Taxonomy::where('slug', 'department')->first()?->children()->pluck('name', 'id') ?? collect())
+                            ->searchable(),
+
                         TextInput::make('cloud_provider')
                             ->maxLength(255)
                             ->label('Cloud Provider'),
@@ -206,6 +221,11 @@ class AssetResource extends Resource
                         TextInput::make('purchase_order_number')
                             ->maxLength(255)
                             ->label('PO Number'),
+
+                        Select::make('supplier_id')
+                            ->label('Supplier')
+                            ->options(fn () => Taxonomy::where('slug', 'asset-supplier')->first()?->children()->pluck('name', 'id') ?? collect())
+                            ->searchable(),
 
                         TextInput::make('invoice_number')
                             ->maxLength(255),
@@ -746,6 +766,30 @@ class AssetResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
+                TextColumn::make('category.name')
+                    ->label('Category')
+                    ->badge()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('location.name')
+                    ->label('Location')
+                    ->badge()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('department.name')
+                    ->label('Department')
+                    ->badge()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('supplier.name')
+                    ->label('Supplier')
+                    ->badge()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
                 TextColumn::make('endpoint_agent_id')
                     ->label('Endpoint Agent ID')
                     ->sortable()
@@ -871,6 +915,26 @@ class AssetResource extends Resource
                 SelectFilter::make('data_classification_id')
                     ->label('Data Classification')
                     ->options(fn () => Taxonomy::where('slug', 'data-classification')->first()?->children()->pluck('name', 'id') ?? collect())
+                    ->searchable(),
+
+                SelectFilter::make('category_id')
+                    ->label('Category')
+                    ->options(fn () => Taxonomy::where('slug', 'asset-category')->first()?->children()->pluck('name', 'id') ?? collect())
+                    ->searchable(),
+
+                SelectFilter::make('location_id')
+                    ->label('Location')
+                    ->options(fn () => Taxonomy::where('slug', 'asset-location')->first()?->children()->pluck('name', 'id') ?? collect())
+                    ->searchable(),
+
+                SelectFilter::make('department_id')
+                    ->label('Department')
+                    ->options(fn () => Taxonomy::where('slug', 'department')->first()?->children()->pluck('name', 'id') ?? collect())
+                    ->searchable(),
+
+                SelectFilter::make('supplier_id')
+                    ->label('Supplier')
+                    ->options(fn () => Taxonomy::where('slug', 'asset-supplier')->first()?->children()->pluck('name', 'id') ?? collect())
                     ->searchable(),
 
                 TernaryFilter::make('encryption_enabled')
@@ -1046,6 +1110,11 @@ class AssetResource extends Resource
                             ->formatStateUsing(fn ($state) => $state ? 'Active' : 'Inactive')
                             ->color(fn ($state) => $state ? 'success' : 'danger'),
 
+                        TextEntry::make('category.name')
+                            ->label('Category')
+                            ->badge()
+                            ->placeholder('Not specified'),
+
                         TextEntry::make('parentAsset.name')
                             ->label('Parent Asset')
                             ->placeholder('None'),
@@ -1140,6 +1209,16 @@ class AssetResource extends Resource
                         TextEntry::make('room')
                             ->placeholder('Not specified'),
 
+                        TextEntry::make('location.name')
+                            ->label('Location')
+                            ->badge()
+                            ->placeholder('Not specified'),
+
+                        TextEntry::make('department.name')
+                            ->label('Department')
+                            ->badge()
+                            ->placeholder('Not specified'),
+
                         TextEntry::make('cloud_provider')
                             ->label('Cloud Provider')
                             ->placeholder('Not specified'),
@@ -1183,6 +1262,11 @@ class AssetResource extends Resource
                         TextEntry::make('purchase_order_number')
                             ->label('PO Number')
                             ->copyable()
+                            ->placeholder('Not specified'),
+
+                        TextEntry::make('supplier.name')
+                            ->label('Supplier')
+                            ->badge()
                             ->placeholder('Not specified'),
 
                         TextEntry::make('invoice_number')
@@ -1444,6 +1528,10 @@ class AssetResource extends Resource
                 'dataClassification',
                 'assetExposure',
                 'assetCriticality',
+                'category',
+                'location',
+                'department',
+                'supplier',
                 'parentAsset',
                 'creator',
                 'updater',

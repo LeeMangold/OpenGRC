@@ -26,6 +26,14 @@ class AssetExporter extends Exporter
                 ->label('Status'),
             ExportColumn::make('condition.name')
                 ->label('Condition'),
+            ExportColumn::make('category.name')
+                ->label('Category'),
+            ExportColumn::make('location.name')
+                ->label('Location'),
+            ExportColumn::make('department.name')
+                ->label('Department'),
+            ExportColumn::make('supplier.name')
+                ->label('Supplier'),
             ExportColumn::make('manufacturer')
                 ->label('Manufacturer'),
             ExportColumn::make('model')

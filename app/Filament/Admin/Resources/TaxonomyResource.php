@@ -45,6 +45,9 @@ class TaxonomyResource extends Resource
         'asset-condition',
         'compliance-status',
         'data-classification',
+        'asset-category',
+        'asset-location',
+        'asset-supplier',
     ];
 
     public static function form(Schema $schema): Schema
