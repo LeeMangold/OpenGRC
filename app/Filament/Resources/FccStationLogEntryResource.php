@@ -72,6 +72,11 @@ class FccStationLogEntryResource extends Resource
         ])->defaultSort('logged_at', 'desc');
     }
 
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        return parent::getEloquentQuery()->with('license');
+    }
+
     public static function getPages(): array
     {
         return ['index' => ManageFccStationLogEntries::route('/')];

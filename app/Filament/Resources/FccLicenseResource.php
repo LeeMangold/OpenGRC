@@ -55,12 +55,10 @@ class FccLicenseResource extends Resource
                         ->maxLength(20),
                     TextInput::make('frn')
                         ->label('FCC Registration Number (FRN)')
-                        ->required()
-                        ->placeholder('10-digit FRN')
+                        ->placeholder('10-digit FRN — populated by `fcc:import-lms`')
                         ->maxLength(20),
                     TextInput::make('licensee')
                         ->label('Licensee (Legal Entity)')
-                        ->required()
                         ->placeholder('e.g., Market Hall Broadcasting, LLC')
                         ->maxLength(255),
                     Select::make('service')
@@ -91,7 +89,7 @@ class FccLicenseResource extends Resource
                 ->schema([
                     DatePicker::make('grant_date')->label('License Grant Date'),
                     DatePicker::make('last_renewal_date')->label('Last Renewal'),
-                    DatePicker::make('expiration_date')->label('Expiration Date')->required(),
+                    DatePicker::make('expiration_date')->label('Expiration Date'),
                 ])->columns(3),
 
             Section::make('Compliance Status')
@@ -118,7 +116,7 @@ class FccLicenseResource extends Resource
                         ->label('Facility')
                         ->relationship('facility', 'name')
                         ->searchable()
-                        ->preload(),
+                        ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->facility_id} — {$record->name}"),
                 ])->columns(3),
 
             Section::make('Notes')
@@ -199,6 +197,11 @@ class FccLicenseResource extends Resource
             ->paginated([25, 50, 100, 250])
             ->persistFiltersInSession()
             ->persistSortInSession();
+    }
+
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        return parent::getEloquentQuery()->with('facility');
     }
 
     public static function getPages(): array

@@ -33,7 +33,7 @@ class FccEasTestResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            Select::make('license_id')->relationship('license', 'call_sign')->required()->searchable()->preload(),
+            Select::make('license_id')->relationship('license', 'call_sign')->required()->searchable(),
             Select::make('test_type')->required()->options([
                 'RWT' => 'RWT — Required Weekly Test',
                 'RMT' => 'RMT — Required Monthly Test',
@@ -79,6 +79,11 @@ class FccEasTestResource extends Resource
             ]),
             SelectFilter::make('license_id')->relationship('license', 'call_sign')->label('Call Sign'),
         ])->defaultSort('test_datetime', 'desc');
+    }
+
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        return parent::getEloquentQuery()->with('license');
     }
 
     public static function getPages(): array

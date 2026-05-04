@@ -77,6 +77,11 @@ class FccFormFilingResource extends Resource
         ])->defaultSort('filed_date', 'desc');
     }
 
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        return parent::getEloquentQuery()->with('license');
+    }
+
     public static function getPages(): array
     {
         return ['index' => ManageFccFormFilings::route('/')];
