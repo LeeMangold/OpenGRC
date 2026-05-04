@@ -2,15 +2,14 @@
 
 namespace App\Filament\Pages;
 
-use App\Filament\Widgets\FccComplianceActivityWidget;
-use App\Filament\Widgets\FccComplianceOverviewWidget;
-use App\Filament\Widgets\FccLicenseComplianceTableWidget;
-use App\Filament\Widgets\FccRuleCategoryRollupWidget;
-use App\Filament\Widgets\FccTopNonCompliantRulesWidget;
-use App\Filament\Widgets\FccUpcomingDeadlinesWidget;
-use Filament\Pages\Dashboard as BaseDashboard;
+use App\Models\FccComplianceEvent;
+use App\Models\FccDeadline;
+use App\Models\FccLicense;
+use App\Models\FccLicenseRuleStatus;
+use App\Models\FccRule;
+use Filament\Pages\Page;
 
-class Dashboard extends BaseDashboard
+class Dashboard extends Page
 {
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-home';
 
@@ -20,20 +19,100 @@ class Dashboard extends BaseDashboard
 
     protected static ?int $navigationSort = -2;
 
-    public function getColumns(): int|array
+    protected static ?string $slug = 'dashboard';
+
+    protected string $view = 'filament.pages.fcc-dashboard';
+
+    protected function getViewData(): array
     {
-        return 2;
+        $licenses = FccLicense::query()
+            ->orderBy('call_sign')
+            ->get();
+
+        $statusCounts = FccLicenseRuleStatus::query()
+            ->selectRaw('status, COUNT(*) as c')
+            ->groupBy('status')
+            ->pluck('c', 'status')
+            ->toArray();
+
+        $compliant = (int) ($statusCounts['compliant'] ?? 0);
+        $atRisk = (int) ($statusCounts['at_risk'] ?? 0);
+        $nonCompliant = (int) ($statusCounts['non_compliant'] ?? 0);
+        $totalRules = max(1, $compliant + $atRisk + $nonCompliant);
+        $overallPct = round(($compliant / $totalRules) * 100, 1);
+
+        $categoryRows = collect();
+        $byCat = FccRule::query()->get()->groupBy('category');
+        foreach ($byCat as $category => $rules) {
+            $ids = $rules->pluck('id');
+            $cs = FccLicenseRuleStatus::query()
+                ->whereIn('fcc_rule_id', $ids)
+                ->selectRaw('status, COUNT(*) as c')
+                ->groupBy('status')
+                ->pluck('c', 'status');
+
+            $c = (int) ($cs['compliant'] ?? 0);
+            $a = (int) ($cs['at_risk'] ?? 0);
+            $n = (int) ($cs['non_compliant'] ?? 0);
+            $tot = max(1, $c + $a + $n);
+            $categoryRows->push([
+                'label' => $this->formatCategory($category),
+                'compliant' => $c,
+                'at_risk' => $a,
+                'non_compliant' => $n,
+                'percent' => round(($c / $tot) * 100, 1),
+            ]);
+        }
+        $categoryRows = $categoryRows->sortByDesc('compliant')->values();
+
+        $topNonCompliant = FccRule::query()
+            ->whereHas('statuses', fn ($q) => $q->whereIn('status', ['non_compliant', 'at_risk']))
+            ->withCount([
+                'statuses as affected_count' => fn ($q) => $q->whereIn('status', ['non_compliant', 'at_risk']),
+            ])
+            ->orderByDesc('affected_count')
+            ->limit(5)
+            ->get();
+
+        $deadlines = FccDeadline::query()
+            ->whereIn('status', ['upcoming', 'due_soon', 'overdue'])
+            ->orderBy('due_date')
+            ->limit(6)
+            ->get();
+
+        $activity = FccComplianceEvent::query()
+            ->orderByDesc('occurred_at')
+            ->limit(6)
+            ->get();
+
+        return [
+            'licenses' => $licenses,
+            'totalLicenses' => $licenses->count(),
+            'totalRules' => $compliant + $atRisk + $nonCompliant,
+            'compliant' => $compliant,
+            'atRisk' => $atRisk,
+            'nonCompliant' => $nonCompliant,
+            'overallPct' => $overallPct,
+            'categoryRows' => $categoryRows,
+            'totalCompliantPct' => $overallPct,
+            'totalAtRiskPct' => round(($atRisk / $totalRules) * 100, 1),
+            'totalNonPct' => round(($nonCompliant / $totalRules) * 100, 1),
+            'topNonCompliant' => $topNonCompliant,
+            'deadlines' => $deadlines,
+            'activity' => $activity,
+        ];
     }
 
-    public function getWidgets(): array
+    private function formatCategory(string $key): string
     {
-        return [
-            FccComplianceOverviewWidget::class,
-            FccLicenseComplianceTableWidget::class,
-            FccRuleCategoryRollupWidget::class,
-            FccTopNonCompliantRulesWidget::class,
-            FccUpcomingDeadlinesWidget::class,
-            FccComplianceActivityWidget::class,
-        ];
+        return match ($key) {
+            'technical_standards' => 'Technical Standards',
+            'operational_rules' => 'Operational Rules',
+            'eas_requirements' => 'EAS Requirements',
+            'public_file_rules' => 'Public File Rules',
+            'ownership_control' => 'Ownership / Control',
+            'reporting_requirements' => 'Reporting Requirements',
+            default => str($key)->headline()->toString(),
+        };
     }
 }
