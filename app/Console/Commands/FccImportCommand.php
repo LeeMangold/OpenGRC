@@ -115,11 +115,23 @@ class FccImportCommand extends Command
      */
     protected function fetchFccPublicFacility(string $call): ?array
     {
-        // Strip any "-FM" / "-TV" / "-AM" suffix; FCC Query stores bare call
+        // If the user disambiguates with a suffix (e.g. WBZ-AM, KFI-AM),
+        // hit that specific query first — otherwise WBZ/KFI/etc. will
+        // match unrelated FM stations that happen to share the call.
         $bareCall = strtoupper(preg_replace('/-(FM|TV|AM|LP|LD)$/i', '', $call));
+        $suffix = '';
+        if (preg_match('/-(AM|FM|TV|LP|LD)$/i', $call, $sm)) {
+            $suffix = strtoupper($sm[1]);
+        }
 
-        // FM, then AM, then TV — first hit wins.
-        foreach (['fmq', 'amq', 'tvq'] as $bin) {
+        $order = match ($suffix) {
+            'AM'         => ['amq', 'fmq', 'tvq'],
+            'FM'         => ['fmq', 'amq', 'tvq'],
+            'TV', 'LD'   => ['tvq', 'fmq', 'amq'],
+            default      => ['fmq', 'amq', 'tvq'],
+        };
+
+        foreach ($order as $bin) {
             $hit = $this->tryFccQueryCgi($bin, $bareCall);
             if ($hit) return $hit;
         }
@@ -223,9 +235,14 @@ class FccImportCommand extends Command
             // Extract JS variable assignments. FM detail pages use bare
             // names (facility_id = '789877'), AM detail pages prefix
             // with c_ (c_facility_id = '70658', c_callsign = 'WABC').
-            // Try both forms.
+            // AM also writes some numeric fields unquoted: freq = 770;
+            // — accept both forms.
             $jsVal = function (string $name) use ($html): ?string {
-                if (preg_match("/(?<![A-Za-z0-9_])(?:c_)?{$name}\\s*=\\s*['\"]([^'\"]*)['\"]/", $html, $m)) {
+                $prefix = "(?<![A-Za-z0-9_])(?:c_)?{$name}\\s*=\\s*";
+                if (preg_match("/{$prefix}['\"]([^'\"]*)['\"]/", $html, $m)) {
+                    return trim($m[1]);
+                }
+                if (preg_match("/{$prefix}([0-9]+(?:\\.[0-9]+)?)\\s*;/", $html, $m)) {
                     return trim($m[1]);
                 }
                 return null;
