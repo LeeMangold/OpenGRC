@@ -108,6 +108,7 @@ class AppPanelProvider extends PanelProvider
                 'danger' => Color::hex('#ef4444'),
             ])
             ->brandName('OpenGRC FCC Compliance')
+            ->defaultThemeMode(\Filament\Enums\ThemeMode::Dark)
             ->brandLogo(fn () => view('filament.admin.logo'))
             ->globalSearch(true)
             ->databaseNotifications()

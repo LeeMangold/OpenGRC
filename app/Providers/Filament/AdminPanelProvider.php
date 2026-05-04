@@ -57,6 +57,7 @@ class AdminPanelProvider extends PanelProvider
                 'danger' => Color::hex('#ef4444'),
             ])
             ->brandName(name: 'OpenGRC FCC Compliance Admin')
+            ->defaultThemeMode(\Filament\Enums\ThemeMode::Dark)
             ->viteTheme('resources/css/filament/app/theme.css')
             ->brandLogo(fn () => view('filament.admin.logo'))
             ->globalSearch(true)
