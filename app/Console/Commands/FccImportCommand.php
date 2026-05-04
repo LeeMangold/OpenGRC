@@ -200,15 +200,19 @@ class FccImportCommand extends Command
         $html = $this->fetchFccQuery($bin, ['call' => $call, 'format' => 8]);
         if ($html === null) return null;
 
-        // The detail page contains JS variable assignments. The list page
-        // (returned by AM/TV Query when the call has multiple records)
-        // contains links of the form "amq?list=0&facid=70658" and the
-        // station data rendered as a single HTML row. Detect the list
-        // format and re-fetch the detail page by facility ID.
-        if (! preg_match("/facility_id\s*=\s*['\"][1-9]/", $html)) {
+        // The detail page contains JS variable assignments (either bare
+        //   facility_id = '789877';   <- FM
+        // or
+        //   c_facility_id = '70658';  <- AM
+        // ). The list page (returned by AM/TV Query for multi-record
+        // calls) carries facid=NNNN links instead. If we got a list page,
+        // re-fetch the detail page by facility ID.
+        $hasDetail = preg_match("/(?<![A-Za-z0-9_])(?:c_)?facility_id\s*=\s*['\"][1-9]/", $html);
+        if (! $hasDetail) {
             if (preg_match('/facid=(\d+)/', $html, $m)) {
                 $html = $this->fetchFccQuery($bin, ['list' => 0, 'facid' => $m[1]]);
-                if ($html === null || ! preg_match("/facility_id\s*=\s*['\"][1-9]/", $html)) {
+                if ($html === null) return null;
+                if (! preg_match("/(?<![A-Za-z0-9_])(?:c_)?facility_id\s*=\s*['\"][1-9]/", $html)) {
                     return null;
                 }
             } else {
@@ -216,12 +220,12 @@ class FccImportCommand extends Command
             }
         }
 
-            // Extract JS variable assignments that look like:
-            //   facility_id = '789877';
-            //   c_comm_city_app = "ALAMO";
-            //   freq = '88.5';
+            // Extract JS variable assignments. FM detail pages use bare
+            // names (facility_id = '789877'), AM detail pages prefix
+            // with c_ (c_facility_id = '70658', c_callsign = 'WABC').
+            // Try both forms.
             $jsVal = function (string $name) use ($html): ?string {
-                if (preg_match("/\\b{$name}\\s*=\\s*['\"]([^'\"]*)['\"]/", $html, $m)) {
+                if (preg_match("/(?<![A-Za-z0-9_])(?:c_)?{$name}\\s*=\\s*['\"]([^'\"]*)['\"]/", $html, $m)) {
                     return trim($m[1]);
                 }
                 return null;
