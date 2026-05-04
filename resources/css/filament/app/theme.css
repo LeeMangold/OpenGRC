@@ -347,20 +347,35 @@ body, .fi-body, .fi-main-ctn, .fi-page, main {
     color: rgb(156 163 175) !important;
 }
 
-/* Tables on dark canvas */
+/* Tables on dark canvas - high contrast */
 .fi-ta-table,
 .fi-ta-header-cell,
 .fi-ta-row,
 .fi-ta-cell {
     background-color: transparent !important;
-    color: rgb(229 231 235) !important;
+    color: #f3f4f6 !important;
 }
+
+/* Make sure inner text spans inherit the bright color */
+.fi-ta-cell *,
+.fi-ta-text,
+.fi-ta-text-item-label,
+.fi-ta-text-prefix,
+.fi-ta-text-suffix {
+    color: #f3f4f6 !important;
+}
+
+/* Keep colored states (success/warning/danger badges) visible */
+.fi-ta-cell .fi-color-success { color: #4ade80 !important; }
+.fi-ta-cell .fi-color-warning { color: #fbbf24 !important; }
+.fi-ta-cell .fi-color-danger  { color: #f87171 !important; }
+.fi-ta-cell .fi-color-info    { color: #38bdf8 !important; }
 
 .fi-ta-header {
     background-color: #050d1f !important;
 }
 
-.fi-ta-header-cell {
+.fi-ta-header-cell, .fi-ta-header-cell * {
     color: #fbbf24 !important;
     text-transform: uppercase;
     font-size: 0.7rem;
@@ -373,6 +388,21 @@ body, .fi-body, .fi-main-ctn, .fi-page, main {
 
 .fi-ta-row:hover {
     background-color: rgba(251, 191, 36, 0.04) !important;
+}
+
+/* Section headers (the "License Compliance" titles) need to pop */
+.fi-section-header-heading,
+.fi-section-header-heading *,
+h2.fi-section-header-heading,
+h3.fi-section-header-heading {
+    color: #f3f4f6 !important;
+    font-weight: 600 !important;
+    font-size: 1.05rem !important;
+}
+
+.fi-section-header-description,
+.fi-section-header-description * {
+    color: #9ca3af !important;
 }
 
 /* Form inputs on dark canvas */
