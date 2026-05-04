@@ -273,18 +273,25 @@ class FccImportBulkCommand extends Command
 
     private function flushLicensees(array $batch): int
     {
-        $touched = 0;
-        foreach ($batch as $facilityId => $licensee) {
-            $touched += DB::table('fcc_licenses')
-                ->whereIn('facility_id', function ($q) use ($facilityId) {
-                    $q->select('id')->from('fcc_facilities')->where('facility_id', $facilityId);
-                })
-                ->update(['licensee' => $licensee]);
-            DB::table('fcc_facilities')
-                ->where('facility_id', $facilityId)
-                ->update(['owner' => $licensee]);
-        }
-        return $touched;
+        if (empty($batch)) return 0;
+
+        return DB::transaction(function () use ($batch) {
+            $touched = 0;
+            $pdo = DB::connection()->getPdo();
+            $facUpdate = $pdo->prepare(
+                'UPDATE fcc_facilities SET owner = ? WHERE facility_id = ?'
+            );
+            $licUpdate = $pdo->prepare(
+                'UPDATE fcc_licenses SET licensee = ? WHERE facility_id IN '
+                .'(SELECT id FROM fcc_facilities WHERE facility_id = ?)'
+            );
+            foreach ($batch as $facilityId => $licensee) {
+                $facUpdate->execute([$licensee, $facilityId]);
+                $licUpdate->execute([$licensee, $facilityId]);
+                $touched += $licUpdate->rowCount();
+            }
+            return $touched;
+        });
     }
 
     /**
@@ -506,20 +513,35 @@ class FccImportBulkCommand extends Command
         return $count;
     }
 
+    /**
+     * Flush an engineering batch as a single transaction — without
+     * wrapping the per-row UPDATEs in a transaction SQLite fsyncs
+     * after every statement, making the pass take 30+ minutes for
+     * the FM dataset. With a wrap it finishes in seconds.
+     */
     private function flushEngineering(array $batch): int
     {
-        $touched = 0;
-        foreach ($batch as $row) {
-            $touched += DB::table('fcc_facilities')
-                ->where('facility_id', $row['facility_id'])
-                ->update([
-                    'latitude' => $row['latitude'],
-                    'longitude' => $row['longitude'],
-                    'antenna_haat_meters' => $row['antenna_haat_meters'],
-                    'antenna_amsl_meters' => $row['antenna_amsl_meters'],
+        if (empty($batch)) return 0;
+
+        return DB::transaction(function () use ($batch) {
+            $touched = 0;
+            $stmt = DB::connection()->getPdo()->prepare(
+                'UPDATE fcc_facilities SET latitude = ?, longitude = ?, '
+                .'antenna_haat_meters = ?, antenna_amsl_meters = ? '
+                .'WHERE facility_id = ?'
+            );
+            foreach ($batch as $row) {
+                $stmt->execute([
+                    $row['latitude'],
+                    $row['longitude'],
+                    $row['antenna_haat_meters'],
+                    $row['antenna_amsl_meters'],
+                    $row['facility_id'],
                 ]);
-        }
-        return $touched;
+                $touched += $stmt->rowCount();
+            }
+            return $touched;
+        });
     }
 
     /* ---------- helpers ---------- */
