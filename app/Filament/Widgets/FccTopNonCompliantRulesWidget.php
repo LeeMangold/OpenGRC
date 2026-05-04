@@ -20,10 +20,10 @@ class FccTopNonCompliantRulesWidget extends BaseWidget
         return $table
             ->query(
                 FccRule::query()
+                    ->whereHas('statuses', fn ($q) => $q->whereIn('status', ['non_compliant', 'at_risk']))
                     ->withCount([
                         'statuses as affected_count' => fn ($q) => $q->whereIn('status', ['non_compliant', 'at_risk']),
                     ])
-                    ->having('affected_count', '>', 0)
                     ->orderByDesc('affected_count')
                     ->limit(8)
             )
