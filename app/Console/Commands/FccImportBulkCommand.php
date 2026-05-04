@@ -253,12 +253,19 @@ class FccImportBulkCommand extends Command
         }
         fclose($fh);
 
+        // Pre-load cdbs_facility_id → internal_pk so flushLicensees can
+        // do a single UPDATE WHERE id IN (...) per batch without a
+        // subquery per row.
+        $facilityPkMap = DB::table('fcc_facilities')
+            ->pluck('id', 'facility_id')
+            ->toArray();
+
         // Stream fac_party.dat. Schema (verified live):
         //   0: facility_id
         //   1: party_id
         //   2: role_code   ('LICEN' = licensee, 'CONTAC' = contact, ...)
         $fh = fopen($facPartyPath, 'r');
-        $batch = [];
+        $batch = [];        // facility_id (cdbs) → name
         $touched = 0;
         while (! feof($fh)) {
             $line = fgets($fh);
@@ -270,7 +277,6 @@ class FccImportBulkCommand extends Command
             $partyId    = trim($cols[1] ?? '');
             $roleCode   = strtoupper(trim($cols[2] ?? ''));
 
-            // CDBS uses 'LICEN' for licensee. Accept all forms we've seen.
             if (! in_array($roleCode, ['LICEN', 'LIC', 'LICENSEE', 'OWNER'], true)) continue;
             if (! isset($parties[$partyId])) continue;
             if (! ctype_digit($facilityId)) continue;
@@ -278,35 +284,56 @@ class FccImportBulkCommand extends Command
             $batch[$facilityId] = $parties[$partyId];
 
             if (count($batch) >= 1000) {
-                $touched += $this->flushLicensees($batch);
+                $touched += $this->flushLicensees($batch, $facilityPkMap);
                 $batch = [];
             }
         }
-        if (! empty($batch)) $touched += $this->flushLicensees($batch);
+        if (! empty($batch)) $touched += $this->flushLicensees($batch, $facilityPkMap);
         fclose($fh);
 
         return $touched;
     }
 
-    private function flushLicensees(array $batch): int
+    /**
+     * Bulk-update licensee names for a batch of cdbs_facility_id → name
+     * pairs. Uses the pre-loaded $pkMap so we never run a subquery.
+     */
+    private function flushLicensees(array $batch, array $pkMap): int
     {
         if (empty($batch)) return 0;
 
-        return DB::transaction(function () use ($batch) {
+        return DB::transaction(function () use ($batch, $pkMap) {
             $touched = 0;
             $pdo = DB::connection()->getPdo();
-            $facUpdate = $pdo->prepare(
-                'UPDATE fcc_facilities SET owner = ? WHERE facility_id = ?'
-            );
-            $licUpdate = $pdo->prepare(
-                'UPDATE fcc_licenses SET licensee = ? WHERE facility_id IN '
-                .'(SELECT id FROM fcc_facilities WHERE facility_id = ?)'
-            );
-            foreach ($batch as $facilityId => $licensee) {
-                $facUpdate->execute([$licensee, $facilityId]);
-                $licUpdate->execute([$licensee, $facilityId]);
-                $touched += $licUpdate->rowCount();
+
+            // Group facilities by name so we can UPDATE WHERE id IN (…)
+            // for each distinct licensee — orders of magnitude fewer
+            // queries than per-row UPDATEs.
+            $byName = [];        // licensee_name → [internal_pk, ...]
+            $facByName = [];     // licensee_name → [cdbs_facility_id, ...]
+            foreach ($batch as $cdbsId => $name) {
+                $facByName[$name][] = $cdbsId;
+                if (isset($pkMap[$cdbsId])) {
+                    $byName[$name][] = $pkMap[$cdbsId];
+                }
             }
+
+            // Update fcc_facilities.owner by cdbs facility_id
+            foreach ($facByName as $name => $cdbsIds) {
+                $place = implode(',', array_fill(0, count($cdbsIds), '?'));
+                $stmt = $pdo->prepare("UPDATE fcc_facilities SET owner = ? WHERE facility_id IN ({$place})");
+                $stmt->execute(array_merge([$name], $cdbsIds));
+            }
+
+            // Update fcc_licenses.licensee by internal facility pk
+            foreach ($byName as $name => $internalIds) {
+                if (empty($internalIds)) continue;
+                $place = implode(',', array_fill(0, count($internalIds), '?'));
+                $stmt = $pdo->prepare("UPDATE fcc_licenses SET licensee = ? WHERE facility_id IN ({$place})");
+                $stmt->execute(array_merge([$name], $internalIds));
+                $touched += $stmt->rowCount();
+            }
+
             return $touched;
         });
     }
