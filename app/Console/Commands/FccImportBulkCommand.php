@@ -396,6 +396,13 @@ class FccImportBulkCommand extends Command
             $callsign = trim($cols[$facilityCol['fac_callsign']]);
             if ($callsign === '') continue;
 
+            // Skip CDBS records where fac_callsign is actually an FCC
+            // application/file number (e.g. "780118AD", "10269") — those
+            // are unbuilt construction-permit applications, not licensed
+            // stations. Real broadcast call signs are 3-6 alphanumeric
+            // chars starting with a letter (K, W, or international like K-).
+            if (! preg_match('/^[A-Z][A-Z0-9-]{2,7}$/', $callsign)) continue;
+
             $svcUpper = strtoupper($service);
             $countByService[$svcUpper] = ($countByService[$svcUpper] ?? 0) + 1;
             if ($limit !== null && $countByService[$svcUpper] > $limit) continue;
