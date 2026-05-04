@@ -200,10 +200,12 @@ class FccImportCommand extends Command
         $url = "https://transition.fcc.gov/fcc-bin/{$bin}";
 
         try {
+            // FCC's Akamai edge blocks "Mozilla/5.0 (compatible;...)" UAs;
+            // a plain client UA (or curl/wget) passes. Use curl/X to mimic.
             $response = Http::timeout(30)
                 ->withHeaders([
-                    'User-Agent' => 'Mozilla/5.0 (compatible; OpenGRC-FCC/1.0; +https://opengrc.com)',
-                    'Accept' => 'text/html,application/xhtml+xml',
+                    'User-Agent' => 'curl/8.5.0',
+                    'Accept' => '*/*',
                 ])
                 ->get($url, ['call' => $call, 'format' => 8]);
 
