@@ -452,3 +452,38 @@ a.fi-logo, .fi-logo {
 }
 
 /* Compliance status badges remain colorful — leave them alone */
+
+/* Hide non-FCC sidebar entries on the App panel so the sidebar leads
+   with FCC Compliance. The underlying pages still work via direct URL. */
+.fi-sidebar-item:has(a[href*="/app/to-do"]),
+.fi-sidebar-item:has(a[href$="/app/risks"]),
+.fi-sidebar-item:has(a[href*="/app/risks?"]),
+.fi-sidebar-item:has(a[href*="/app/vendor-manager"]),
+.fi-sidebar-item:has(a[href*="/app/trust-center-manager"]) {
+    display: none !important;
+}
+
+/* Topbar alerts badge styling */
+.fi-fcc-alerts-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 9999px;
+    background-color: rgba(251, 191, 36, 0.1);
+    border: 1px solid rgba(251, 191, 36, 0.3);
+    color: #fbbf24;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 150ms;
+}
+.fi-fcc-alerts-badge:hover {
+    background-color: rgba(251, 191, 36, 0.2);
+    color: #fcd34d;
+}
+.fi-fcc-alerts-badge.is-critical {
+    background-color: rgba(239, 68, 68, 0.12);
+    border-color: rgba(239, 68, 68, 0.4);
+    color: #f87171;
+}

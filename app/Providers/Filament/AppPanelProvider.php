@@ -161,6 +161,14 @@ class AppPanelProvider extends PanelProvider
                 PanelsRenderHook::FOOTER,
                 fn () => view('filament.footer.fcc-compliance-strip')
             )
+            ->renderHook(
+                PanelsRenderHook::TOPBAR_END,
+                fn () => view('filament.topbar.fcc-alerts-badge')
+            )
+            ->renderHook(
+                PanelsRenderHook::TOPBAR_END,
+                fn () => view('filament.topbar.fcc-export-button')
+            )
             ->navigationGroups([
                 'FCC Compliance',
                 'FCC Compliance Review',
