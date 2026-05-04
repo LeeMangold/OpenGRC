@@ -100,9 +100,15 @@ class AppPanelProvider extends PanelProvider
             ->login(Login::class)
             ->loginRouteSlug('login')
             ->colors([
-                'primary' => Color::Slate,
+                'primary' => Color::hex('#fbbf24'),
+                'gray' => Color::hex('#0c1f3d'),
+                'info' => Color::hex('#22d3ee'),
+                'success' => Color::hex('#22c55e'),
+                'warning' => Color::hex('#f59e0b'),
+                'danger' => Color::hex('#ef4444'),
             ])
-            ->brandName('OpenGRC')
+            ->brandName('OpenGRC FCC Compliance')
+            ->defaultThemeMode(\Filament\Enums\ThemeMode::Dark)
             ->brandLogo(fn () => view('filament.admin.logo'))
             ->globalSearch(true)
             ->databaseNotifications()
@@ -115,6 +121,10 @@ class AppPanelProvider extends PanelProvider
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
+            ->widgets([
+                \App\Filament\Widgets\FccComplianceOverviewWidget::class,
+                \App\Filament\Widgets\FccUpcomingDeadlinesWidget::class,
+            ])
             ->plugins([
                 FilamentApexChartsPlugin::make(),
                 BreezyCore::make()
@@ -147,9 +157,25 @@ class AppPanelProvider extends PanelProvider
                 PanelsRenderHook::SIDEBAR_FOOTER,
                 fn () => view('filament.app.sidebar-bottom-links')
             )
+            ->renderHook(
+                PanelsRenderHook::FOOTER,
+                fn () => view('filament.footer.fcc-compliance-strip')
+            )
+            ->renderHook(
+                PanelsRenderHook::TOPBAR_END,
+                fn () => view('filament.topbar.fcc-alerts-badge')
+            )
+            ->renderHook(
+                PanelsRenderHook::TOPBAR_END,
+                fn () => view('filament.topbar.fcc-export-button')
+            )
             ->navigationGroups([
+                'FCC Compliance',
+                'FCC Compliance Review',
+                'Documents & Reports',
                 'Foundations',
                 'Entities',
+                'Admin',
             ])
             ->middleware([
                 EncryptCookies::class,

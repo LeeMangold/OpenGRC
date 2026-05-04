@@ -49,9 +49,15 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->loginRouteSlug('login')
             ->colors([
-                'primary' => Color::Slate,
+                'primary' => Color::hex('#fbbf24'),
+                'gray' => Color::hex('#0c1f3d'),
+                'info' => Color::hex('#22d3ee'),
+                'success' => Color::hex('#22c55e'),
+                'warning' => Color::hex('#f59e0b'),
+                'danger' => Color::hex('#ef4444'),
             ])
-            ->brandName(name: 'OpenGRC Admin')
+            ->brandName(name: 'OpenGRC FCC Compliance Admin')
+            ->defaultThemeMode(\Filament\Enums\ThemeMode::Dark)
             ->viteTheme('resources/css/filament/app/theme.css')
             ->brandLogo(fn () => view('filament.admin.logo'))
             ->globalSearch(true)
@@ -120,7 +126,7 @@ class AdminPanelProvider extends PanelProvider
                 fn () => view('components.session-expiration-handler')
             )
             ->navigationItems([
-                NavigationItem::make('Back to OpenGRC')
+                NavigationItem::make('Back to OpenGRC FCC Compliance')
                     ->url('/app', shouldOpenInNewTab: false)
                     ->icon('heroicon-o-arrow-left'),
             ]);
