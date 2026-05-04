@@ -96,42 +96,97 @@ class FccImportCommand extends Command
     }
 
     /**
-     * Fetch one station's public facility record from the FCC LMS.
-     * Returns a normalized array or null if the station isn't found.
+     * Fetch one station's public facility record from the FCC.
      *
-     * Note: the LMS public-facility endpoint URL and response shape may
-     * change. If you need a hardened pull, drop in a CDBS bulk-data
-     * loader (the `facility`, `am/fm/tv_eng_data`, and `license_filing`
-     * tables from https://transition.fcc.gov/Bureaus/MB/Databases/cdbs/).
+     * The FCC's public-search endpoints have shifted around over time.
+     * We try multiple known-good URL shapes in order. If you're hitting
+     * this in production and all fall through, the canonical fallback is
+     * a CDBS bulk-data loader (https://transition.fcc.gov/Bureaus/MB/Databases/cdbs/).
      */
     protected function fetchFccPublicFacility(string $call): ?array
     {
-        $url = 'https://publicfiles.fcc.gov/api/manager/station/search/'.urlencode($call).'.json';
+        $candidates = [
+            // 1. Public Inspection Files manager — search by callsign query string
+            'https://publicfiles.fcc.gov/api/manager/station/search?searchString='.urlencode($call),
 
-        $response = Http::timeout(10)->acceptJson()->get($url);
-        if (! $response->ok()) {
-            return null;
-        }
+            // 2. Same site, callsign as path segment
+            'https://publicfiles.fcc.gov/api/manager/station/'.urlencode($call),
 
-        $payload = $response->json();
-        $hits = data_get($payload, 'stations', []);
-        if (empty($hits)) {
-            return null;
-        }
-
-        $h = $hits[0];
-
-        return [
-            'facility_id'    => (string) data_get($h, 'facilityId'),
-            'facility_name'  => data_get($h, 'transmitterName') ?? null,
-            'frn'            => data_get($h, 'frn') ?? '',
-            'licensee'       => data_get($h, 'licensee') ?? data_get($h, 'entityName', 'Unknown'),
-            'service'        => $this->mapService(data_get($h, 'serviceCode') ?? data_get($h, 'service', 'OTHER')),
-            'frequency'      => data_get($h, 'frequency') ?? data_get($h, 'channel', ''),
-            'community'      => data_get($h, 'community.city') ?? data_get($h, 'communityCity'),
-            'state'          => data_get($h, 'community.state') ?? data_get($h, 'communityState'),
-            'expiration_date'=> data_get($h, 'licenseExpirationDate'),
+            // 3. LMS public-facility elastic search
+            'https://enterpriseefiling.fcc.gov/dataentry/api/elasticsearch/public/api/public/facility/search?callSign='.urlencode($call),
         ];
+
+        foreach ($candidates as $url) {
+            try {
+                $response = Http::timeout(15)
+                    ->withHeaders(['User-Agent' => 'OpenGRC-FCC-Compliance/1.0'])
+                    ->acceptJson()
+                    ->get($url);
+
+                if (! $response->ok()) {
+                    continue;
+                }
+
+                $payload = $response->json();
+                if (! is_array($payload) || empty($payload)) {
+                    continue;
+                }
+
+                $hit = $this->extractFirstStation($payload);
+                if (! $hit) {
+                    continue;
+                }
+
+                $facilityId = (string) data_get($hit, 'facilityId') ?: (string) data_get($hit, 'facility_id') ?: (string) data_get($hit, 'id');
+                if (! $facilityId) {
+                    continue;
+                }
+
+                return [
+                    'facility_id'     => $facilityId,
+                    'facility_name'   => data_get($hit, 'transmitterName') ?? data_get($hit, 'facilityName') ?? null,
+                    'frn'             => (string) (data_get($hit, 'frn') ?? data_get($hit, 'licenseeFrn') ?? ''),
+                    'licensee'        => data_get($hit, 'licensee') ?? data_get($hit, 'entityName') ?? data_get($hit, 'licenseeName') ?? 'Unknown',
+                    'service'         => $this->mapService((string) (data_get($hit, 'serviceCode') ?? data_get($hit, 'service') ?? 'OTHER')),
+                    'frequency'       => (string) (data_get($hit, 'frequency') ?? data_get($hit, 'channel') ?? ''),
+                    'community'       => data_get($hit, 'community.city') ?? data_get($hit, 'communityCity') ?? data_get($hit, 'communityServed.city'),
+                    'state'           => data_get($hit, 'community.state') ?? data_get($hit, 'communityState') ?? data_get($hit, 'communityServed.state'),
+                    'expiration_date' => data_get($hit, 'licenseExpirationDate') ?? data_get($hit, 'expirationDate'),
+                    '_source_url'     => $url,
+                ];
+            } catch (\Throwable $e) {
+                // try next URL
+                continue;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Extract the first station-like record from a heterogeneous payload.
+     */
+    protected function extractFirstStation(array $payload): ?array
+    {
+        // Common shapes:
+        //  - { stations: [ {...} ] }
+        //  - { hits: [ {...} ] }
+        //  - { data: [ {...} ] }
+        //  - [ {...} ]            (bare array)
+        //  - { facilityId: ... }  (single record)
+        foreach (['stations', 'hits', 'data', 'results', 'records'] as $key) {
+            if (isset($payload[$key]) && is_array($payload[$key]) && ! empty($payload[$key])) {
+                return $payload[$key][0];
+            }
+        }
+        if (array_is_list($payload) && ! empty($payload) && is_array($payload[0])) {
+            return $payload[0];
+        }
+        if (isset($payload['facilityId']) || isset($payload['facility_id'])) {
+            return $payload;
+        }
+
+        return null;
     }
 
     protected function mapService(string $code): string
