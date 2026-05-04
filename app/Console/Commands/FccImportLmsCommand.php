@@ -56,7 +56,11 @@ class FccImportLmsCommand extends Command
 
         if ($limit) $query->limit($limit);
 
-        $total = (clone $query)->count();
+        // Eloquent's chunk() ignores prior limit() calls, so eager-load
+        // the capped result set instead. For 1k-row batches this fits
+        // easily in memory.
+        $licenses = $query->get();
+        $total = $licenses->count();
         if ($total === 0) {
             $this->info('Nothing to augment — all targeted licenses already have an FRN.');
             return self::SUCCESS;
@@ -71,8 +75,7 @@ class FccImportLmsCommand extends Command
         $hits = 0;
         $misses = 0;
 
-        $query->chunk(200, function ($chunk) use (&$hits, &$misses, $progress, $sleepMs) {
-            foreach ($chunk as $license) {
+        foreach ($licenses as $license) {
                 $facilityId = optional($license->facility)->facility_id;
                 if (! $facilityId) {
                     $progress->advance();
@@ -104,8 +107,7 @@ class FccImportLmsCommand extends Command
                 }
 
                 if ($sleepMs > 0) usleep($sleepMs * 1000);
-            }
-        });
+        }
 
         $progress->finish();
         $this->newLine(2);
