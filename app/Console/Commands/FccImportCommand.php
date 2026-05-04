@@ -197,32 +197,24 @@ class FccImportCommand extends Command
      */
     protected function tryFccQueryCgi(string $bin, string $call): ?array
     {
-        $url = "https://transition.fcc.gov/fcc-bin/{$bin}";
+        $html = $this->fetchFccQuery($bin, ['call' => $call, 'format' => 8]);
+        if ($html === null) return null;
 
-        try {
-            // FCC's Akamai edge blocks "Mozilla/5.0 (compatible;...)" UAs;
-            // a plain client UA (or curl/wget) passes. Use curl/X to mimic.
-            $response = Http::timeout(30)
-                ->withHeaders([
-                    'User-Agent' => 'curl/8.5.0',
-                    'Accept' => '*/*',
-                ])
-                ->get($url, ['call' => $call, 'format' => 8]);
-
-            if (! $response->ok()) {
-                if (config('app.debug')) {
-                    logger()->info("FCC {$bin} HTTP {$response->status()} for {$call}");
+        // The detail page contains JS variable assignments. The list page
+        // (returned by AM/TV Query when the call has multiple records)
+        // contains links of the form "amq?list=0&facid=70658" and the
+        // station data rendered as a single HTML row. Detect the list
+        // format and re-fetch the detail page by facility ID.
+        if (! preg_match("/facility_id\s*=\s*['\"][1-9]/", $html)) {
+            if (preg_match('/facid=(\d+)/', $html, $m)) {
+                $html = $this->fetchFccQuery($bin, ['list' => 0, 'facid' => $m[1]]);
+                if ($html === null || ! preg_match("/facility_id\s*=\s*['\"][1-9]/", $html)) {
+                    return null;
                 }
+            } else {
                 return null;
             }
-            $html = $response->body();
-            if ($html === '') return null;
-
-            // The page must contain at least one quoted facility_id assignment
-            // (the un-quoted "var facility_id = 0;" declaration doesn't count).
-            if (! preg_match("/facility_id\s*=\s*['\"][1-9]/", $html)) {
-                return null;
-            }
+        }
 
             // Extract JS variable assignments that look like:
             //   facility_id = '789877';
@@ -290,21 +282,46 @@ class FccImportCommand extends Command
                 'last_license_date' => $licensedDate,
                 '_source_url'     => "transition.fcc.gov/fcc-bin/{$bin}",
             ];
-        } catch (\Throwable $e) {
-            return null;
-        }
     }
 
     protected function mapService(string $code): string
     {
+        // FCC service designators (LMS):
+        //   AM, AB (AM/AM-Booster) → AM
+        //   FM, FB (Booster), FX (Translator), FL (LPFM)
+        //   DT (Digital TV), TX (TV Translator), LD (LPTV-D), LP (LPTV-A)
+        //   CA (Class A TV), DC (Class A digital)
         $code = strtoupper(trim($code));
         return match (true) {
-            str_starts_with($code, 'AM') => 'AM',
-            str_starts_with($code, 'FM'), $code === 'FX' => 'FM',
-            str_starts_with($code, 'TV'), $code === 'DT', $code === 'DC' => 'TV',
+            in_array($code, ['AM', 'AB']) => 'AM',
+            in_array($code, ['FM', 'FB', 'FX']) => 'FM',
+            $code === 'FL' => 'LPFM',
             $code === 'LPFM' => 'LPFM',
-            $code === 'LPTV', $code === 'TX' => 'LPTV',
+            in_array($code, ['TV', 'DT', 'DC', 'CA']) => 'TV',
+            in_array($code, ['LP', 'LD', 'TX']) => 'LPTV',
             default => 'OTHER',
         };
+    }
+
+    /**
+     * Single-shot fetch from a transition.fcc.gov AM/FM/TV Query CGI.
+     * FCC's Akamai edge blocks "Mozilla/5.0 (compatible;...)" UAs; a
+     * curl/wget UA passes.
+     */
+    protected function fetchFccQuery(string $bin, array $params): ?string
+    {
+        try {
+            $response = Http::timeout(30)
+                ->withHeaders([
+                    'User-Agent' => 'curl/8.5.0',
+                    'Accept' => '*/*',
+                ])
+                ->get("https://transition.fcc.gov/fcc-bin/{$bin}", $params);
+
+            if (! $response->ok()) return null;
+            return $response->body() ?: null;
+        } catch (\Throwable $e) {
+            return null;
+        }
     }
 }
