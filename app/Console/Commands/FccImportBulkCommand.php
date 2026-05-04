@@ -632,6 +632,12 @@ class FccImportBulkCommand extends Command
     {
         $freq = trim($freq);
         $channel = trim($channel);
+
+        // Strip trailing zeros so 88.300000 → 88.3, 1470.000000 → 1470.
+        if ($freq !== '' && is_numeric($freq)) {
+            $freq = rtrim(rtrim($freq, '0'), '.');
+        }
+
         return match (true) {
             in_array($service, ['AM', 'AB']) && $freq !== '' => "{$freq} kHz",
             in_array($service, ['FM', 'FB', 'FX', 'FL']) && $freq !== '' => "{$freq} MHz",
