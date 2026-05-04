@@ -224,24 +224,39 @@ class FccImportBulkCommand extends Command
     {
         if (! file_exists($partyPath) || ! file_exists($facPartyPath)) return 0;
 
-        // Load party_id → name into memory (~50K rows, name string only)
+        // Load party_id → name into memory (~50K rows).
+        // party.dat schema (verified live):
+        //   0: party_id
+        //   1: address1
+        //   4: city
+        //   6: country
+        //   10: party_name (canonical entity name) ← what we want
+        //   12: state
+        //   13: zip
         $parties = [];
         $fh = fopen($partyPath, 'r');
         while (! feof($fh)) {
             $line = fgets($fh);
             if ($line === false) break;
             $cols = explode('|', rtrim($line, "\r\n"));
-            if (count($cols) < 8) continue;
-            // party.dat columns: party_id, name, attention_line, addr1, addr2, ...
+            if (count($cols) < 11) continue;
             $partyId = trim($cols[0]);
-            $name = trim($cols[1]);
-            if ($partyId !== '' && $name !== '') {
+            // Try col 10 first (typical real-party row), then col 9 as
+            // a fallback for the placeholder rows where address fields
+            // collapsed and name shifted left.
+            $name = trim($cols[10] ?? '');
+            if ($name === '') $name = trim($cols[9] ?? '');
+            if ($partyId !== '' && ctype_digit($partyId) && $name !== ''
+                && stripos($name, 'PARTY INFO NOT FOUND') === false) {
                 $parties[$partyId] = $name;
             }
         }
         fclose($fh);
 
-        // Stream fac_party.dat: facility_id, party_id, role_code (=LIC for licensee)
+        // Stream fac_party.dat. Schema (verified live):
+        //   0: facility_id
+        //   1: party_id
+        //   2: role_code   ('LICEN' = licensee, 'CONTAC' = contact, ...)
         $fh = fopen($facPartyPath, 'r');
         $batch = [];
         $touched = 0;
@@ -249,14 +264,16 @@ class FccImportBulkCommand extends Command
             $line = fgets($fh);
             if ($line === false) break;
             $cols = explode('|', rtrim($line, "\r\n"));
-            if (count($cols) < 5) continue;
+            if (count($cols) < 3) continue;
 
             $facilityId = trim($cols[0] ?? '');
             $partyId    = trim($cols[1] ?? '');
             $roleCode   = strtoupper(trim($cols[2] ?? ''));
 
-            if ($roleCode !== 'LIC' && $roleCode !== 'LICENSEE' && $roleCode !== 'OWNER') continue;
+            // CDBS uses 'LICEN' for licensee. Accept all forms we've seen.
+            if (! in_array($roleCode, ['LICEN', 'LIC', 'LICENSEE', 'OWNER'], true)) continue;
             if (! isset($parties[$partyId])) continue;
+            if (! ctype_digit($facilityId)) continue;
 
             $batch[$facilityId] = $parties[$partyId];
 

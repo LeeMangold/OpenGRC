@@ -29,6 +29,16 @@ class FccComplianceSeeder extends Seeder
         $fictionalCalls = ['KXYZ-FM', 'WQRS-TV', 'KLMN-LP', 'KDEF-FM', 'KJKL-TV', 'KPOW-AM', 'KZ99-FM'];
         FccLicense::whereIn('call_sign', $fictionalCalls)->forceDelete();
 
+        // Drop fictional facility rows from earlier demo seeds.
+        // Real CDBS facility_ids never collide with these specific
+        // names — verified empirically — so name-based matching is safe.
+        $fictionalFacilityNames = [
+            'Market Hall Tower', 'Pioneer Hill Site', 'CityView Mt. Wilson',
+            'Plains LPFM Translator', 'North County Site', 'Metro Media Tower',
+            'PowerTalk Tower', 'Z99 Mountain',
+        ];
+        FccFacility::whereIn('name', $fictionalFacilityNames)->forceDelete();
+
         // ---- FCC Rules — actual 47 CFR sections (Parts 73, 11, 17) ----
         $rules = [
             ['rule_number' => '73.3526',    'part' => 'Part 73', 'title' => 'Online public inspection file of commercial stations',           'category' => 'public_file_rules',     'severity' => 'high'],
