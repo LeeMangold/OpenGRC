@@ -80,33 +80,40 @@ class FccImportBulkCommand extends Command
     ];
 
     /**
-     * Column order in am_eng_data.dat / fm_eng_data.dat / tv_eng_data.dat.
-     * Different per file but share several common fields. We extract:
-     *   facility_id, station_class, lat/lon (computed), ERP, HAAT
+     * Column positions verified empirically against current CDBS dumps.
+     * Each {svc}_eng_data.dat has slightly different column ordering
+     * (FM: 73 cols, TV: 75 cols, AM: 17 cols — AM has no lat/lon).
      */
     private const FM_ENG_COLS = [
-        'application_id' => 0,
-        'callsign'       => 1,
-        'station_class'  => 2,
-        'effective_erp'  => 3,
-        'haat_horiz_va'  => 4,
-        'haat_vert_va'   => 5,
-        'amsl'           => 6,
-        'agl'            => 7,
-        'directional_ant_id' => 8,
-        'lat_dir'        => 9,
-        'lat_deg'        => 10,
-        'lat_min'        => 11,
-        'lat_sec'        => 12,
-        'lon_dir'        => 13,
-        'lon_deg'        => 14,
-        'lon_min'        => 15,
-        'lon_sec'        => 16,
-        'rcamsl_horiz_mtr' => 17,
-        'rcamsl_vert_mtr'  => 18,
-        'facility_id'    => 19,
-        'station_channel'=> 20,
-        'frequency'      => 21,
+        'service'      => 7,
+        'facility_id'  => 20,
+        'erp_kw'       => 29,
+        'lat_deg'      => 30,
+        'lat_dir'      => 31,
+        'lat_min'      => 32,
+        'lat_sec'      => 33,
+        'lon_deg'      => 34,
+        'lon_dir'      => 35,
+        'lon_min'      => 36,
+        'lon_sec'      => 37,
+        'haat_meters'  => 40,
+        'amsl_meters'  => 48,
+        'station_class'=> 50,
+    ];
+
+    private const TV_ENG_COLS = [
+        'facility_id'  => 21,
+        'lat_deg'      => 29,
+        'lat_dir'      => 30,
+        'lat_min'      => 31,
+        'lat_sec'      => 32,
+        'lon_deg'      => 33,
+        'lon_dir'      => 34,
+        'lon_min'      => 35,
+        'lon_sec'      => 36,
+        'haat_meters'  => 41,
+        'erp_kw'       => 42,
+        'amsl_meters'  => 47,
     ];
 
     public function handle(): int
@@ -160,13 +167,17 @@ class FccImportBulkCommand extends Command
         $this->line('  '.number_format(count($facilityIdMap)).' facilities imported');
         $this->newLine();
 
-        // 4. Augment with engineering data (lat/lon, ERP, HAAT) per service
+        // 4. Augment with engineering data (lat/lon, ERP, HAAT) per service.
+        //    AM has no coordinates in am_eng_data — skip it (AM lat/lon
+        //    lives in am_ant_sys.dat which requires a separate join path).
         foreach ($services as $svc) {
+            if ($svc === 'am') continue;
             $eng = "{$cacheDir}/{$svc}_eng_data.dat";
             if (! file_exists($eng)) continue;
 
+            $cols = $svc === 'tv' ? self::TV_ENG_COLS : self::FM_ENG_COLS;
             $this->info("Applying {$svc}_eng_data → coordinates / ERP / HAAT…");
-            $count = $this->applyEngineeringData($eng, $facilityIdMap);
+            $count = $this->applyEngineeringData($eng, $facilityIdMap, $cols);
             $this->line("  {$count} facilities updated with engineering data");
         }
         $this->newLine();
@@ -437,15 +448,16 @@ class FccImportBulkCommand extends Command
     }
 
     /**
-     * Stream {fm,am,tv}_eng_data.dat and update fcc_facilities with
-     * lat/lon/HAAT/AMSL pulled from the engineering record.
+     * Stream {fm,tv}_eng_data.dat and update fcc_facilities with
+     * lat/lon/HAAT/AMSL pulled from the engineering record. Column
+     * positions vary per service — pass the appropriate map.
      */
-    private function applyEngineeringData(string $path, array $facMap): int
+    private function applyEngineeringData(string $path, array $facMap, array $cols): int
     {
         $fh = fopen($path, 'r');
         if (! $fh) return 0;
 
-        $cols = self::FM_ENG_COLS;
+        $minCols = max($cols) + 1;
         $count = 0;
         $batch = [];
 
@@ -453,7 +465,7 @@ class FccImportBulkCommand extends Command
             $line = fgets($fh);
             if ($line === false) break;
             $row = explode('|', rtrim($line, "\r\n"));
-            if (count($row) < 22) continue;
+            if (count($row) < $minCols) continue;
 
             $facilityId = trim($row[$cols['facility_id']] ?? '');
             if (! isset($facMap[$facilityId])) continue;
@@ -470,8 +482,8 @@ class FccImportBulkCommand extends Command
                 $row[$cols['lon_min']] ?? 0,
                 $row[$cols['lon_sec']] ?? 0
             );
-            $haat = (float) ($row[$cols['haat_horiz_va']] ?? 0);
-            $amsl = (float) ($row[$cols['rcamsl_horiz_mtr']] ?? $row[$cols['amsl']] ?? 0);
+            $haat = (float) ($row[$cols['haat_meters']] ?? 0);
+            $amsl = (float) ($row[$cols['amsl_meters']] ?? 0);
 
             if ($lat === null && $lon === null && $haat == 0 && $amsl == 0) continue;
 
