@@ -11,7 +11,10 @@ class FccComplianceOverviewWidget extends BaseWidget
 {
     protected static bool $isLazy = false;
 
-    protected static ?string $heading = 'Compliance at a Glance';
+    public function getHeading(): ?string
+    {
+        return 'Compliance at a Glance';
+    }
 
     protected function getStats(): array
     {
