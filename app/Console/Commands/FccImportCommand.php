@@ -67,6 +67,10 @@ class FccImportCommand extends Command
                         'community_of_license' => $data['community'],
                         'state' => $data['state'],
                         'owner' => $data['licensee'],
+                        'latitude' => $data['latitude'] ?? null,
+                        'longitude' => $data['longitude'] ?? null,
+                        'antenna_haat_meters' => $data['haat_meters'] ?? null,
+                        'antenna_amsl_meters' => $data['amsl_meters'] ?? null,
                     ]
                 );
 
@@ -78,6 +82,8 @@ class FccImportCommand extends Command
                         'service' => $data['service'],
                         'channel_or_frequency' => $data['frequency'],
                         'expiration_date' => $data['expiration_date'] ?? null,
+                        'last_renewal_date' => $data['last_license_date'] ?? null,
+                        'grant_date' => $data['last_license_date'] ?? null,
                         'status' => 'active',
                         'compliance_score' => 100.0,
                         'facility_id' => $facility->id,
@@ -195,68 +201,97 @@ class FccImportCommand extends Command
     }
 
     /**
-     * Fall back to the FCC AM/FM/TV Query CGIs with format=4 (pipe-delimited).
-     * These have been the most stable FCC endpoint over the past 20 years.
+     * Fall back to the FCC AM/FM/TV Query CGIs at transition.fcc.gov.
+     *
+     * The CGI returns an HTML page containing JavaScript variable
+     * assignments with the actual record data, plus a few <b>-wrapped
+     * fields for licensee + licensed date. We parse both.
+     *
+     * URL example:
+     *   https://transition.fcc.gov/fcc-bin/fmq?call=KQED&format=8
      */
     protected function tryFccQueryCgi(string $bin, string $call): ?array
     {
         $url = "https://transition.fcc.gov/fcc-bin/{$bin}";
 
         try {
-            $response = Http::timeout(15)
+            $response = Http::timeout(20)
                 ->withHeaders(['User-Agent' => 'OpenGRC-FCC-Compliance/1.0'])
-                ->get($url, ['call' => $call, 'format' => 4]);
+                ->get($url, ['call' => $call, 'format' => 8]);
 
             if (! $response->ok()) return null;
-            $body = trim($response->body());
-            if ($body === '' || ! str_contains($body, '|')) return null;
+            $html = $response->body();
+            if ($html === '' || ! str_contains($html, 'facility_id')) return null;
 
-            // Take the first non-comment data line
-            foreach (preg_split("/\r?\n/", $body) as $line) {
-                $line = trim($line);
-                if ($line === '' || str_starts_with($line, '#') || str_starts_with($line, '*')) continue;
-                $cols = explode('|', $line);
-                if (count($cols) < 5) continue;
-
-                // FM Query format 4 columns (approximate, public docs):
-                //   call|service|status|frequency|channel|...|licensee|city|state|...|facility_id|...
-                $service = $bin === 'fmq' ? 'FM' : ($bin === 'amq' ? 'AM' : 'TV');
-                $freq = trim($cols[3] ?? '');
-                $channel = trim($cols[4] ?? '');
-                $licensee = trim($cols[6] ?? $cols[7] ?? '');
-                $city = trim($cols[8] ?? '');
-                $state = trim($cols[9] ?? '');
-
-                // Hunt for a numeric facility ID elsewhere in the row
-                $facilityId = '';
-                foreach ($cols as $c) {
-                    $c = trim($c);
-                    if (ctype_digit($c) && strlen($c) >= 4 && strlen($c) <= 7) {
-                        $facilityId = $c;
-                        break;
-                    }
+            // Extract JS variable assignments that look like:
+            //   facility_id = '789877';
+            //   c_comm_city_app = "ALAMO";
+            //   freq = '88.5';
+            $jsVal = function (string $name) use ($html): ?string {
+                if (preg_match("/\\b{$name}\\s*=\\s*['\"]([^'\"]*)['\"]/", $html, $m)) {
+                    return trim($m[1]);
                 }
+                return null;
+            };
 
-                $freqDisplay = $service === 'AM' ? "{$freq} kHz" : ($service === 'FM' ? "{$freq} MHz" : "Ch. {$channel}");
+            $facilityId = $jsVal('facility_id');
+            // facility_id = 0 means "no record yet"
+            if (! $facilityId || $facilityId === '0') return null;
 
-                return [
-                    'facility_id'     => $facilityId,
-                    'facility_name'   => null,
-                    'frn'             => '',
-                    'licensee'        => $licensee ?: 'Unknown',
-                    'service'         => $service,
-                    'frequency'       => trim($freqDisplay),
-                    'community'       => $city,
-                    'state'           => $state,
-                    'expiration_date' => null,
-                    '_source_url'     => "transition.fcc.gov/fcc-bin/{$bin}",
-                ];
+            $callsign  = $jsVal('c_callsign') ?? $jsVal('c_facility_callsign') ?? $call;
+            $service   = strtoupper($jsVal('c_service') ?? '');
+            $status    = $jsVal('c_dom_status');
+            $city      = $jsVal('c_comm_city_app');
+            $state     = $jsVal('c_comm_state_app');
+            $freq      = $jsVal('freq');
+            $channel   = $jsVal('c_station_channel');
+            $erp       = $jsVal('p_erp_max');
+            $haat      = $jsVal('p_haat_max');
+            $amsl      = $jsVal('p_rcamsl_max');
+            $lat       = $jsVal('alat83');
+            $lon       = $jsVal('alon83');
+
+            // Licensee + licensed date come from HTML, not JS
+            $licensee = null;
+            if (preg_match('/Licensee:\s*<b>([^<]+)<\/b>/i', $html, $m)) {
+                $licensee = trim($m[1]);
             }
+            $licensedDate = null;
+            if (preg_match('/Licensed\s+date:\s*([0-9]{4}-[0-9]{2}-[0-9]{2})/i', $html, $m)) {
+                $licensedDate = $m[1];
+            }
+
+            $serviceMapped = $this->mapService($service ?: ($bin === 'fmq' ? 'FM' : ($bin === 'amq' ? 'AM' : 'TV')));
+
+            $freqDisplay = match ($serviceMapped) {
+                'AM'           => $freq ? "{$freq} kHz"  : '',
+                'FM', 'LPFM'   => $freq ? "{$freq} MHz"  : '',
+                'TV', 'LPTV'   => $channel ? "Ch. {$channel}" : '',
+                default        => $freq ?: $channel ?: '',
+            };
+
+            return [
+                'facility_id'     => $facilityId,
+                'facility_name'   => $callsign,
+                'frn'             => '',
+                'licensee'        => $licensee ?: 'Unknown',
+                'service'         => $serviceMapped,
+                'frequency'       => trim($freqDisplay),
+                'community'       => $city,
+                'state'           => $state,
+                'expiration_date' => null,
+                'latitude'        => $lat ? (float) $lat : null,
+                'longitude'       => $lon ? (float) $lon : null,
+                'haat_meters'     => $haat ? (float) $haat : null,
+                'amsl_meters'     => $amsl ? (float) $amsl : null,
+                'erp_kw'          => $erp ? (float) $erp : null,
+                'license_status'  => $status,
+                'last_license_date' => $licensedDate,
+                '_source_url'     => "transition.fcc.gov/fcc-bin/{$bin}",
+            ];
         } catch (\Throwable $e) {
             return null;
         }
-
-        return null;
     }
 
     protected function mapService(string $code): string
