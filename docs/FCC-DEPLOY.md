@@ -70,7 +70,13 @@ sudo -u www-data php artisan fcc:import-bulk --skip-download     # use cache
 sudo -u www-data php artisan fcc:import-asr
 sudo -u www-data php artisan fcc:import-asr --limit=200          # smoke test
 
-# Single-station live lookup (transition.fcc.gov FM/AM/TV Query)
+# LMS augmentation — adds FRN per facility (rate-limited, resumable)
+sudo -u www-data php artisan fcc:import-lms                       # all missing FRN
+sudo -u www-data php artisan fcc:import-lms --limit=1000          # one batch
+sudo -u www-data php artisan fcc:import-lms --calls=KQED,WTOP     # specific
+sudo -u www-data php artisan fcc:import-lms --sleep=500           # 500ms between requests
+
+# Single-station live lookup (transition.fcc.gov FM/AM/TV Query — also LMS-backed)
 sudo -u www-data php artisan fcc:import --calls=KQED,WTOP-FM,WBZ-AM
 ```
 
@@ -102,6 +108,7 @@ After hard-refresh of `https://your-server/app/dashboard` you should see:
 | Licensee names | CDBS party.dat + fac_party.dat | ✅ Real |
 | License expiration dates | CDBS facility.dat | ✅ Real |
 | ASR # / structure type / height | ULS r_tower.zip | ✅ Real |
+| FRN per license | LMS publicFacilityDetails (per-facility scrape) | ✅ Real (run fcc:import-lms) |
 | 47 CFR rule numbers + titles | Hand-coded from CFR | ✅ Real |
 | Compliance scores | Synthetic (so dashboard renders mix) | ⚠️ Demo |
 | EAS test logs | Synthetic per sample station | ⚠️ Demo |

@@ -33,6 +33,8 @@ class FccSyncCommand extends Command
                             {--quick : Smoke test (limit=200 per service, no licensee names)}
                             {--skip-bulk : Skip the CDBS bulk import}
                             {--skip-asr : Skip the ASR bulk import}
+                            {--skip-lms : Skip the LMS FRN augmentation pass}
+                            {--lms-batch=1000 : LMS augmentation batch size per run}
                             {--skip-operational : Skip generating EAS/IPL/etc demo data}';
 
     protected $description = 'Run the full FCC data pipeline (bulk + ASR + operational)';
@@ -62,7 +64,7 @@ class FccSyncCommand extends Command
         }
 
         if (! $this->option('skip-asr')) {
-            $this->info('▶ Step 2/3: ASR bulk import (Antenna Structure Registrations)');
+            $this->info('▶ Step 2/4: ASR bulk import (Antenna Structure Registrations)');
             $asrOpts = ['--no-interaction' => true];
             if ($quick) $asrOpts['--limit'] = 200;
             $exit = $this->call('fcc:import-asr', $asrOpts);
@@ -72,8 +74,22 @@ class FccSyncCommand extends Command
             $this->newLine();
         }
 
+        if (! $this->option('skip-lms')) {
+            $this->info('▶ Step 3/4: LMS augmentation (per-station FRN, polite + resumable)');
+            $batch = $quick ? 50 : (int) $this->option('lms-batch');
+            $exit = $this->call('fcc:import-lms', [
+                '--limit' => $batch,
+                '--no-interaction' => true,
+            ]);
+            if ($exit !== 0) {
+                $this->warn('  LMS augmentation returned non-zero; continuing');
+            }
+            $this->line("  Re-run `php artisan fcc:import-lms` to continue augmenting more stations.");
+            $this->newLine();
+        }
+
         if (! $this->option('skip-operational')) {
-            $this->info('▶ Step 3/3: Operational data (EAS tests / IPL / Public File / etc.)');
+            $this->info('▶ Step 4/4: Operational data (EAS tests / IPL / Public File / etc.)');
             $exit = $this->call('db:seed', [
                 '--class' => 'Database\\Seeders\\FccOperationalSeeder',
                 '--force' => true,
