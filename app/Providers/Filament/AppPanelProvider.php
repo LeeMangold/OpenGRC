@@ -162,8 +162,12 @@ class AppPanelProvider extends PanelProvider
                 fn () => view('filament.footer.fcc-compliance-strip')
             )
             ->navigationGroups([
+                'FCC Compliance',
+                'FCC Compliance Review',
+                'Documents & Reports',
                 'Foundations',
                 'Entities',
+                'Admin',
             ])
             ->middleware([
                 EncryptCookies::class,

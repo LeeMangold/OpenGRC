@@ -308,3 +308,117 @@ a.fi-logo {
 .fi-main-ctn {
     transition-duration: 0s !important;
 }
+
+/* ----------------------------------------------------------------------- */
+/* Force the navy/gold canvas in BOTH light and dark mode so the FCC look  */
+/* is consistent regardless of the user's theme preference.                */
+/* ----------------------------------------------------------------------- */
+
+body, .fi-body, .fi-main-ctn, .fi-page, main {
+    background-color: #0a1830 !important;
+    color: rgb(229 231 235) !important;
+}
+
+/* Section / card backgrounds — dark with subtle gold border */
+.fi-section,
+.fi-wi-stats-overview-stat,
+.fi-fo-section,
+.fi-in-section,
+.fi-ta-ctn,
+.fi-table {
+    background-color: #0c1f3d !important;
+    border: 1px solid rgba(251, 191, 36, 0.12) !important;
+    color: rgb(229 231 235) !important;
+}
+
+.fi-section-header-heading,
+.fi-section-header-description,
+.fi-wi-stats-overview-stat-label {
+    color: rgb(229 231 235) !important;
+}
+
+.fi-wi-stats-overview-stat-value {
+    color: #fbbf24 !important;
+    font-weight: 700;
+    font-size: 2.25rem;
+}
+
+.fi-wi-stats-overview-stat-description {
+    color: rgb(156 163 175) !important;
+}
+
+/* Tables on dark canvas */
+.fi-ta-table,
+.fi-ta-header-cell,
+.fi-ta-row,
+.fi-ta-cell {
+    background-color: transparent !important;
+    color: rgb(229 231 235) !important;
+}
+
+.fi-ta-header {
+    background-color: #050d1f !important;
+}
+
+.fi-ta-header-cell {
+    color: #fbbf24 !important;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+}
+
+.fi-ta-row {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+.fi-ta-row:hover {
+    background-color: rgba(251, 191, 36, 0.04) !important;
+}
+
+/* Form inputs on dark canvas */
+.fi-input,
+.fi-select-input,
+.fi-textarea-input {
+    background-color: #050d1f !important;
+    color: rgb(229 231 235) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.fi-input::placeholder {
+    color: rgb(107 114 128) !important;
+}
+
+/* Dropdown panels */
+.fi-dropdown-panel {
+    background-color: #0c1f3d !important;
+    border: 1px solid rgba(251, 191, 36, 0.15) !important;
+}
+
+/* Page heading */
+.fi-header-heading,
+.fi-header h1,
+h1.fi-header-heading {
+    color: rgb(243 244 246) !important;
+}
+
+.fi-breadcrumbs-item, .fi-breadcrumbs-separator {
+    color: rgb(156 163 175) !important;
+}
+
+/* Brand text in topbar */
+a.fi-logo, .fi-logo {
+    color: #fbbf24 !important;
+}
+
+/* Modal */
+.fi-modal-window {
+    background-color: #0c1f3d !important;
+    color: rgb(229 231 235) !important;
+}
+
+/* Pagination */
+.fi-pagination, .fi-pagination button, .fi-pagination a {
+    color: rgb(229 231 235) !important;
+}
+
+/* Compliance status badges remain colorful — leave them alone */

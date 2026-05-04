@@ -8,8 +8,9 @@ use App\Filament\Widgets\FccLicenseComplianceTableWidget;
 use App\Filament\Widgets\FccRuleCategoryRollupWidget;
 use App\Filament\Widgets\FccTopNonCompliantRulesWidget;
 use App\Filament\Widgets\FccUpcomingDeadlinesWidget;
+use Filament\Pages\Dashboard as BaseDashboard;
 
-class Dashboard extends TabbedPage
+class Dashboard extends BaseDashboard
 {
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-home';
 
@@ -19,26 +20,20 @@ class Dashboard extends TabbedPage
 
     protected static ?int $navigationSort = -2;
 
-    public function getStatsWidgets(): array
+    public function getColumns(): int|string|array
     {
-        return [
-            FccComplianceOverviewWidget::class,
-        ];
+        return 2;
     }
 
     public function getWidgets(): array
     {
         return [
+            FccComplianceOverviewWidget::class,
             FccLicenseComplianceTableWidget::class,
             FccRuleCategoryRollupWidget::class,
             FccTopNonCompliantRulesWidget::class,
             FccUpcomingDeadlinesWidget::class,
             FccComplianceActivityWidget::class,
         ];
-    }
-
-    public function getColumns(): int|string|array
-    {
-        return 2;
     }
 }
