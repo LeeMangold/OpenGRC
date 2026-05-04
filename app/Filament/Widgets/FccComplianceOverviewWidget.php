@@ -11,9 +11,7 @@ class FccComplianceOverviewWidget extends BaseWidget
 {
     protected static bool $isLazy = false;
 
-    protected ?string $heading = 'Compliance at a Glance';
-
-    protected ?string $description = 'Real-time FCC compliance status across all licensed operations';
+    protected static ?string $heading = 'Compliance at a Glance';
 
     protected function getStats(): array
     {

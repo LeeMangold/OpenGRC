@@ -13,7 +13,7 @@ class FccUpcomingDeadlinesWidget extends BaseWidget
 
     protected int|string|array $columnSpan = 'full';
 
-    protected ?string $heading = 'Upcoming FCC Deadlines';
+    protected static ?string $heading = 'Upcoming FCC Deadlines';
 
     public function table(Table $table): Table
     {
