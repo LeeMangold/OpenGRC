@@ -2,11 +2,12 @@
 
 namespace App\Filament\Pages;
 
-use App\Filament\Widgets\AuditListWidget;
-use App\Filament\Widgets\ControlsStatsWidget;
-use App\Filament\Widgets\ImplementationsStatsWidget;
-use App\Filament\Widgets\StatsOverview;
-use App\Filament\Widgets\ToDoListWidget;
+use App\Filament\Widgets\FccComplianceActivityWidget;
+use App\Filament\Widgets\FccComplianceOverviewWidget;
+use App\Filament\Widgets\FccLicenseComplianceTableWidget;
+use App\Filament\Widgets\FccRuleCategoryRollupWidget;
+use App\Filament\Widgets\FccTopNonCompliantRulesWidget;
+use App\Filament\Widgets\FccUpcomingDeadlinesWidget;
 
 class Dashboard extends TabbedPage
 {
@@ -14,23 +15,30 @@ class Dashboard extends TabbedPage
 
     protected static ?string $navigationLabel = 'Dashboard';
 
-    protected static ?string $title = 'Dashboard';
+    protected static ?string $title = 'Compliance at a Glance';
 
     protected static ?int $navigationSort = -2;
+
+    public function getStatsWidgets(): array
+    {
+        return [
+            FccComplianceOverviewWidget::class,
+        ];
+    }
 
     public function getWidgets(): array
     {
         return [
-            StatsOverview::class,
-            ControlsStatsWidget::class,
-            AuditListWidget::class,
-            ImplementationsStatsWidget::class,
-            ToDoListWidget::class,
+            FccLicenseComplianceTableWidget::class,
+            FccRuleCategoryRollupWidget::class,
+            FccTopNonCompliantRulesWidget::class,
+            FccUpcomingDeadlinesWidget::class,
+            FccComplianceActivityWidget::class,
         ];
     }
 
     public function getColumns(): int|string|array
     {
-        return 3;
+        return 2;
     }
 }

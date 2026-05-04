@@ -157,6 +157,10 @@ class AppPanelProvider extends PanelProvider
                 PanelsRenderHook::SIDEBAR_FOOTER,
                 fn () => view('filament.app.sidebar-bottom-links')
             )
+            ->renderHook(
+                PanelsRenderHook::FOOTER,
+                fn () => view('filament.footer.fcc-compliance-strip')
+            )
             ->navigationGroups([
                 'Foundations',
                 'Entities',

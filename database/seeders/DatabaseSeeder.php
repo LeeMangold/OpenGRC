@@ -19,5 +19,6 @@ class DatabaseSeeder extends Seeder
         $this->call(VendorSurveyTemplatesSeeder::class);
         $this->call(TrustCenterContentBlockSeeder::class);
         $this->call(FccComplianceSeeder::class);
+        $this->call(FccOperationalSeeder::class);
     }
 }
