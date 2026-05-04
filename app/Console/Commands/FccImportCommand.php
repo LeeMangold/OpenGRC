@@ -103,55 +103,40 @@ class FccImportCommand extends Command
     }
 
     /**
-     * Fetch one station's public facility record from opendata.fcc.gov.
+     * Fetch one station's public facility record.
      *
-     * The FCC publishes broadcast engineering data via the Socrata SODA
-     * API at opendata.fcc.gov — these endpoints are stable and don't
-     * require auth for low-volume queries.
+     * The FCC's old "publicfiles" and "opendata" Socrata endpoints have
+     * shifted — when last verified they returned 404. The reliable
+     * surface is the FCC's AM/FM/TV Query CGI at transition.fcc.gov,
+     * which has been live for 20+ years. We hit that directly.
      *
-     * We try the broadcast engineering dataset first, falling back to
-     * the AM/FM Query and LMS endpoints if Socrata returns nothing.
+     * If you want to wire Socrata or the LMS public API back in, drop
+     * the URL into trySocrata() and add a call below.
      */
     protected function fetchFccPublicFacility(string $call): ?array
     {
-        // Strip any "-FM" / "-TV" suffix for the search; opendata stores the bare call
+        // Strip any "-FM" / "-TV" / "-AM" suffix; FCC Query stores bare call
         $bareCall = strtoupper(preg_replace('/-(FM|TV|AM|LP|LD)$/i', '', $call));
 
-        // 1) opendata.fcc.gov — broadcast engineering (AM/FM/TV) — stable Socrata API
-        //    Dataset: "AM, FM, TV Broadcast Engineering Data" (cd28-25ar)
-        $hit = $this->trySocrata('cd28-25ar', $bareCall);
-        if ($hit) {
-            return $this->normalizeSocrata($hit);
+        // FM, then AM, then TV — first hit wins.
+        foreach (['fmq', 'amq', 'tvq'] as $bin) {
+            $hit = $this->tryFccQueryCgi($bin, $bareCall);
+            if ($hit) return $hit;
         }
-
-        // 2) opendata.fcc.gov — broadcast facility data (alt dataset)
-        $hit = $this->trySocrata('iqaq-mbpb', $bareCall);
-        if ($hit) {
-            return $this->normalizeSocrata($hit);
-        }
-
-        // 3) FCC FM Query CGI (pipe-delimited; has been stable since the 90s)
-        $hit = $this->tryFccQueryCgi('fmq', $bareCall);
-        if ($hit) return $hit;
-
-        $hit = $this->tryFccQueryCgi('amq', $bareCall);
-        if ($hit) return $hit;
-
-        $hit = $this->tryFccQueryCgi('tvq', $bareCall);
-        if ($hit) return $hit;
 
         return null;
     }
 
     /**
      * Query opendata.fcc.gov Socrata endpoint for a call sign.
+     * Currently disabled (404 as of last check) but kept for re-enabling.
      */
     protected function trySocrata(string $datasetId, string $call): ?array
     {
         $url = "https://opendata.fcc.gov/resource/{$datasetId}.json";
 
         try {
-            $response = Http::timeout(15)
+            $response = Http::timeout(8)
                 ->withHeaders(['User-Agent' => 'OpenGRC-FCC-Compliance/1.0'])
                 ->acceptJson()
                 ->get($url, ['call_sign' => $call, '$limit' => 1]);
