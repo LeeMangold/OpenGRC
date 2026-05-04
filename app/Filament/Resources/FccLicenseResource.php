@@ -213,13 +213,20 @@ class FccLicenseResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        return (string) FccLicense::query()->count();
+        // Cached for 5 minutes — without this every page load pays for
+        // a full COUNT on ~60K licenses.
+        return cache()->remember('fcc.licenses.count', 300, function () {
+            return (string) FccLicense::query()->count();
+        });
     }
 
     public static function getNavigationBadgeColor(): ?string
     {
-        $atRisk = FccLicense::query()->whereIn('status', ['at_risk', 'non_compliant'])->count();
-
-        return $atRisk > 0 ? 'danger' : 'success';
+        return cache()->remember('fcc.licenses.atrisk_color', 300, function () {
+            $atRisk = FccLicense::query()
+                ->whereIn('status', ['at_risk', 'non_compliant'])
+                ->count();
+            return $atRisk > 0 ? 'danger' : 'success';
+        });
     }
 }
