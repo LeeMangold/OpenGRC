@@ -55,7 +55,8 @@ class FccImportCommand extends Command
                 }
 
                 if ($this->option('dry-run')) {
-                    $this->line("  · {$call}: {$data['licensee']} ({$data['service']} {$data['frequency']}) — facility {$data['facility_id']}");
+                    $src = $data['_source_url'] ?? 'unknown';
+                    $this->line("  · {$call}: {$data['licensee']} ({$data['service']} {$data['frequency']}) — facility {$data['facility_id']} [src: {$src}]");
                     continue;
                 }
 
@@ -96,94 +97,163 @@ class FccImportCommand extends Command
     }
 
     /**
-     * Fetch one station's public facility record from the FCC.
+     * Fetch one station's public facility record from opendata.fcc.gov.
      *
-     * The FCC's public-search endpoints have shifted around over time.
-     * We try multiple known-good URL shapes in order. If you're hitting
-     * this in production and all fall through, the canonical fallback is
-     * a CDBS bulk-data loader (https://transition.fcc.gov/Bureaus/MB/Databases/cdbs/).
+     * The FCC publishes broadcast engineering data via the Socrata SODA
+     * API at opendata.fcc.gov — these endpoints are stable and don't
+     * require auth for low-volume queries.
+     *
+     * We try the broadcast engineering dataset first, falling back to
+     * the AM/FM Query and LMS endpoints if Socrata returns nothing.
      */
     protected function fetchFccPublicFacility(string $call): ?array
     {
-        $candidates = [
-            // 1. Public Inspection Files manager — search by callsign query string
-            'https://publicfiles.fcc.gov/api/manager/station/search?searchString='.urlencode($call),
+        // Strip any "-FM" / "-TV" suffix for the search; opendata stores the bare call
+        $bareCall = strtoupper(preg_replace('/-(FM|TV|AM|LP|LD)$/i', '', $call));
 
-            // 2. Same site, callsign as path segment
-            'https://publicfiles.fcc.gov/api/manager/station/'.urlencode($call),
-
-            // 3. LMS public-facility elastic search
-            'https://enterpriseefiling.fcc.gov/dataentry/api/elasticsearch/public/api/public/facility/search?callSign='.urlencode($call),
-        ];
-
-        foreach ($candidates as $url) {
-            try {
-                $response = Http::timeout(15)
-                    ->withHeaders(['User-Agent' => 'OpenGRC-FCC-Compliance/1.0'])
-                    ->acceptJson()
-                    ->get($url);
-
-                if (! $response->ok()) {
-                    continue;
-                }
-
-                $payload = $response->json();
-                if (! is_array($payload) || empty($payload)) {
-                    continue;
-                }
-
-                $hit = $this->extractFirstStation($payload);
-                if (! $hit) {
-                    continue;
-                }
-
-                $facilityId = (string) data_get($hit, 'facilityId') ?: (string) data_get($hit, 'facility_id') ?: (string) data_get($hit, 'id');
-                if (! $facilityId) {
-                    continue;
-                }
-
-                return [
-                    'facility_id'     => $facilityId,
-                    'facility_name'   => data_get($hit, 'transmitterName') ?? data_get($hit, 'facilityName') ?? null,
-                    'frn'             => (string) (data_get($hit, 'frn') ?? data_get($hit, 'licenseeFrn') ?? ''),
-                    'licensee'        => data_get($hit, 'licensee') ?? data_get($hit, 'entityName') ?? data_get($hit, 'licenseeName') ?? 'Unknown',
-                    'service'         => $this->mapService((string) (data_get($hit, 'serviceCode') ?? data_get($hit, 'service') ?? 'OTHER')),
-                    'frequency'       => (string) (data_get($hit, 'frequency') ?? data_get($hit, 'channel') ?? ''),
-                    'community'       => data_get($hit, 'community.city') ?? data_get($hit, 'communityCity') ?? data_get($hit, 'communityServed.city'),
-                    'state'           => data_get($hit, 'community.state') ?? data_get($hit, 'communityState') ?? data_get($hit, 'communityServed.state'),
-                    'expiration_date' => data_get($hit, 'licenseExpirationDate') ?? data_get($hit, 'expirationDate'),
-                    '_source_url'     => $url,
-                ];
-            } catch (\Throwable $e) {
-                // try next URL
-                continue;
-            }
+        // 1) opendata.fcc.gov — broadcast engineering (AM/FM/TV) — stable Socrata API
+        //    Dataset: "AM, FM, TV Broadcast Engineering Data" (cd28-25ar)
+        $hit = $this->trySocrata('cd28-25ar', $bareCall);
+        if ($hit) {
+            return $this->normalizeSocrata($hit);
         }
+
+        // 2) opendata.fcc.gov — broadcast facility data (alt dataset)
+        $hit = $this->trySocrata('iqaq-mbpb', $bareCall);
+        if ($hit) {
+            return $this->normalizeSocrata($hit);
+        }
+
+        // 3) FCC FM Query CGI (pipe-delimited; has been stable since the 90s)
+        $hit = $this->tryFccQueryCgi('fmq', $bareCall);
+        if ($hit) return $hit;
+
+        $hit = $this->tryFccQueryCgi('amq', $bareCall);
+        if ($hit) return $hit;
+
+        $hit = $this->tryFccQueryCgi('tvq', $bareCall);
+        if ($hit) return $hit;
 
         return null;
     }
 
     /**
-     * Extract the first station-like record from a heterogeneous payload.
+     * Query opendata.fcc.gov Socrata endpoint for a call sign.
      */
-    protected function extractFirstStation(array $payload): ?array
+    protected function trySocrata(string $datasetId, string $call): ?array
     {
-        // Common shapes:
-        //  - { stations: [ {...} ] }
-        //  - { hits: [ {...} ] }
-        //  - { data: [ {...} ] }
-        //  - [ {...} ]            (bare array)
-        //  - { facilityId: ... }  (single record)
-        foreach (['stations', 'hits', 'data', 'results', 'records'] as $key) {
-            if (isset($payload[$key]) && is_array($payload[$key]) && ! empty($payload[$key])) {
-                return $payload[$key][0];
+        $url = "https://opendata.fcc.gov/resource/{$datasetId}.json";
+
+        try {
+            $response = Http::timeout(15)
+                ->withHeaders(['User-Agent' => 'OpenGRC-FCC-Compliance/1.0'])
+                ->acceptJson()
+                ->get($url, ['call_sign' => $call, '$limit' => 1]);
+
+            if (! $response->ok()) return null;
+
+            $rows = $response->json();
+            return is_array($rows) && ! empty($rows) ? $rows[0] : null;
+        } catch (\Throwable $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Normalize a Socrata broadcast-engineering row to our schema.
+     * Field names vary slightly between FCC datasets; we cover both.
+     */
+    protected function normalizeSocrata(array $h): array
+    {
+        $service = $this->mapService((string) (
+            $h['service'] ?? $h['service_type'] ?? $h['fac_service'] ?? 'OTHER'
+        ));
+
+        $freq = (string) ($h['station_frequency'] ?? $h['frequency'] ?? $h['fac_frequency'] ?? '');
+        $channel = (string) ($h['channel'] ?? $h['fac_channel'] ?? '');
+
+        // For AM stations the frequency is in kHz; FM in MHz; TV uses channel.
+        $freqDisplay = match (true) {
+            str_starts_with($service, 'AM') && $freq !== '' => $freq.' kHz',
+            in_array($service, ['FM', 'LPFM']) && $freq !== '' => $freq.' MHz',
+            in_array($service, ['TV', 'LPTV']) && $channel !== '' => 'Ch. '.$channel,
+            default => $freq ?: $channel,
+        };
+
+        return [
+            'facility_id'     => (string) ($h['facility_id'] ?? $h['fac_facility_id'] ?? ''),
+            'facility_name'   => $h['fac_callsign'] ?? null,
+            'frn'             => (string) ($h['licensee_frn'] ?? $h['frn'] ?? ''),
+            'licensee'        => $h['licensee_name'] ?? $h['licensee'] ?? $h['fac_organization_name'] ?? 'Unknown',
+            'service'         => $service,
+            'frequency'       => $freqDisplay,
+            'community'       => $h['community_city'] ?? $h['fac_community_city'] ?? null,
+            'state'           => $h['community_state'] ?? $h['fac_community_state'] ?? null,
+            'expiration_date' => $h['lic_expiration_date'] ?? $h['license_expiration_date'] ?? null,
+            '_source_url'     => 'opendata.fcc.gov',
+        ];
+    }
+
+    /**
+     * Fall back to the FCC AM/FM/TV Query CGIs with format=4 (pipe-delimited).
+     * These have been the most stable FCC endpoint over the past 20 years.
+     */
+    protected function tryFccQueryCgi(string $bin, string $call): ?array
+    {
+        $url = "https://transition.fcc.gov/fcc-bin/{$bin}";
+
+        try {
+            $response = Http::timeout(15)
+                ->withHeaders(['User-Agent' => 'OpenGRC-FCC-Compliance/1.0'])
+                ->get($url, ['call' => $call, 'format' => 4]);
+
+            if (! $response->ok()) return null;
+            $body = trim($response->body());
+            if ($body === '' || ! str_contains($body, '|')) return null;
+
+            // Take the first non-comment data line
+            foreach (preg_split("/\r?\n/", $body) as $line) {
+                $line = trim($line);
+                if ($line === '' || str_starts_with($line, '#') || str_starts_with($line, '*')) continue;
+                $cols = explode('|', $line);
+                if (count($cols) < 5) continue;
+
+                // FM Query format 4 columns (approximate, public docs):
+                //   call|service|status|frequency|channel|...|licensee|city|state|...|facility_id|...
+                $service = $bin === 'fmq' ? 'FM' : ($bin === 'amq' ? 'AM' : 'TV');
+                $freq = trim($cols[3] ?? '');
+                $channel = trim($cols[4] ?? '');
+                $licensee = trim($cols[6] ?? $cols[7] ?? '');
+                $city = trim($cols[8] ?? '');
+                $state = trim($cols[9] ?? '');
+
+                // Hunt for a numeric facility ID elsewhere in the row
+                $facilityId = '';
+                foreach ($cols as $c) {
+                    $c = trim($c);
+                    if (ctype_digit($c) && strlen($c) >= 4 && strlen($c) <= 7) {
+                        $facilityId = $c;
+                        break;
+                    }
+                }
+
+                $freqDisplay = $service === 'AM' ? "{$freq} kHz" : ($service === 'FM' ? "{$freq} MHz" : "Ch. {$channel}");
+
+                return [
+                    'facility_id'     => $facilityId,
+                    'facility_name'   => null,
+                    'frn'             => '',
+                    'licensee'        => $licensee ?: 'Unknown',
+                    'service'         => $service,
+                    'frequency'       => trim($freqDisplay),
+                    'community'       => $city,
+                    'state'           => $state,
+                    'expiration_date' => null,
+                    '_source_url'     => "transition.fcc.gov/fcc-bin/{$bin}",
+                ];
             }
-        }
-        if (array_is_list($payload) && ! empty($payload) && is_array($payload[0])) {
-            return $payload[0];
-        }
-        if (isset($payload['facilityId']) || isset($payload['facility_id'])) {
-            return $payload;
+        } catch (\Throwable $e) {
+            return null;
         }
 
         return null;
