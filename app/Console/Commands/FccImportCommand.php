@@ -200,13 +200,27 @@ class FccImportCommand extends Command
         $url = "https://transition.fcc.gov/fcc-bin/{$bin}";
 
         try {
-            $response = Http::timeout(20)
-                ->withHeaders(['User-Agent' => 'OpenGRC-FCC-Compliance/1.0'])
+            $response = Http::timeout(30)
+                ->withHeaders([
+                    'User-Agent' => 'Mozilla/5.0 (compatible; OpenGRC-FCC/1.0; +https://opengrc.com)',
+                    'Accept' => 'text/html,application/xhtml+xml',
+                ])
                 ->get($url, ['call' => $call, 'format' => 8]);
 
-            if (! $response->ok()) return null;
+            if (! $response->ok()) {
+                if (config('app.debug')) {
+                    logger()->info("FCC {$bin} HTTP {$response->status()} for {$call}");
+                }
+                return null;
+            }
             $html = $response->body();
-            if ($html === '' || ! str_contains($html, 'facility_id')) return null;
+            if ($html === '') return null;
+
+            // The page must contain at least one quoted facility_id assignment
+            // (the un-quoted "var facility_id = 0;" declaration doesn't count).
+            if (! preg_match("/facility_id\s*=\s*['\"][1-9]/", $html)) {
+                return null;
+            }
 
             // Extract JS variable assignments that look like:
             //   facility_id = '789877';
