@@ -28,10 +28,37 @@ class FccOperationalSeeder extends Seeder
 {
     public function run(): void
     {
-        $licenses = FccLicense::all()->keyBy('call_sign');
+        // After fcc:import-bulk we may have ~30K stations. Generating
+        // operational records for every station would create millions of
+        // rows. Pick a representative sample so the dashboard renders
+        // realistic compliance activity without bloating the DB.
+        //
+        // Strategy: prefer well-known reference stations (the ones we
+        // pull live via fcc:import) plus a random tail.
+        $referenceCalls = [
+            'WABC', 'WTOP', 'KCBS-FM', 'WGBH-FM', 'KQED-FM', 'WAMU',
+            'KCRW', 'KUOW', 'WHTZ', 'KFI', 'WBZ', 'KFI-AM', 'WBZ-AM',
+            'WABC-AM', 'KQED', 'WGBH',
+        ];
+
+        $referenced = FccLicense::query()
+            ->whereIn('call_sign', $referenceCalls)
+            ->get();
+
+        $extraSample = FccLicense::query()
+            ->whereNotIn('call_sign', $referenceCalls)
+            ->inRandomOrder()
+            ->limit(30 - $referenced->count())
+            ->get();
+
+        $licenses = $referenced->merge($extraSample)->keyBy('call_sign');
         if ($licenses->isEmpty()) {
             return;
         }
+
+        $this->command?->getOutput()?->writeln(
+            "  Seeding operational data for ".$licenses->count()." sample stations"
+        );
 
         // ---- ASR registrations (one per tower-bearing facility) ----
         $asrs = [

@@ -25,8 +25,14 @@ class Dashboard extends Page
 
     protected function getViewData(): array
     {
+        // Cap at 25 for the dashboard table; the full list is one click
+        // away on /app/fcc-licenses. After fcc:import-bulk we may have
+        // ~30K stations, so unbounded ::get() would render 30K <tr>s.
+        $totalLicenses = FccLicense::query()->count();
         $licenses = FccLicense::query()
+            ->orderByRaw("CASE status WHEN 'non_compliant' THEN 0 WHEN 'at_risk' THEN 1 WHEN 'expiring_soon' THEN 2 ELSE 3 END")
             ->orderBy('call_sign')
+            ->limit(25)
             ->get();
 
         $statusCounts = FccLicenseRuleStatus::query()
@@ -87,7 +93,7 @@ class Dashboard extends Page
 
         return [
             'licenses' => $licenses,
-            'totalLicenses' => $licenses->count(),
+            'totalLicenses' => $totalLicenses,
             'totalRules' => $compliant + $atRisk + $nonCompliant,
             'compliant' => $compliant,
             'atRisk' => $atRisk,

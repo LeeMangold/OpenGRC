@@ -166,7 +166,7 @@
                 </table>
             </div>
             <div class="px-5 py-3 text-xs text-gray-500 flex items-center justify-between border-t border-amber-400/10">
-                <span>Showing 1 to {{ $licenses->count() }} of {{ $licenses->count() }} licenses</span>
+                <span>Showing 1 to {{ $licenses->count() }} of {{ number_format($totalLicenses) }} licenses</span>
                 <a href="{{ $licenseIndex }}" class="text-amber-400 hover:text-amber-300">Open Licenses →</a>
             </div>
         </div>
