@@ -72,7 +72,10 @@ class FccAsrRegistrationResource extends Resource
             TextColumn::make('lighting_type')->badge(),
             TextColumn::make('next_inspection_due')->date('M d, Y')->label('Next Inspection')
                 ->color(fn ($state) => $state && $state < now()->addDays(30) ? 'danger' : 'success'),
-        ])->defaultSort('asr_number');
+        ])
+        ->defaultSort('asr_number')
+        ->striped()
+        ->paginated([25, 50, 100, 250]);
     }
 
     public static function getPages(): array

@@ -179,6 +179,11 @@ class FccLicenseResource extends Resource
                     'at_risk' => 'At Risk',
                     'non_compliant' => 'Non-Compliant',
                 ]),
+                SelectFilter::make('state')
+                    ->relationship('facility', 'state')
+                    ->label('State')
+                    ->searchable()
+                    ->preload(),
             ])
             ->recordActions([
                 ViewAction::make(),
@@ -189,7 +194,11 @@ class FccLicenseResource extends Resource
                     DeleteBulkAction::make(),
                 ]),
             ])
-            ->defaultSort('call_sign');
+            ->defaultSort('call_sign')
+            ->striped()
+            ->paginated([25, 50, 100, 250])
+            ->persistFiltersInSession()
+            ->persistSortInSession();
     }
 
     public static function getPages(): array

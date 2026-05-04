@@ -132,7 +132,25 @@ class FccComplianceSeeder extends Seeder
         // ---- Per-license rule status (drives the "by category" rollup) ----
         $ruleObjects = FccRule::all();
         FccLicenseRuleStatus::query()->delete();
-        foreach (FccLicense::all() as $license) {
+
+        // After fcc:import-bulk, FccLicense may have ~30K rows. Generating
+        // (30K × 18 rules) = 540K rule statuses would bloat SQLite. Sample
+        // a representative slice so the dashboard renders meaningful
+        // category rollups and top-non-compliant tables.
+        $licensesForRuleStatus = FccLicense::query()
+            ->where(function ($q) {
+                $q->whereIn('call_sign', [
+                    'WABC', 'WTOP', 'KCBS-FM', 'WGBH-FM', 'KQED-FM', 'KQED',
+                    'WAMU', 'KCRW', 'KUOW', 'WHTZ', 'KFI', 'WBZ',
+                ])->orWhereIn('id', function ($q2) {
+                    $q2->select('id')->from('fcc_licenses')
+                       ->inRandomOrder()->limit(200);
+                });
+            })
+            ->limit(250)
+            ->get();
+
+        foreach ($licensesForRuleStatus as $license) {
             foreach ($ruleObjects as $rule) {
                 $score = $license->compliance_score;
                 $status = 'compliant';

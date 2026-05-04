@@ -46,14 +46,19 @@ class FccFacilityResource extends Resource
     public static function table(Table $table): Table
     {
         return $table->columns([
-            TextColumn::make('facility_id')->label('Facility ID')->searchable(),
-            TextColumn::make('name')->searchable()->weight('bold'),
-            TextColumn::make('community_of_license')->label('Community')->searchable(),
-            TextColumn::make('state')->badge(),
+            TextColumn::make('facility_id')->label('Facility ID')->searchable()->sortable(),
+            TextColumn::make('name')->searchable()->weight('bold')->limit(35),
+            TextColumn::make('community_of_license')->label('Community')->searchable()->sortable(),
+            TextColumn::make('state')->badge()->sortable(),
+            TextColumn::make('owner')->label('Owner / Licensee')->searchable()->limit(30)->toggleable(),
             TextColumn::make('asr_number')->label('ASR #')->toggleable(),
-            TextColumn::make('licenses_count')->counts('licenses')->label('Licenses'),
-            TextColumn::make('contact_engineer')->label('Engineer')->toggleable(),
-        ])->defaultSort('name');
+            TextColumn::make('licenses_count')->counts('licenses')->label('# Licenses'),
+            TextColumn::make('antenna_haat_meters')->label('HAAT (m)')->numeric(2)->toggleable(),
+            TextColumn::make('antenna_amsl_meters')->label('AMSL (m)')->numeric(2)->toggleable(),
+            TextColumn::make('latitude')->numeric(6)->toggleable(isToggledHiddenByDefault: true),
+            TextColumn::make('longitude')->numeric(6)->toggleable(isToggledHiddenByDefault: true),
+            TextColumn::make('contact_engineer')->label('Engineer')->toggleable(isToggledHiddenByDefault: true),
+        ])->defaultSort('name')->striped()->paginated([25, 50, 100]);
     }
 
     public static function getPages(): array
