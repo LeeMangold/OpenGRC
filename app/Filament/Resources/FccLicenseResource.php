@@ -178,10 +178,20 @@ class FccLicenseResource extends Resource
                     'non_compliant' => 'Non-Compliant',
                 ]),
                 SelectFilter::make('state')
-                    ->relationship('facility', 'state')
                     ->label('State')
-                    ->searchable()
-                    ->preload(),
+                    ->options(fn () => \App\Models\FccFacility::query()
+                        ->whereNotNull('state')
+                        ->where('state', '!=', '')
+                        ->distinct()
+                        ->orderBy('state')
+                        ->pluck('state', 'state')
+                        ->toArray())
+                    ->query(function ($query, array $data) {
+                        if (! empty($data['value'])) {
+                            $query->whereHas('facility', fn ($q) => $q->where('state', $data['value']));
+                        }
+                    })
+                    ->searchable(),
             ])
             ->recordActions([
                 ViewAction::make(),
