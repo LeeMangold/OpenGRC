@@ -9,6 +9,7 @@ use App\Filament\Resources\AssetResource\Pages\EditAsset;
 use App\Filament\Resources\AssetResource\Pages\ListAssets;
 use App\Filament\Resources\AssetResource\Pages\ViewAsset;
 use App\Filament\Resources\AssetResource\RelationManagers\ImplementationsRelationManager;
+use App\Filament\Resources\AssetResource\RelationManagers\RisksRelationManager;
 use App\Models\Asset;
 use App\Models\User;
 use Filament\Actions\BulkActionGroup;
@@ -1503,6 +1504,7 @@ class AssetResource extends Resource
     {
         return [
             ImplementationsRelationManager::class,
+            RisksRelationManager::class,
         ];
     }
 

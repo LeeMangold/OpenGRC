@@ -262,6 +262,26 @@ class CreateRisk extends CreateRecord
 
                         ]),
 
+                    Section::make('Related Assets')
+                        ->columnSpan(2)
+                        ->schema([
+                            Placeholder::make('assets')
+                                ->hiddenLabel(true)
+                                ->columnSpanFull()
+                                ->content('If this risk relates to specific assets in OpenGRC,
+                                you can link them here. You can relate these later if you need to.'),
+                            Select::make('assets')
+                                ->label('Related Assets')
+                                ->helperText('Which assets does this risk apply to?')
+                                ->relationship('assets', 'name')
+                                ->getOptionLabelFromRecordUsing(fn ($record) => $record->asset_tag
+                                    ? "({$record->asset_tag}) {$record->name}"
+                                    : $record->name)
+                                ->searchable(['name', 'asset_tag'])
+                                ->multiple(),
+
+                        ]),
+
                 ]),
 
         ];
