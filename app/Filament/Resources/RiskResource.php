@@ -13,6 +13,7 @@ use App\Filament\Resources\RiskResource\Pages\CreateRisk;
 use App\Filament\Resources\RiskResource\Pages\ListRiskActivities;
 use App\Filament\Resources\RiskResource\Pages\ListRisks;
 use App\Filament\Resources\RiskResource\Pages\ViewRisk;
+use App\Filament\Resources\RiskResource\RelationManagers\AssetsRelationManager;
 use App\Filament\Resources\RiskResource\RelationManagers\ImplementationsRelationManager;
 use App\Filament\Resources\RiskResource\RelationManagers\MitigationsRelationManager;
 use App\Filament\Resources\RiskResource\RelationManagers\PoliciesRelationManager;
@@ -232,6 +233,7 @@ class RiskResource extends Resource
         return [
             'implementations' => ImplementationsRelationManager::class,
             'policies' => PoliciesRelationManager::class,
+            'assets' => AssetsRelationManager::class,
             'mitigations' => MitigationsRelationManager::class,
         ];
     }

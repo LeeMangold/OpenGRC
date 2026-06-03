@@ -341,6 +341,15 @@ class Asset extends Model
     }
 
     /**
+     * Get the risks associated with this asset.
+     */
+    public function risks(): BelongsToMany
+    {
+        return $this->belongsToMany(Risk::class)
+            ->withTimestamps();
+    }
+
+    /**
      * Get the asset type name accessor.
      */
     public function getAssetTypeNameAttribute(): ?string
