@@ -49,7 +49,7 @@ class RisksRelationManager extends RelationManager
                     ->label('Attach Risk')
                     ->preloadRecordSelect()
                     ->recordSelectOptionsQuery(function (Builder $query) {
-                        $query->select(['id', 'name']);
+                        $query->select(['risks.id', 'name']);
                     })
                     ->recordTitle(function ($record) {
                         return strip_tags($record->name);

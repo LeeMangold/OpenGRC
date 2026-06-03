@@ -44,7 +44,7 @@ class ControlsRelationManager extends RelationManager
                     ->label('Relate to Control')
                     ->preloadRecordSelect()
                     ->recordSelectOptionsQuery(function (Builder $query) {
-                        $query->select(['id', 'code', 'title']); // Select only necessary columns
+                        $query->select(['controls.id', 'code', 'title']); // Select only necessary columns
                     })
                     ->recordTitle(function ($record) {
                         // Concatenate code and title for the option label

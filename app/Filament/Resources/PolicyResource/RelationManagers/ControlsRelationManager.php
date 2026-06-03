@@ -53,7 +53,7 @@ class ControlsRelationManager extends RelationManager
                     ->label('Attach Control')
                     ->preloadRecordSelect()
                     ->recordSelectOptionsQuery(function (Builder $query) {
-                        $query->select(['id', 'code', 'title']);
+                        $query->select(['controls.id', 'code', 'title']);
                     })
                     ->recordTitle(function ($record) {
                         return strip_tags("({$record->code}) {$record->title}");

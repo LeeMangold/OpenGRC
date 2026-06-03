@@ -58,7 +58,7 @@ class ImplementationsRelationManager extends RelationManager
                     ->label('Attach Implementation')
                     ->preloadRecordSelect()
                     ->recordSelectOptionsQuery(function (Builder $query) {
-                        $query->select(['id', 'title']);
+                        $query->select(['implementations.id', 'title']);
                     })
                     ->recordTitle(function ($record) {
                         return strip_tags($record->title);
