@@ -24,7 +24,8 @@ class TrustCenterPanelProvider extends PanelProvider
             ->id('trustcenter')
             ->path('trust')
             ->colors([
-                'primary' => Color::Blue,
+                'primary' => Color::hex('#fbbf24'),
+                'gray' => Color::hex('#0c1f3d'),
             ])
             ->brandName($this->getTrustCenterName())
             ->spa()
