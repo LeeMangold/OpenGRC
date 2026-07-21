@@ -334,8 +334,12 @@ class Import extends Page implements HasForms
             }
 
             // Resolve relative paths against the storage directory
-            if ($path && ! str_starts_with($path, DIRECTORY_SEPARATOR)) {
-                $path = storage_path('app/'.$path);
+            if (
+              $path &&
+              ! str_starts_with($path, DIRECTORY_SEPARATOR) &&
+              ! preg_match('/^[A-Za-z]:\\\\/', $path)
+            ) {
+              $path = storage_path('app/'.$path);
             }
 
             if (! $path || ! file_exists($path)) {
