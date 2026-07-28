@@ -73,29 +73,38 @@ class AppServiceProvider extends ServiceProvider
                 Config::set('app.name', setting('general.name', 'OpenGRC'));
                 Config::set('app.url', setting('general.url', 'https://opengrc.test'));
 
-                // Decrypt mail password if it's encrypted
-                $mailPassword = setting('mail.password');
-                if (! empty($mailPassword)) {
-                    try {
-                        $mailPassword = Crypt::decryptString($mailPassword);
-                    } catch (Exception $e) {
-                        // If decryption fails, assume it's plaintext (legacy data)
+                // Only override the .env mail config once SMTP settings have been
+                // saved in-app; a fresh install must not boot the mailer with a
+                // null host. Avoid the top-level "driver" key — it switches
+                // MailManager to the legacy whole-array config path.
+                $mailHost = setting('mail.host');
+                if (! empty($mailHost)) {
+                    // Decrypt mail password if it's encrypted
+                    $mailPassword = setting('mail.password');
+                    if (! empty($mailPassword)) {
+                        try {
+                            $mailPassword = Crypt::decryptString($mailPassword);
+                        } catch (Exception $e) {
+                            // If decryption fails, assume it's plaintext (legacy data)
+                        }
                     }
-                }
 
-                config()->set('mail', array_merge(config('mail'), [
-                    'driver' => 'smtp',
-                    'transport' => 'smtp',
-                    'host' => setting('mail.host'),
-                    'username' => setting('mail.username'),
-                    'password' => $mailPassword,
-                    'encryption' => setting('mail.encryption'),
-                    'port' => setting('mail.port'),
-                    'from' => [
-                        'address' => setting('mail.from'),
-                        'name' => setting('general.name'),
-                    ],
-                ]));
+                    config([
+                        'mail.default' => 'smtp',
+                        'mail.mailers.smtp' => array_merge(config('mail.mailers.smtp', []), [
+                            'transport' => 'smtp',
+                            'host' => $mailHost,
+                            'port' => setting('mail.port', config('mail.mailers.smtp.port')),
+                            'encryption' => setting('mail.encryption'),
+                            'username' => setting('mail.username'),
+                            'password' => $mailPassword,
+                        ]),
+                        'mail.from' => [
+                            'address' => setting('mail.from', config('mail.from.address')),
+                            'name' => setting('general.name'),
+                        ],
+                    ]);
+                }
 
                 // Configure filesystem based on settings
                 $storageDriver = setting('storage.driver', 'private');
