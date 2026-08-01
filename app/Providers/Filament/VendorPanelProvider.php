@@ -36,7 +36,8 @@ class VendorPanelProvider extends PanelProvider
             ->emailVerification()
             ->profile()
             ->colors([
-                'primary' => Color::Teal,
+                'primary' => Color::hex('#fbbf24'),
+                'gray' => Color::hex('#0c1f3d'),
             ])
             ->brandName($this->getPortalName())
             ->spa()

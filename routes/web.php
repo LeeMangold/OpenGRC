@@ -19,6 +19,13 @@ Route::get('login', function () {
     return redirect()->route('filament.app.auth.login');
 })->name('login');
 
+// FCC Compliance — full report CSV download (auth required via Filament panel)
+Route::middleware(['web', 'auth'])->group(function () {
+    Route::get('/app/fcc-report.csv',
+        [\App\Http\Controllers\FccComplianceReportController::class, 'csv']
+    )->name('fcc.report.csv');
+});
+
 Route::middleware(['auth'])->group(function () {
 
     Route::get('/app/reset-password', PasswordResetPage::class)->name('password-reset-page');

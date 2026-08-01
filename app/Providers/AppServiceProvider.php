@@ -32,6 +32,22 @@ class AppServiceProvider extends ServiceProvider
         // Disable mass assignment protection
         Model::unguard();
 
+        // Put SQLite into WAL + sane PRAGMAs on every connection.
+        // Without WAL, long-running imports (e.g. fcc:import-lms) take
+        // a write lock and block every web request reading the DB —
+        // pages just sit at the splash logo until the writer finishes.
+        if (config('database.default') === 'sqlite') {
+            \Illuminate\Support\Facades\DB::listen(function () {});
+            try {
+                $pdo = \Illuminate\Support\Facades\DB::connection()->getPdo();
+                $pdo->exec('PRAGMA journal_mode = WAL');
+                $pdo->exec('PRAGMA synchronous = NORMAL');
+                $pdo->exec('PRAGMA busy_timeout = 5000');
+            } catch (\Throwable $e) {
+                // First-boot, DB may not exist yet — ignore.
+            }
+        }
+
         // Only skip the install check if running the installer command or actual PHPUnit tests
         $isInstaller = false;
         if ($this->app->runningInConsole()) {

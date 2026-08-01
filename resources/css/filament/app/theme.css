@@ -6,18 +6,32 @@
 @source '../../../../storage/framework/views/*.php';
 @source '../../../../vendor/filament/**/*.blade.php';
 
-/* Define custom grcblue color palette */
+/* OpenGRC FCC Compliance reskin - navy & gold palette.
+   The legacy `grcblue` token names are retained for backwards compatibility
+   with existing markup, but now resolve to a deep-navy ramp. A new `grcgold`
+   ramp powers the amber accents seen on the FCC Compliance dashboard. */
 @theme {
-    --color-grcblue-50: #eaf3f7;
-    --color-grcblue-100: #d4e7ef;
-    --color-grcblue-200: #d4e7ef;
-    --color-grcblue-300: #7eb7d1;
-    --color-grcblue-400: #1375a0;
-    --color-grcblue-500: #1375a0;
-    --color-grcblue-600: #0f5a7a;
-    --color-grcblue-700: #0c4a65;
-    --color-grcblue-800: #374151;
-    --color-grcblue-900: #212a3a;
+    --color-grcblue-50: #e6ecf5;
+    --color-grcblue-100: #c4d1e6;
+    --color-grcblue-200: #8fa6c9;
+    --color-grcblue-300: #5a7bac;
+    --color-grcblue-400: #2c4d80;
+    --color-grcblue-500: #1a3666;
+    --color-grcblue-600: #122a52;
+    --color-grcblue-700: #0c1f3d;
+    --color-grcblue-800: #0a1830;
+    --color-grcblue-900: #050d1f;
+
+    --color-grcgold-50: #fffbeb;
+    --color-grcgold-100: #fef3c7;
+    --color-grcgold-200: #fde68a;
+    --color-grcgold-300: #fcd34d;
+    --color-grcgold-400: #fbbf24;
+    --color-grcgold-500: #f59e0b;
+    --color-grcgold-600: #d97706;
+    --color-grcgold-700: #b45309;
+    --color-grcgold-800: #92400e;
+    --color-grcgold-900: #78350f;
 }
 
 
@@ -28,45 +42,62 @@
     font-style: normal;
 }
 
-/* GRC Blue color utilities - defined with !important for override */
+/* Navy text/background utilities (legacy class names kept). */
 .text-grcblue-800 {
-    color: #374151 !important;
+    color: #0a1830 !important;
 }
 
 .text-grcblue-400 {
-    color: #1375a0 !important;
+    color: #fbbf24 !important;
 }
 
 .bg-grcblue-200 {
-    background-color: #d4e7ef !important;
+    background-color: #8fa6c9 !important;
 }
 
 .bg-grcblue-400 {
-    background-color: #1375a0 !important;
+    background-color: #2c4d80 !important;
 }
 
 .bg-grcblue-500 {
-    background-color: #1375a0 !important;
+    background-color: #1a3666 !important;
 }
 
 .bg-grcblue-600 {
-    background-color: #0f5a7a !important;
+    background-color: #122a52 !important;
 }
 
 .bg-grcblue-700 {
-    background-color: #0c4a65 !important;
+    background-color: #0c1f3d !important;
 }
 
 .bg-grcblue-800 {
-    background-color: #374151 !important;
+    background-color: #0a1830 !important;
 }
 
 .hover\:bg-grcblue-600:hover {
-    background-color: #0f5a7a !important;
+    background-color: #122a52 !important;
 }
 
 .hover\:bg-grcblue-700:hover {
-    background-color: #0c4a65 !important;
+    background-color: #0c1f3d !important;
+}
+
+/* Gold accent utilities. */
+.text-grcgold-400 {
+    color: #fbbf24 !important;
+}
+
+.bg-grcgold-400 {
+    background-color: #fbbf24 !important;
+}
+
+.bg-grcgold-500 {
+    background-color: #f59e0b !important;
+}
+
+.hover\:bg-grcgold-500:hover {
+    background-color: #f59e0b !important;
 }
 
 /* Control description text formatting */
@@ -88,43 +119,71 @@
     margin-bottom: 1rem;
 }
 
-/* Sidebar Styles */
+/* Sidebar - deep navy in both light and dark modes to match FCC dashboard */
 .fi-sidebar {
-    background-color: #374151 !important;
+    background-color: #0a1830 !important;
+    border-right: 1px solid rgba(251, 191, 36, 0.08) !important;
 }
 
 .dark .fi-sidebar {
-    background-color: rgb(17 24 39) !important;
+    background-color: #050d1f !important;
 }
 
 .fi-sidebar-item-label {
-    color: rgb(243 244 246) !important;
+    color: rgb(229 231 235) !important;
 }
 
 li.fi-sidebar-item.fi-active > a {
-    background-color: #1375a0 !important;
+    background-color: rgba(251, 191, 36, 0.12) !important;
+    border-left: 3px solid #fbbf24 !important;
+}
+
+li.fi-sidebar-item.fi-active > a .fi-sidebar-item-label {
+    color: #fbbf24 !important;
 }
 
 .fi-sidebar-item > a:hover {
-    @apply bg-primary-600 text-black transition-colors duration-200;
+    background-color: rgba(251, 191, 36, 0.08) !important;
+    color: #fbbf24 !important;
+    transition: background-color 200ms, color 200ms;
 }
 
 .fi-sidebar-group-label {
-    color: rgb(209 213 219) !important;
+    color: #fbbf24 !important;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.7rem;
+}
+
+/* Topbar / branding */
+.fi-topbar {
+    background-color: #0a1830 !important;
+    border-bottom: 1px solid rgba(251, 191, 36, 0.08) !important;
+}
+
+.dark .fi-topbar {
+    background-color: #050d1f !important;
+}
+
+.fi-topbar a, .fi-topbar button {
+    color: rgb(229 231 235);
 }
 
 /* Form Label */
 div.flex.items-center.gap-x-3.justify-between > dt > span {
-    color: #374151 !important;
+    color: #0a1830 !important;
     font-weight: bold;
 }
 
 .dark div.flex.items-center.gap-x-3.justify-between > dt > span {
-    color: #1375a0 !important;
+    color: #fbbf24 !important;
 }
 
 a.fi-logo {
     font-family: 'Bruno Ace SC', sans-serif;
+    color: #fbbf24 !important;
+    letter-spacing: 0.04em;
 }
 
 /* Custom Risk Colors */
@@ -177,38 +236,61 @@ a.fi-logo {
 }
 
 .fi-color-grcblue {
-    background-color: #1375a0 !important;
-    color: #ffffff;
+    background-color: #0c1f3d !important;
+    color: #fbbf24;
 }
 
 .fi-color-grcblue:hover {
-    background-color: #a8d4ea !important;
-    color: #ffffff;
+    background-color: #122a52 !important;
+    color: #fcd34d;
 }
 
 .fi-color-bg-grcblue-200 {
-    background-color: #d4e7ef !important;
-    color: #000000;
+    background-color: #8fa6c9 !important;
+    color: #050d1f;
 }
 
-/* Custom sidebar scrollbar */
+/* Primary action buttons - amber/gold accent like the FCC "Export" CTA */
+.fi-btn-color-primary {
+    background-color: #fbbf24 !important;
+    color: #0a1830 !important;
+    border-color: #f59e0b !important;
+}
+
+.fi-btn-color-primary:hover {
+    background-color: #f59e0b !important;
+    color: #050d1f !important;
+}
+
+/* Stat widget headings */
+.fi-wi-stats-overview-stat-value {
+    color: #fbbf24 !important;
+    font-weight: 700;
+}
+
+.dark .fi-wi-stats-overview-stat {
+    background-color: #0c1f3d !important;
+    border: 1px solid rgba(251, 191, 36, 0.1);
+}
+
+/* Custom sidebar scrollbar - navy with gold hover */
 .fi-sidebar-nav {
     scrollbar-width: thin;
-    scrollbar-color: #374151 #232e3c;
+    scrollbar-color: #122a52 #0a1830;
 }
 
 .fi-sidebar-nav::-webkit-scrollbar {
     width: 8px;
-    background: #232e3c;
+    background: #0a1830;
 }
 
 .fi-sidebar-nav::-webkit-scrollbar-thumb {
-    background: #374151;
+    background: #122a52;
     border-radius: 6px;
 }
 
 .fi-sidebar-nav::-webkit-scrollbar-thumb:hover {
-    background: #1375a0;
+    background: #fbbf24;
 }
 
 /* Prevent inactivity guard wrapper from taking up space when modal is inactive */
@@ -217,12 +299,191 @@ a.fi-logo {
     font-size: 0;
 }
 
-/* Use white for active sidebar icons for better contrast (austin-liminal) */
+/* Active sidebar icons in gold for stronger contrast on navy */
 .fi-sidebar-item.fi-active .fi-sidebar-item-icon {
-    color: white !important;
+    color: #fbbf24 !important;
 }
 
 /* Make page transition instant (F4 no longer has transition-all class) */
 .fi-main-ctn {
     transition-duration: 0s !important;
+}
+
+/* ----------------------------------------------------------------------- */
+/* Force the navy/gold canvas in BOTH light and dark mode so the FCC look  */
+/* is consistent regardless of the user's theme preference.                */
+/* ----------------------------------------------------------------------- */
+
+body, .fi-body, .fi-main-ctn, .fi-page, main {
+    background-color: #0a1830 !important;
+    color: rgb(229 231 235) !important;
+}
+
+/* Section / card backgrounds — dark with subtle gold border */
+.fi-section,
+.fi-wi-stats-overview-stat,
+.fi-fo-section,
+.fi-in-section,
+.fi-ta-ctn,
+.fi-table {
+    background-color: #0c1f3d !important;
+    border: 1px solid rgba(251, 191, 36, 0.12) !important;
+    color: rgb(229 231 235) !important;
+}
+
+.fi-section-header-heading,
+.fi-section-header-description,
+.fi-wi-stats-overview-stat-label {
+    color: rgb(229 231 235) !important;
+}
+
+.fi-wi-stats-overview-stat-value {
+    color: #fbbf24 !important;
+    font-weight: 700;
+    font-size: 2.25rem;
+}
+
+.fi-wi-stats-overview-stat-description {
+    color: rgb(156 163 175) !important;
+}
+
+/* Tables on dark canvas - high contrast */
+.fi-ta-table,
+.fi-ta-header-cell,
+.fi-ta-row,
+.fi-ta-cell {
+    background-color: transparent !important;
+    color: #f3f4f6 !important;
+}
+
+/* Make sure inner text spans inherit the bright color */
+.fi-ta-cell *,
+.fi-ta-text,
+.fi-ta-text-item-label,
+.fi-ta-text-prefix,
+.fi-ta-text-suffix {
+    color: #f3f4f6 !important;
+}
+
+/* Keep colored states (success/warning/danger badges) visible */
+.fi-ta-cell .fi-color-success { color: #4ade80 !important; }
+.fi-ta-cell .fi-color-warning { color: #fbbf24 !important; }
+.fi-ta-cell .fi-color-danger  { color: #f87171 !important; }
+.fi-ta-cell .fi-color-info    { color: #38bdf8 !important; }
+
+.fi-ta-header {
+    background-color: #050d1f !important;
+}
+
+.fi-ta-header-cell, .fi-ta-header-cell * {
+    color: #fbbf24 !important;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+}
+
+.fi-ta-row {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+.fi-ta-row:hover {
+    background-color: rgba(251, 191, 36, 0.04) !important;
+}
+
+/* Section headers (the "License Compliance" titles) need to pop */
+.fi-section-header-heading,
+.fi-section-header-heading *,
+h2.fi-section-header-heading,
+h3.fi-section-header-heading {
+    color: #f3f4f6 !important;
+    font-weight: 600 !important;
+    font-size: 1.05rem !important;
+}
+
+.fi-section-header-description,
+.fi-section-header-description * {
+    color: #9ca3af !important;
+}
+
+/* Form inputs on dark canvas */
+.fi-input,
+.fi-select-input,
+.fi-textarea-input {
+    background-color: #050d1f !important;
+    color: rgb(229 231 235) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.fi-input::placeholder {
+    color: rgb(107 114 128) !important;
+}
+
+/* Dropdown panels */
+.fi-dropdown-panel {
+    background-color: #0c1f3d !important;
+    border: 1px solid rgba(251, 191, 36, 0.15) !important;
+}
+
+/* Page heading */
+.fi-header-heading,
+.fi-header h1,
+h1.fi-header-heading {
+    color: rgb(243 244 246) !important;
+}
+
+.fi-breadcrumbs-item, .fi-breadcrumbs-separator {
+    color: rgb(156 163 175) !important;
+}
+
+/* Brand text in topbar */
+a.fi-logo, .fi-logo {
+    color: #fbbf24 !important;
+}
+
+/* Modal */
+.fi-modal-window {
+    background-color: #0c1f3d !important;
+    color: rgb(229 231 235) !important;
+}
+
+/* Pagination */
+.fi-pagination, .fi-pagination button, .fi-pagination a {
+    color: rgb(229 231 235) !important;
+}
+
+/* Compliance status badges remain colorful — leave them alone */
+
+/* Hide non-FCC sidebar entries on the App panel so the sidebar leads
+   with FCC Compliance. The underlying pages still work via direct URL. */
+.fi-sidebar-item:has(a[href*="/app/to-do"]),
+.fi-sidebar-item:has(a[href$="/app/risks"]),
+.fi-sidebar-item:has(a[href*="/app/risks?"]),
+.fi-sidebar-item:has(a[href*="/app/vendor-manager"]),
+.fi-sidebar-item:has(a[href*="/app/trust-center-manager"]) {
+    display: none !important;
+}
+
+/* Topbar alerts badge styling */
+.fi-fcc-alerts-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 9999px;
+    background-color: rgba(251, 191, 36, 0.1);
+    border: 1px solid rgba(251, 191, 36, 0.3);
+    color: #fbbf24;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 150ms;
+}
+.fi-fcc-alerts-badge:hover {
+    background-color: rgba(251, 191, 36, 0.2);
+    color: #fcd34d;
+}
+.fi-fcc-alerts-badge.is-critical {
+    background-color: rgba(239, 68, 68, 0.12);
+    border-color: rgba(239, 68, 68, 0.4);
+    color: #f87171;
 }
