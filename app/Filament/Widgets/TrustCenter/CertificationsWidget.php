@@ -3,6 +3,7 @@
 namespace App\Filament\Widgets\TrustCenter;
 
 use App\Filament\Resources\CertificationResource;
+use App\Filament\Widgets\TrustCenter\Concerns\RequiresTrustCenterManagement;
 use App\Models\Certification;
 use Filament\Actions\Action;
 use Filament\Actions\BulkAction;
@@ -20,6 +21,8 @@ use Illuminate\Database\Eloquent\Collection;
 
 class CertificationsWidget extends BaseWidget
 {
+    use RequiresTrustCenterManagement;
+
     protected int|string|array $columnSpan = 'full';
 
     protected static ?string $heading = 'Certifications';

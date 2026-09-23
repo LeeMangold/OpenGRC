@@ -4,6 +4,7 @@ namespace App\Filament\Widgets\TrustCenter;
 
 use App\Enums\TrustLevel;
 use App\Filament\Resources\TrustCenterDocumentResource;
+use App\Filament\Widgets\TrustCenter\Concerns\RequiresTrustCenterManagement;
 use App\Models\TrustCenterDocument;
 use Filament\Actions\Action;
 use Filament\Actions\BulkAction;
@@ -22,6 +23,8 @@ use Illuminate\Database\Eloquent\Collection;
 
 class TrustCenterDocumentsWidget extends BaseWidget
 {
+    use RequiresTrustCenterManagement;
+
     protected static bool $isLazy = false;
 
     protected int|string|array $columnSpan = 'full';

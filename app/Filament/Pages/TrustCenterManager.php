@@ -50,7 +50,7 @@ class TrustCenterManager extends TabbedPage
 
     public function getTabs(): array
     {
-        return [
+        $tabs = [
             'documents' => [
                 'label' => __('Documents'),
                 'icon' => 'heroicon-o-document-text',
@@ -68,16 +68,27 @@ class TrustCenterManager extends TabbedPage
                 'icon' => 'heroicon-o-squares-2x2',
             ],
         ];
+
+        // "Manage Trust Access" alone only grants access request review.
+        if (! auth()->user()?->can('Manage Trust Center')) {
+            return array_intersect_key($tabs, ['access_requests' => true]);
+        }
+
+        return $tabs;
     }
 
     public function getWidgets(): array
     {
-        return match ($this->activeTab) {
+        $tab = array_key_exists($this->activeTab, $this->getTabs())
+            ? $this->activeTab
+            : array_key_first($this->getTabs());
+
+        return match ($tab) {
             'documents' => [TrustCenterDocumentsWidget::class],
             'certifications' => [CertificationsWidget::class],
             'access_requests' => [PendingAccessRequestsWidget::class],
             'content' => [ContentBlocksWidget::class],
-            default => [TrustCenterDocumentsWidget::class],
+            default => [],
         };
     }
 

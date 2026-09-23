@@ -3,6 +3,7 @@
 namespace App\Filament\Widgets\TrustCenter;
 
 use App\Filament\Resources\TrustCenterContentBlockResource;
+use App\Filament\Widgets\TrustCenter\Concerns\RequiresTrustCenterManagement;
 use App\Models\TrustCenterContentBlock;
 use Filament\Actions\Action;
 use Filament\Actions\BulkAction;
@@ -21,6 +22,8 @@ use Illuminate\Database\Eloquent\Collection;
 
 class ContentBlocksWidget extends BaseWidget
 {
+    use RequiresTrustCenterManagement;
+
     protected int|string|array $columnSpan = 'full';
 
     protected static ?string $heading = 'Content Blocks';
