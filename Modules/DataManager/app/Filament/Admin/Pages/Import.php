@@ -17,7 +17,9 @@ use Filament\Schemas\Components\Wizard;
 use Filament\Schemas\Components\Wizard\Step;
 use Filament\Schemas\Schema;
 use Illuminate\Support\HtmlString;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Modules\DataManager\Services\EntityRegistry;
+use Modules\DataManager\Services\EnumResolver;
 use Modules\DataManager\Services\ImportService;
 use Modules\DataManager\Services\SchemaInspector;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -52,7 +54,7 @@ class Import extends Page implements HasForms
 
     public ?string $entity_type = null;
 
-    //public $upload_file;
+    // public $upload_file;
     public ?array $upload_file = [];
 
     public ?string $upload_file_path = null;
@@ -137,12 +139,12 @@ class Import extends Page implements HasForms
                         FileUpload::make('upload_file')
                             ->label('CSV File')
                             ->required()
-                            //->acceptedFileTypes(['text/csv'])
-                            //->rules([])
+                            // ->acceptedFileTypes(['text/csv'])
+                            // ->rules([])
                             ->helperText('Upload a CSV file with headers in the first row.')
                             ->afterStateUpdated(function ($state) {
                                 if ($state) {
-                                    //Debug
+                                    // Debug
                                     $this->parseUploadedFile($state);
                                 }
                             }),
@@ -320,13 +322,13 @@ class Import extends Page implements HasForms
             // Handle different state types from Filament FileUpload
             $path = null;
 
-            if ($state instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile) {
+            if ($state instanceof TemporaryUploadedFile) {
                 $path = $state->getRealPath();
             } elseif (is_string($state)) {
                 $path = $state;
             } elseif (is_array($state) && ! empty($state)) {
                 $firstFile = reset($state);
-                if ($firstFile instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile) {
+                if ($firstFile instanceof TemporaryUploadedFile) {
                     $path = $firstFile->getRealPath();
                 } elseif (is_string($firstFile)) {
                     $path = $firstFile;
@@ -334,7 +336,7 @@ class Import extends Page implements HasForms
             }
 
             // Resolve relative paths against the storage directory
-            if ($path && ! str_starts_with($path, DIRECTORY_SEPARATOR)) {
+            if ($path && ! $this->isAbsolutePath($path)) {
                 $path = storage_path('app/'.$path);
             }
 
@@ -368,6 +370,16 @@ class Import extends Page implements HasForms
         } catch (\Exception $e) {
             $this->addError('upload_file', 'Error parsing file: '.$e->getMessage());
         }
+    }
+
+    /**
+     * Determine whether a path is absolute on POSIX or Windows (drive letter or UNC).
+     */
+    protected function isAbsolutePath(string $path): bool
+    {
+        return str_starts_with($path, '/')
+            || str_starts_with($path, '\\')
+            || preg_match('#^[A-Za-z]:[\\\\/]#', $path) === 1;
     }
 
     /**
@@ -563,7 +575,7 @@ class Import extends Page implements HasForms
             if ($field['is_primary']) {
                 $desc[] = 'Optional - provide to update existing, omit to create new';
             } elseif ($type === 'enum' && isset($field['enum_class'])) {
-                $enumResolver = app(\Modules\DataManager\Services\EnumResolver::class);
+                $enumResolver = app(EnumResolver::class);
                 $options = $enumResolver->getOptions($field['enum_class']);
                 $desc[] = 'Options: '.implode(', ', array_keys($options));
             } elseif ($type === 'boolean') {
