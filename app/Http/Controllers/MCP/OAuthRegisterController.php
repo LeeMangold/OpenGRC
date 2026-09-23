@@ -10,9 +10,8 @@ use Laravel\Passport\ClientRepository;
 /**
  * Custom OAuth client registration controller for MCP.
  *
- * This overrides the laravel/mcp package's controller to work with
- * Laravel Passport v12's API (which uses `create()` instead of
- * `createAuthorizationCodeGrantClient()`).
+ * This overrides the laravel/mcp package's controller to register
+ * public (non-confidential) clients and enforce allowed redirect domains.
  */
 class OAuthRegisterController
 {
@@ -38,15 +37,9 @@ class OAuthRegisterController
             }],
         ]);
 
-        // Create an authorization code grant client using Passport v12 API
-        // Parameters: userId, name, redirect, provider, personalAccess, password, confidential
-        $client = $this->clients->create(
-            userId: null,
+        $client = $this->clients->createAuthorizationCodeGrantClient(
             name: $request->get('client_name', $request->get('name', 'MCP Client')),
-            redirect: implode(',', $validated['redirect_uris']),
-            provider: null,
-            personalAccess: false,
-            password: false,
+            redirectUris: $validated['redirect_uris'],
             confidential: false, // Public client for MCP
         );
 
