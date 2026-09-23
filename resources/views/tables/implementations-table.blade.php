@@ -17,8 +17,8 @@
         <tr>
             <td class="border px-4 py-2"> {{ $implementation->code }}</td>
             <td class="border px-4 py-2">{{ $implementation->title }}</td>
-            <td class="border px-4 py-2"> {!! $implementation->details !!} </td>
-            <td class="border px-4 py-2"> {!! $implementation->test_procedure !!} </td>
+            <td class="border px-4 py-2"> @safeHtml($implementation->details) </td>
+            <td class="border px-4 py-2"> @safeHtml($implementation->test_procedure) </td>
             </tr>
         @endforeach
 

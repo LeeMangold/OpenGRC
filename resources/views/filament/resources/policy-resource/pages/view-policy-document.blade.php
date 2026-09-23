@@ -41,7 +41,7 @@
                             </td>
                             <td colspan="5" class="border border-gray-300 dark:border-gray-600 px-4 py-3 text-gray-900 dark:text-gray-100">
                                 <div class="prose dark:prose-invert max-w-none">
-                                    {!! $record->purpose ?: 'No purpose defined' !!}
+                                    @safeHtml($record->purpose ?: 'No purpose defined')
                                 </div>
                             </td>
                         </tr>
@@ -53,7 +53,7 @@
                             </td>
                             <td colspan="5" class="border border-gray-300 dark:border-gray-600 px-4 py-3 text-gray-900 dark:text-gray-100">
                                 <div class="prose dark:prose-invert max-w-none">
-                                    {!! $record->policy_scope ?: 'No scope defined' !!}
+                                    @safeHtml($record->policy_scope ?: 'No scope defined')
                                 </div>
                             </td>
                         </tr>
@@ -79,7 +79,7 @@
                         [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:mt-5 [&_h3]:mb-2 [&_h3]:text-gray-900 dark:[&_h3]:text-gray-100
                         [&_h4]:text-lg [&_h4]:font-medium [&_h4]:mt-4 [&_h4]:mb-2 [&_h4]:text-gray-900 dark:[&_h4]:text-gray-100
                         [&_p]:mb-4 [&_ul]:mb-4 [&_ol]:mb-4 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:list-decimal [&_ol]:pl-6">
-                        {!! $record->body !!}
+                        @safeHtml($record->body)
                     </div>
                 </div>
             @endif
@@ -128,7 +128,7 @@
                                         {{ $revision['author'] ?? '' }}
                                     </td>
                                     <td class="border border-gray-300 dark:border-gray-600 px-4 py-3 text-gray-900 dark:text-gray-100">
-                                        {!! $revision['changes'] ?? '' !!}
+                                        @safeHtml($revision['changes'] ?? '')
                                     </td>
                                 </tr>
                             @endforeach

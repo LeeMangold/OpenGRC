@@ -15,7 +15,7 @@
         </h2>
         @if($survey->template->description)
             <div class="mt-2 text-sm text-gray-600 dark:text-gray-400 prose dark:prose-invert prose-sm max-w-none">
-                {!! $survey->template->description !!}
+                @safeHtml($survey->template->description)
             </div>
         @endif
     </div>

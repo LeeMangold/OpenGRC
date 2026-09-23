@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Aliziodev\LaravelTaxonomy\Models\Taxonomy;
 use Aliziodev\LaravelTaxonomy\Traits\HasTaxonomy;
+use App\Casts\SanitizedHtml;
 use App\Enums\DocumentType;
 use App\Mcp\Traits\HasMcpSupport;
 use Illuminate\Database\Eloquent\Builder;
@@ -71,6 +72,9 @@ class Policy extends Model
         'effective_date' => 'date',
         'retired_date' => 'date',
         'revision_history' => 'array',
+        'purpose' => SanitizedHtml::class,
+        'policy_scope' => SanitizedHtml::class,
+        'body' => SanitizedHtml::class,
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',

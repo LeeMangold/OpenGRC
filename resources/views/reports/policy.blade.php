@@ -51,7 +51,7 @@
                 <tr>
                     <td style="background-color: #f2f2f2; vertical-align: top;"><strong>Purpose</strong></td>
                     <td colspan="5">
-                        {!! $policy->purpose ? PdfHelper::convertImagesToBase64($policy->purpose) : 'No purpose defined' !!}
+                        @safePdfHtml($policy->purpose ?: 'No purpose defined')
                     </td>
                 </tr>
 
@@ -59,7 +59,7 @@
                 <tr>
                     <td style="background-color: #f2f2f2; vertical-align: top;"><strong>Scope</strong></td>
                     <td colspan="5">
-                        {!! $policy->policy_scope ? PdfHelper::convertImagesToBase64($policy->policy_scope) : 'No scope defined' !!}
+                        @safePdfHtml($policy->policy_scope ?: 'No scope defined')
                     </td>
                 </tr>
             </tbody>
@@ -72,7 +72,7 @@
         {{-- Policy Body --}}
         @if($policy->body)
             <div style="margin: 30px 0;">
-                {!! PdfHelper::convertImagesToBase64($policy->body) !!}
+                @safePdfHtml($policy->body)
             </div>
         @endif
 
@@ -95,7 +95,7 @@
                             <td>{{ $revision['version'] ?? '' }}</td>
                             <td>{{ isset($revision['date']) ? \Carbon\Carbon::parse($revision['date'])->format('n/j/Y') : '' }}</td>
                             <td>{{ $revision['author'] ?? '' }}</td>
-                            <td>{!! $revision['changes'] ?? '' !!}</td>
+                            <td>@safeHtml($revision['changes'] ?? '')</td>
                         </tr>
                     @endforeach
                 </tbody>

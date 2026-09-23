@@ -20,7 +20,7 @@
             <tr>
                 <td class="border px-4 py-2">
                     <a class="underline"
-                       href="{!! route('filament.app.resources.data-requests.view', $request->id) !!}">
+                       href="{{ route('filament.app.resources.data-requests.view', $request->id) }}">
                         {{ $request->details }}
                     </a>
                 </td>
@@ -31,7 +31,7 @@
                         <ul class="list-disc p-4">
                             @foreach ($request->responses as $response)
                                 <li>
-                                    {!! $response->response !!}
+                                    @safeHtml($response->response)
                                     @if($response->attachments->count() > 0)
                                         (has attachments)
                                     @endif
@@ -43,7 +43,7 @@
                 </td>
 
                 <td class="border px-4 py-2">{{ Carbon::parse($request->responses->first()->due_at)->format('F j, Y') }}</td>
-                <td class="border px-4 py-2"> {!! $request->responses->first()->status->value !!} </td>
+                <td class="border px-4 py-2"> {{ $request->responses->first()->status->value }} </td>
             </tr>
         @endforeach
 

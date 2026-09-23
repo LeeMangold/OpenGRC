@@ -49,7 +49,7 @@
                 <td class='fi-ta-td text-center align-middle'>{{ $record["Request Code"] ?? ''}}</td>
                 <td class='fi-ta-td text-center align-middle'>{{ $record["Control Code"] }}</td>
                 <td class='fi-ta-td'>{{ $record["Details"] }}</td>
-                <td class='fi-ta-td text-center align-middle'>{!! $record["Assigned To"] !!}</td>
+                <td class='fi-ta-td text-center align-middle'>{{ $record["Assigned To"] }}</td>
                 <td class='fi-ta-td text-center align-middle'>{{ $record["Due On"] }}</td>
             </tr>
         @endforeach

@@ -90,7 +90,7 @@
                 <div class="bg-white rounded-xl shadow-sm border p-8">
                     <h2 class="text-xl font-semibold text-gray-900 mb-4">{{ $contentBlocks['overview']->title }}</h2>
                     <div class="prose prose-blue max-w-none">
-                        {!! $contentBlocks['overview']->content !!}
+                        @safeHtml($contentBlocks['overview']->content)
                     </div>
                 </div>
             </section>
@@ -295,7 +295,7 @@
                                         <div class="bg-gray-50 rounded-md p-4">
                                             <h4 class="text-sm font-medium text-gray-900 mb-2">Non-Disclosure Agreement</h4>
                                             <div class="text-sm text-gray-600 max-h-32 overflow-y-auto prose prose-sm">
-                                                {!! $ndaText !!}
+                                                @safeHtml($ndaText)
                                             </div>
                                             <label class="flex items-center mt-3">
                                                 <input type="checkbox" name="nda_agreed" value="1" required class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
@@ -338,7 +338,7 @@
                         <div class="bg-white rounded-xl shadow-sm border p-6 flex flex-col">
                             <h2 class="text-lg font-semibold text-gray-900 mb-3">{{ $block->title }}</h2>
                             <div class="prose prose-sm prose-blue max-w-none flex-1">
-                                {!! $block->content !!}
+                                @safeHtml($block->content)
                             </div>
                         </div>
                     @endforeach

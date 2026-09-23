@@ -88,7 +88,7 @@
         @if($program->description)
             <center><h2>Program Description</h2></center>
             <div style="margin: 20px 0;">
-                {!! PdfHelper::convertImagesToBase64($program->description) !!}
+                @safePdfHtml($program->description)
             </div>
             <div class="page-break"></div>
         @endif
@@ -184,7 +184,7 @@
                 </tr>
                 <tr>
                     <td style="background-color: #f9f9f9;"><strong>Control Description</strong></td>
-                    <td>{!! PdfHelper::convertImagesToBase64($control->description) !!}</td>
+                    <td>@safePdfHtml($control->description)</td>
                 </tr>
                 <tr>
                     <td style="background-color: #f9f9f9;"><strong>Applicability</strong></td>
@@ -202,7 +202,7 @@
                                 <div style="margin-bottom: 15px;">
                                     <strong>Implementation {{ $loop->iteration }}:</strong>
                                     <br>
-                                    {!! PdfHelper::convertImagesToBase64($implementation->details) !!}
+                                    @safePdfHtml($implementation->details)
                                     @if($implementation->status)
                                         <br><em>Status: {{ $implementation->status->value }}</em>
                                     @endif
