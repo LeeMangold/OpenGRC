@@ -2,10 +2,10 @@
 
 namespace App\Mail;
 
+use App\Services\MailTemplateRenderer;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Blade;
 
 class EvidenceRequestMail extends Mailable
 {
@@ -34,7 +34,7 @@ class EvidenceRequestMail extends Mailable
     {
         $viewString = setting('mail.templates.evidence_request_body');
 
-        $renderedView = Blade::render($viewString, [
+        $renderedView = MailTemplateRenderer::html($viewString, [
             'url' => $this->url,
             'name' => $this->name,
             'email' => $this->email,

@@ -3,10 +3,10 @@
 namespace App\Mail;
 
 use App\Models\VendorUser;
+use App\Services\MailTemplateRenderer;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\URL;
 
 class VendorInvitationMail extends Mailable
@@ -45,7 +45,7 @@ class VendorInvitationMail extends Mailable
     {
         $viewString = setting('mail.templates.vendor_invitation_body');
 
-        $renderedView = Blade::render($viewString, [
+        $renderedView = MailTemplateRenderer::html($viewString, [
             'name' => $this->name,
             'email' => $this->email,
             'vendorName' => $this->vendorName,
@@ -56,7 +56,7 @@ class VendorInvitationMail extends Mailable
 
         return $this->from(setting('mail.from'))
             ->to($this->email)
-            ->subject(Blade::render(setting('mail.templates.vendor_invitation_subject'), [
+            ->subject(MailTemplateRenderer::text(setting('mail.templates.vendor_invitation_subject'), [
                 'portalName' => $this->portalName,
                 'vendorName' => $this->vendorName,
             ]))

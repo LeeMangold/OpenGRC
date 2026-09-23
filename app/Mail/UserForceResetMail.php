@@ -2,10 +2,10 @@
 
 namespace App\Mail;
 
+use App\Services\MailTemplateRenderer;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Blade;
 
 class UserForceResetMail extends Mailable
 {
@@ -37,7 +37,7 @@ class UserForceResetMail extends Mailable
     {
         $viewString = setting('mail.templates.password_reset_body');
 
-        $renderedView = Blade::render($viewString, [
+        $renderedView = MailTemplateRenderer::html($viewString, [
             'url' => $this->url,
             'name' => $this->name,
             'email' => $this->email,

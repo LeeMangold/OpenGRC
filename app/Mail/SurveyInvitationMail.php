@@ -3,10 +3,10 @@
 namespace App\Mail;
 
 use App\Models\Survey;
+use App\Services\MailTemplateRenderer;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Blade;
 
 class SurveyInvitationMail extends Mailable
 {
@@ -44,7 +44,7 @@ class SurveyInvitationMail extends Mailable
     {
         $viewString = setting('mail.templates.survey_invitation_body');
 
-        $renderedView = Blade::render($viewString, [
+        $renderedView = MailTemplateRenderer::html($viewString, [
             'name' => $this->name,
             'email' => $this->email,
             'surveyUrl' => $this->surveyUrl,
@@ -55,7 +55,7 @@ class SurveyInvitationMail extends Mailable
 
         return $this->from(setting('mail.from'))
             ->to($this->email)
-            ->subject(Blade::render(setting('mail.templates.survey_invitation_subject'), [
+            ->subject(MailTemplateRenderer::text(setting('mail.templates.survey_invitation_subject'), [
                 'surveyTitle' => $this->surveyTitle,
             ]))
             ->html($renderedView);

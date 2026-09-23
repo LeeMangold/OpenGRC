@@ -3,10 +3,10 @@
 namespace App\Mail;
 
 use App\Models\TrustCenterAccessRequest;
+use App\Services\MailTemplateRenderer;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Blade;
 
 class TrustCenterAccessApprovedMail extends Mailable
 {
@@ -38,7 +38,7 @@ class TrustCenterAccessApprovedMail extends Mailable
     {
         $viewString = setting('mail.templates.trust_center_access_approved_body');
 
-        $renderedView = Blade::render($viewString, [
+        $renderedView = MailTemplateRenderer::html($viewString, [
             'requesterName' => $this->requesterName,
             'requesterEmail' => $this->requesterEmail,
             'accessUrl' => $this->accessUrl,
@@ -49,7 +49,7 @@ class TrustCenterAccessApprovedMail extends Mailable
 
         return $this->from(setting('mail.from'), setting('general.name'))
             ->to($this->requesterEmail)
-            ->subject(Blade::render(setting('mail.templates.trust_center_access_approved_subject'), [
+            ->subject(MailTemplateRenderer::text(setting('mail.templates.trust_center_access_approved_subject'), [
                 'requesterName' => $this->requesterName,
             ]))
             ->html($renderedView);

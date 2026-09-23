@@ -4,10 +4,10 @@ namespace App\Mail;
 
 use App\Models\VendorDocument;
 use App\Models\VendorUser;
+use App\Services\MailTemplateRenderer;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Blade;
 
 class VendorDocumentExpiringMail extends Mailable
 {
@@ -48,23 +48,27 @@ class VendorDocumentExpiringMail extends Mailable
     {
         $viewString = setting('mail.templates.vendor_document_expiring_body');
 
-        $renderedView = Blade::render($viewString, [
+        $renderedView = MailTemplateRenderer::html($viewString, [
             'name' => $this->name,
             'email' => $this->email,
             'vendorName' => $this->vendorName,
             'portalName' => $this->portalName,
             'documentName' => $this->documentName,
+            'documentTitle' => $this->documentName,
             'documentType' => $this->documentType,
             'expirationDate' => $this->expirationDate,
             'daysUntilExpiration' => $this->daysUntilExpiration,
+            'daysRemaining' => $this->daysUntilExpiration,
             'portalUrl' => $this->portalUrl,
         ]);
 
         return $this->from(setting('mail.from'))
             ->to($this->email)
-            ->subject(Blade::render(setting('mail.templates.vendor_document_expiring_subject'), [
+            ->subject(MailTemplateRenderer::text(setting('mail.templates.vendor_document_expiring_subject'), [
                 'documentName' => $this->documentName,
+                'documentTitle' => $this->documentName,
                 'daysUntilExpiration' => $this->daysUntilExpiration,
+                'daysRemaining' => $this->daysUntilExpiration,
             ]))
             ->html($renderedView);
     }

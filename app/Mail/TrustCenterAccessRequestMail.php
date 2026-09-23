@@ -3,10 +3,10 @@
 namespace App\Mail;
 
 use App\Models\TrustCenterAccessRequest;
+use App\Services\MailTemplateRenderer;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Blade;
 
 class TrustCenterAccessRequestMail extends Mailable
 {
@@ -41,7 +41,7 @@ class TrustCenterAccessRequestMail extends Mailable
     {
         $viewString = setting('mail.templates.trust_center_access_request_body');
 
-        $renderedView = Blade::render($viewString, [
+        $renderedView = MailTemplateRenderer::html($viewString, [
             'requesterName' => $this->requesterName,
             'requesterEmail' => $this->requesterEmail,
             'requesterCompany' => $this->requesterCompany,
@@ -52,7 +52,7 @@ class TrustCenterAccessRequestMail extends Mailable
         ]);
 
         return $this->from(setting('mail.from'), setting('general.name'))
-            ->subject(Blade::render(setting('mail.templates.trust_center_access_request_subject'), [
+            ->subject(MailTemplateRenderer::text(setting('mail.templates.trust_center_access_request_subject'), [
                 'requesterName' => $this->requesterName,
                 'requesterCompany' => $this->requesterCompany,
             ]))
