@@ -227,9 +227,16 @@ class ScoreSurvey extends Page implements HasForms, HasInfolists
             });
 
         if ($answers->isEmpty()) {
+            $hasWeightedQuestions = $this->record->template
+                ?->questions()
+                ->where('risk_weight', '>', 0)
+                ->exists();
+
             $schema[] = Placeholder::make('no_manual_scoring')
                 ->label('')
-                ->content('This survey has no open-ended questions that require manual scoring. All questions can be automatically scored.')
+                ->content($hasWeightedQuestions
+                    ? __('This survey has no weighted open-ended questions that require manual scoring. All weighted questions are scored automatically.')
+                    : __('This survey template has no weighted questions, so no risk score can be calculated. Set question weights under Vendor Management → Survey Templates.'))
                 ->columnSpanFull();
 
             return $schema;
@@ -457,6 +464,18 @@ class ScoreSurvey extends Page implements HasForms, HasInfolists
             $service->calculateVendorScore($this->record->vendor);
         }
 
+        if ($score === null) {
+            Notification::make()
+                ->title(__('Assessment completed'))
+                ->body(__('No risk score was calculated because the survey has no scorable answers.'))
+                ->warning()
+                ->send();
+
+            $this->redirect(SurveyResource::getUrl('view', ['record' => $this->record]));
+
+            return;
+        }
+
         $recommendedRating = $service->recommendRiskRating($score);
 
         Notification::make()
@@ -484,6 +503,16 @@ class ScoreSurvey extends Page implements HasForms, HasInfolists
         // Also update vendor score if linked
         if ($this->record->vendor) {
             $service->calculateVendorScore($this->record->vendor);
+        }
+
+        if ($score === null) {
+            Notification::make()
+                ->title(__('Risk score not calculated'))
+                ->body(__('No weighted answers have been scored yet.'))
+                ->warning()
+                ->send();
+
+            return;
         }
 
         $recommendedRating = $service->recommendRiskRating($score);

@@ -373,6 +373,16 @@ class SurveyResource extends Resource
                                 $service->calculateVendorScore($record->vendor);
                             }
 
+                            if ($score === null) {
+                                Notification::make()
+                                    ->title(__('Risk score not calculated'))
+                                    ->body(__('This survey has no scorable answers. Check that the template\'s questions have risk weights.'))
+                                    ->warning()
+                                    ->send();
+
+                                return;
+                            }
+
                             Notification::make()
                                 ->title(__('Risk score recalculated'))
                                 ->body(__('New score: :score/100', ['score' => $score]))

@@ -26,8 +26,20 @@ class VendorSurveyTemplatesSeeder extends Seeder
             return;
         }
 
-        $this->seedVendorSecuritySurvey($user->id);
-        $this->seedVendorSecuritySurveyInternal($user->id);
+        // Only add templates that are missing so re-running never overwrites
+        // customised weights or resurrects a template someone deleted.
+        if (! $this->templateExists('Vendor Security Survey')) {
+            $this->seedVendorSecuritySurvey($user->id);
+        }
+
+        if (! $this->templateExists('Vendor Security Survey (Internal)')) {
+            $this->seedVendorSecuritySurveyInternal($user->id);
+        }
+    }
+
+    private function templateExists(string $title): bool
+    {
+        return SurveyTemplate::withTrashed()->where('title', $title)->exists();
     }
 
     private function seedVendorSecuritySurvey(int $userId): void

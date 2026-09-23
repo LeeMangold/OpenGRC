@@ -64,7 +64,11 @@ class AnswersRelationManager extends RelationManager
                         }
 
                         if ($questionType === QuestionType::BOOLEAN) {
-                            return $value ? 'Yes' : 'No';
+                            return match ($record->booleanValue()) {
+                                true => __('Yes'),
+                                false => __('No'),
+                                null => (string) $record->display_value,
+                            };
                         }
 
                         if (is_array($value)) {
@@ -195,7 +199,11 @@ class AnswersRelationManager extends RelationManager
                         } elseif ($value === null) {
                             $html .= '<span class="text-gray-400">No answer provided</span>';
                         } elseif ($question->question_type === QuestionType::BOOLEAN) {
-                            $html .= $value ? 'Yes' : 'No';
+                            $html .= e(match ($record->booleanValue()) {
+                                true => __('Yes'),
+                                false => __('No'),
+                                null => (string) $record->display_value,
+                            });
                         } elseif (is_array($value)) {
                             $html .= '<ul class="list-disc list-inside">';
                             foreach ($value as $v) {
