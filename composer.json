@@ -39,7 +39,7 @@
         "laravel/tinker": "^2.11.1",
         "league/flysystem-aws-s3-v3": "^3.35.2",
         "leandrocfe/filament-apex-charts": "^4.0",
-        "livewire/livewire": "3.7.6",
+        "livewire/livewire": "^3.8.9",
         "mangoldsecurity/filament-settings": "^2.4",
         "nwidart/laravel-modules": "^11.1.10",
         "pxlrbt/filament-activity-log": "^2.2.0",
