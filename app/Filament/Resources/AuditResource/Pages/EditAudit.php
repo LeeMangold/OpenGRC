@@ -15,6 +15,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Resources\Pages\EditRecord;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Illuminate\Database\Eloquent\Builder;
 
 class EditAudit extends EditRecord
 {
@@ -51,11 +52,16 @@ class EditAudit extends EditRecord
                             ->columns(1)
                             ->searchable(),
                         Select::make('members')
-                            ->relationship('members')
+                            ->relationship(
+                                'members',
+                                'name',
+                                fn (Builder $query) => $query->withTrashed()->whereNotNull('name'),
+                            )
+                            ->getOptionLabelFromRecordUsing(fn (User $record): string => $record->trashed() ? "{$record->name} (Deactivated)" : $record->name)
                             ->label('Additional Members')
                             ->hint('Who else should have full access to the Audit?')
                             ->helperText('Note: You don\'t need to add evidence people who are only fulfilling requests here.')
-                            ->options(User::optionsWithDeactivated())
+                            ->preload()
                             ->columns(1)
                             ->multiple()
                             ->searchable(),

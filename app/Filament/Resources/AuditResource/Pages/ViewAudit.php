@@ -131,6 +131,31 @@ class ViewAudit extends ViewRecord
                         AuditResource::completeAudit($record);
                         $livewire->redirectRoute('filament.app.resources.audits.view', $record);
                     }),
+                Action::make('take_ownership')
+                    ->label('Take Ownership')
+                    ->color('primary')
+                    ->requiresConfirmation()
+                    ->modalHeading('Take Ownership')
+                    ->modalDescription('You will become the audit manager. The current manager will remain on the audit as an additional member.')
+                    ->modalSubmitActionLabel('Yes, take ownership')
+                    ->visible(fn (Audit $record) => auth()->user()->hasRole('Super Admin') && $record->manager_id != auth()->id())
+                    ->action(function (Audit $record, $livewire) {
+                        $previousManagerId = $record->manager_id;
+
+                        $record->update(['manager_id' => auth()->id()]);
+                        $record->members()->detach(auth()->id());
+
+                        if ($previousManagerId) {
+                            $record->members()->syncWithoutDetaching([$previousManagerId]);
+                        }
+
+                        Notification::make()
+                            ->title('You are now the audit manager')
+                            ->success()
+                            ->send();
+
+                        $livewire->redirectRoute('filament.app.resources.audits.view', $record);
+                    }),
 
             ])
                 ->label('Workflow')
