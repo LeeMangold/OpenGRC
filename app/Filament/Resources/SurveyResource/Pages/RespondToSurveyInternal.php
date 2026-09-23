@@ -389,11 +389,19 @@ class RespondToSurveyInternal extends Page implements HasForms
             $scoringService->calculateVendorScore($this->record->vendor);
         }
 
-        Notification::make()
-            ->title(__('Assessment submitted'))
-            ->body(__('The internal assessment has been completed. Risk score: :score/100', ['score' => $riskScore]))
-            ->success()
-            ->send();
+        if ($riskScore === null) {
+            Notification::make()
+                ->title(__('Assessment submitted'))
+                ->body(__('The internal assessment has been completed, but no risk score was calculated because the survey template has no weighted questions. Set question weights under Vendor Management → Survey Templates.'))
+                ->warning()
+                ->send();
+        } else {
+            Notification::make()
+                ->title(__('Assessment submitted'))
+                ->body(__('The internal assessment has been completed. Risk score: :score/100', ['score' => $riskScore]))
+                ->success()
+                ->send();
+        }
 
         $this->redirect(SurveyResource::getUrl('view', ['record' => $this->record]));
     }

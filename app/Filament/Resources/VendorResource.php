@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Enums\SurveyStatus;
-use App\Enums\SurveyTemplateStatus;
 use App\Enums\VendorRiskRating;
 use App\Enums\VendorStatus;
 use App\Filament\Exports\VendorExporter;
@@ -325,7 +324,7 @@ class VendorResource extends Resource
                     ->schema([
                         Select::make('survey_template_id')
                             ->label(__('Survey Template'))
-                            ->options(SurveyTemplate::where('status', SurveyTemplateStatus::ACTIVE)->pluck('title', 'id'))
+                            ->options(SurveyTemplate::forVendorAssessment()->pluck('title', 'id'))
                             ->searchable()
                             ->required(),
                         TextInput::make('respondent_email')

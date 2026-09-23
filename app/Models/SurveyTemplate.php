@@ -12,8 +12,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Spatie\Activitylog\Support\LogOptions;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 
 class SurveyTemplate extends Model
 {
@@ -71,6 +71,18 @@ class SurveyTemplate extends Model
     public function scopeChecklists(Builder $query): Builder
     {
         return $query->where('type', SurveyType::INTERNAL_CHECKLIST);
+    }
+
+    /**
+     * Scope a query to active templates that can be used for vendor assessments.
+     *
+     * Checklist templates have no risk weights, so assessments built on them
+     * can never produce a meaningful risk score.
+     */
+    public function scopeForVendorAssessment(Builder $query): Builder
+    {
+        return $query->where('status', SurveyTemplateStatus::ACTIVE)
+            ->where('type', '!=', SurveyType::INTERNAL_CHECKLIST);
     }
 
     /**

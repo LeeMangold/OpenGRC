@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Enums\SurveyStatus;
-use App\Enums\SurveyTemplateStatus;
 use App\Enums\SurveyType;
 use App\Filament\Resources\SurveyResource;
 use App\Mail\SurveyInvitationMail;
@@ -39,7 +38,8 @@ class VendorAssessmentService
                 ->live(),
             Select::make('survey_template_id')
                 ->label(__('Survey Template'))
-                ->options(SurveyTemplate::where('status', SurveyTemplateStatus::ACTIVE)->pluck('title', 'id'))
+                ->options(SurveyTemplate::forVendorAssessment()->pluck('title', 'id'))
+                ->helperText(__('Only vendor assessment survey templates are listed. Configure question weights under Vendor Management → Survey Templates.'))
                 ->searchable()
                 ->required(),
             TextInput::make('respondent_email')

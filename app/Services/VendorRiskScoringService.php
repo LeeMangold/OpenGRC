@@ -14,13 +14,17 @@ class VendorRiskScoringService
 {
     /**
      * Calculate the risk score for a survey based on answers and question weights.
+     *
+     * Returns null when nothing could be scored (no weighted questions, or every
+     * weighted question is N/A or awaiting manual scoring). In that case the
+     * survey's stored score is left untouched rather than reported as 0 (no risk).
      */
-    public function calculateSurveyScore(Survey $survey): int
+    public function calculateSurveyScore(Survey $survey): ?int
     {
         $template = $survey->template;
 
         if (! $template) {
-            return 0;
+            return null;
         }
 
         $questions = $template->questions()
@@ -28,7 +32,7 @@ class VendorRiskScoringService
             ->get();
 
         if ($questions->isEmpty()) {
-            return 0;
+            return null;
         }
 
         $totalWeight = 0;
@@ -52,7 +56,7 @@ class VendorRiskScoringService
         }
 
         if ($totalWeight === 0) {
-            return 0;
+            return null;
         }
 
         // Calculate weighted average (0-100)

@@ -167,6 +167,10 @@ class Install extends Command
         $this->call('db:seed', ['--class' => 'SettingsSeeder']);
         $this->call('db:seed', ['--class' => 'RolePermissionSeeder']);
 
+        // Built-in vendor survey templates need an existing user as their creator,
+        // so they are seeded here rather than by their migrations.
+        $this->call('db:seed', ['--class' => 'VendorSurveyTemplatesSeeder']);
+
         // Set the site name and URL.
         $this->call('settings:set', [
             'key' => 'general.name',

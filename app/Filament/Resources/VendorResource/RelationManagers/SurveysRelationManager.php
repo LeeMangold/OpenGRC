@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\VendorResource\RelationManagers;
 
 use App\Enums\SurveyStatus;
-use App\Enums\SurveyTemplateStatus;
 use App\Enums\SurveyType;
 use App\Filament\Resources\SurveyResource;
 use App\Mail\SurveyInvitationMail;
@@ -40,7 +39,9 @@ class SurveysRelationManager extends RelationManager
             ->components([
                 Select::make('survey_template_id')
                     ->label(__('Survey Template'))
-                    ->options(SurveyTemplate::where('status', SurveyTemplateStatus::ACTIVE)->pluck('title', 'id'))
+                    ->options(fn (?Survey $record) => SurveyTemplate::forVendorAssessment()
+                        ->when($record, fn ($query) => $query->orWhere('id', $record->survey_template_id))
+                        ->pluck('title', 'id'))
                     ->searchable()
                     ->required()
                     ->disabled(fn (?Survey $record): bool => $record !== null),
