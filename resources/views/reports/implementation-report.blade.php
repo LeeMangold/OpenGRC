@@ -95,11 +95,11 @@
                 <tr>
                     <td>Implementation Title</td>
                     <td colspan="2">{{ $item->auditable->code }} {{ $item->auditable->title }}
-                        <br>{!! $item->auditable->details !!}</td>
+                        <br>@safeHtml($item->auditable->details)</td>
                 </tr>
                 <tr>
                     <td>Auditor Notes</td>
-                    <td colspan="2">{!! $item->auditor_notes !!}</td>
+                    <td colspan="2">@safeHtml($item->auditor_notes)</td>
                 </tr>
             </table>
             <br><br>

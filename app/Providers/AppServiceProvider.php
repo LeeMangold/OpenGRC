@@ -4,12 +4,14 @@ namespace App\Providers;
 
 use App\Livewire\CustomSessionGuard;
 use App\Models\User;
+use App\Services\HtmlSanitizerService;
 use BezhanSalleh\LanguageSwitch\LanguageSwitch;
 use BladeUI\Icons\Factory as IconFactory;
 use Exception;
 use Filament\Support\Facades\FilamentColor;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Gate;
@@ -28,6 +30,11 @@ class AppServiceProvider extends ServiceProvider
     {
         // Override the package's SessionGuard component with our custom one
         Livewire::component('filament-inactivity-guard::session-guard', CustomSessionGuard::class);
+
+        // Render user-supplied rich text as sanitized HTML. Use these instead of {!! !!}.
+        $this->app->singleton(HtmlSanitizerService::class);
+        Blade::directive('safeHtml', fn (string $expression) => "<?php echo app(\\App\\Services\\HtmlSanitizerService::class)->sanitize({$expression}); ?>");
+        Blade::directive('safePdfHtml', fn (string $expression) => "<?php echo app(\\App\\Services\\HtmlSanitizerService::class)->sanitizeForPdf({$expression}); ?>");
 
         // Disable mass assignment protection
         Model::unguard();

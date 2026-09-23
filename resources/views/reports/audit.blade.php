@@ -136,17 +136,17 @@
                 <tr>
                     <td>Control</td>
                     <td colspan="3">{{ $item->auditable->code }} {{ $item->auditable->title }}
-                        <br>{!! $item->auditable->description !!}</td>
+                        <br>@safeHtml($item->auditable->description)</td>
                 </tr>
                 <tr>
                     <td>Auditor Notes</td>
-                    <td colspan="3">{!! $item->auditor_notes !!}</td>
+                    <td colspan="3">@safeHtml($item->auditor_notes)</td>
                 </tr>
                 <tr>
                     <td>Implementations</td>
                     <td colspan="3">
                         @foreach($item->auditable->implementations as $implementation)
-                            {!!  $implementation->details  !!}
+                            @safeHtml($implementation->details)
                         @endforeach
 
 
