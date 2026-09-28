@@ -149,13 +149,13 @@
     <div class="control-box">
         <div class="code">{{ $controlCode }}</div>
         <div class="title">{{ $controlTitle }}</div>
-        <div class="description">{!! html_entity_decode($controlDescription) !!}</div>
+        <div class="description">@safeHtml(html_entity_decode($controlDescription ?? ''))</div>
     </div>
 
     <div class="section">
         <div class="section-title">Evidence Request</div>
         <div class="request-text">
-            {!! html_entity_decode($dataRequest->details) !!}
+            @safeHtml(html_entity_decode($dataRequest->details ?? ''))
         </div>
     </div>
 
@@ -174,7 +174,7 @@
         @foreach($dataRequest->responses as $response)
             @if($response->response)
                 <div class="narrative">
-                    {!! html_entity_decode($response->response) !!}
+                    @safeHtml(html_entity_decode($response->response ?? ''))
                 </div>
             @endif
         @endforeach

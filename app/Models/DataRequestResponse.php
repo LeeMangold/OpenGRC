@@ -4,6 +4,7 @@
 
 namespace App\Models;
 
+use App\Casts\SanitizedHtml;
 use App\Enums\ResponseStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,8 +12,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Kirschbaum\Commentions\Contracts\Commentable;
 use Kirschbaum\Commentions\HasComments;
-use Spatie\Activitylog\Support\LogOptions;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 
 class DataRequestResponse extends Model implements Commentable
 {
@@ -21,6 +22,7 @@ class DataRequestResponse extends Model implements Commentable
     protected $casts = [
         'status' => ResponseStatus::class,
         'due_at' => 'datetime',
+        'response' => SanitizedHtml::class,
     ];
 
     protected function casts(): array

@@ -114,10 +114,10 @@ class PdfHelper extends Controller
                         ]);
 
                         // Try to get from storage disk directly
-                        if ($storageDisk->exists($storagePath)) {
+                        if (self::isSafeStoragePath($storagePath) && $storageDisk->exists($storagePath)) {
                             $imageContent = $storageDisk->get($storagePath);
-                            $mimeType = $storageDisk->mimeType($storagePath);
-                            $base64Image = 'data:'.$mimeType.';base64,'.base64_encode($imageContent);
+                            $mimeType = self::detectImageMime($imageContent);
+                            $base64Image = $mimeType ? 'data:'.$mimeType.';base64,'.base64_encode($imageContent) : null;
 
                             Log::info('[PdfHelper] Successfully converted image from storage', [
                                 'storage_path' => $storagePath,
@@ -135,46 +135,7 @@ class PdfHelper extends Controller
                     if (! $base64Image) {
                         Log::info('[PdfHelper] Attempting to download remote image', ['url' => $src]);
 
-                        // Download the image temporarily
-                        $tempFile = sys_get_temp_dir().'/'.uniqid('img_', true).'.tmp';
-
-                        // Use curl for better error handling
-                        $ch = curl_init($src);
-                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-                        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-                        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-                        $imageContent = curl_exec($ch);
-                        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-                        $curlError = curl_error($ch);
-                        curl_close($ch);
-
-                        if ($imageContent !== false && $httpCode === 200) {
-                            file_put_contents($tempFile, $imageContent);
-
-                            // Get mime type
-                            $finfo = new finfo(FILEINFO_MIME_TYPE);
-                            $mimeType = $finfo->file($tempFile);
-
-                            // Convert to base64
-                            $base64Image = 'data:'.$mimeType.';base64,'.base64_encode($imageContent);
-
-                            Log::info('[PdfHelper] Successfully converted remote image', [
-                                'mime_type' => $mimeType,
-                                'size' => strlen($imageContent),
-                            ]);
-
-                            // Clean up temp file
-                            if (file_exists($tempFile)) {
-                                unlink($tempFile);
-                            }
-                        } else {
-                            Log::warning('[PdfHelper] Failed to download remote image', [
-                                'url' => $src,
-                                'http_code' => $httpCode,
-                                'curl_error' => $curlError,
-                            ]);
-                        }
+                        $base64Image = self::fetchRemoteImage($src);
                     }
                 } else {
                     // Handle local storage paths
@@ -203,28 +164,20 @@ class PdfHelper extends Controller
                     }
 
                     // Try to get from storage
-                    if ($storagePath && $storageDisk->exists($storagePath)) {
+                    if ($storagePath && self::isSafeStoragePath($storagePath) && $storageDisk->exists($storagePath)) {
                         $imageContent = $storageDisk->get($storagePath);
-                        $mimeType = $storageDisk->mimeType($storagePath);
-                        $base64Image = 'data:'.$mimeType.';base64,'.base64_encode($imageContent);
+                        $mimeType = self::detectImageMime($imageContent);
+                        $base64Image = $mimeType ? 'data:'.$mimeType.';base64,'.base64_encode($imageContent) : null;
                     }
 
-                    // If not found in storage, try as absolute file path
-                    if (! $base64Image && file_exists($src)) {
-                        $imageContent = file_get_contents($src);
-                        $finfo = new finfo(FILEINFO_MIME_TYPE);
-                        $mimeType = $finfo->file($src);
-                        $base64Image = 'data:'.$mimeType.';base64,'.base64_encode($imageContent);
-                    }
-
-                    // Try as public path
+                    // Try as public path, confined to the public directory
                     if (! $base64Image) {
-                        $publicPath = public_path($cleanSrc);
-                        if (file_exists($publicPath)) {
+                        $publicRoot = realpath(public_path());
+                        $publicPath = realpath(public_path(parse_url($cleanSrc, PHP_URL_PATH) ?? ''));
+                        if ($publicRoot && $publicPath && str_starts_with($publicPath, $publicRoot.DIRECTORY_SEPARATOR) && is_file($publicPath)) {
                             $imageContent = file_get_contents($publicPath);
-                            $finfo = new finfo(FILEINFO_MIME_TYPE);
-                            $mimeType = $finfo->file($publicPath);
-                            $base64Image = 'data:'.$mimeType.';base64,'.base64_encode($imageContent);
+                            $mimeType = self::detectImageMime($imageContent);
+                            $base64Image = $mimeType ? 'data:'.$mimeType.';base64,'.base64_encode($imageContent) : null;
                         }
                     }
                 }
@@ -252,6 +205,96 @@ class PdfHelper extends Controller
         }, $html);
 
         return $html;
+    }
+
+    private const MAX_REMOTE_IMAGE_BYTES = 10 * 1024 * 1024;
+
+    /**
+     * Download an external image for embedding. Guards against SSRF: http(s) only,
+     * no redirects, host must resolve exclusively to public IPs (pinned for the
+     * request to prevent DNS rebinding), size-capped, and the payload must be an image.
+     */
+    private static function fetchRemoteImage(string $url): ?string
+    {
+        $parts = parse_url($url);
+        $scheme = strtolower($parts['scheme'] ?? '');
+        $host = $parts['host'] ?? '';
+
+        if (! in_array($scheme, ['http', 'https'], true) || $host === '') {
+            return null;
+        }
+
+        $host = trim($host, '[]');
+        $isIpLiteral = (bool) filter_var($host, FILTER_VALIDATE_IP);
+        $ips = $isIpLiteral ? [$host] : array_merge(
+            array_column(dns_get_record($host, DNS_A) ?: [], 'ip'),
+            array_column(dns_get_record($host, DNS_AAAA) ?: [], 'ipv6'),
+        );
+
+        if ($ips === []) {
+            return null;
+        }
+
+        foreach ($ips as $ip) {
+            if (! filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+                Log::warning('[PdfHelper] Refusing to fetch image from non-public address', ['url' => $url, 'ip' => $ip]);
+
+                return null;
+            }
+        }
+
+        $ch = curl_init($url);
+
+        if (! $isIpLiteral) {
+            $port = $parts['port'] ?? ($scheme === 'https' ? 443 : 80);
+            $pinnedIp = str_contains($ips[0], ':') ? '['.$ips[0].']' : $ips[0];
+            curl_setopt($ch, CURLOPT_RESOLVE, ["{$host}:{$port}:{$pinnedIp}"]);
+        }
+
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_FOLLOWLOCATION => false,
+            CURLOPT_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,
+            CURLOPT_SSL_VERIFYPEER => true,
+            CURLOPT_TIMEOUT => 15,
+            CURLOPT_BUFFERSIZE => 16384,
+            CURLOPT_NOPROGRESS => false,
+            CURLOPT_PROGRESSFUNCTION => fn ($ch, $dlTotal, $dlNow) => $dlNow > self::MAX_REMOTE_IMAGE_BYTES ? 1 : 0,
+        ]);
+        $imageContent = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curlError = curl_error($ch);
+        curl_close($ch);
+
+        if ($imageContent === false || $httpCode !== 200) {
+            Log::warning('[PdfHelper] Failed to download remote image', [
+                'url' => $url,
+                'http_code' => $httpCode,
+                'curl_error' => $curlError,
+            ]);
+
+            return null;
+        }
+
+        $mimeType = self::detectImageMime($imageContent);
+
+        return $mimeType ? 'data:'.$mimeType.';base64,'.base64_encode($imageContent) : null;
+    }
+
+    /**
+     * Return the image MIME type of the given bytes, or null if they are not a raster image.
+     * SVG is excluded since it can carry script and external references.
+     */
+    private static function detectImageMime(string $content): ?string
+    {
+        $mimeType = (new finfo(FILEINFO_MIME_TYPE))->buffer($content);
+
+        return in_array($mimeType, ['image/png', 'image/jpeg', 'image/gif', 'image/webp', 'image/bmp'], true) ? $mimeType : null;
+    }
+
+    private static function isSafeStoragePath(string $path): bool
+    {
+        return ! str_contains($path, '..') && ! str_contains($path, "\0");
     }
 
     /**

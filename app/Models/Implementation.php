@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Aliziodev\LaravelTaxonomy\Traits\HasTaxonomy;
+use App\Casts\SanitizedHtml;
 use App\Enums\Effectiveness;
 use App\Enums\ImplementationStatus;
 use App\Mcp\Traits\HasMcpSupport;
@@ -17,8 +18,8 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Carbon;
-use Spatie\Activitylog\Support\LogOptions;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 
 /**
  * Class Implementation
@@ -74,6 +75,8 @@ class Implementation extends Model
         'id' => 'integer',
         'status' => ImplementationStatus::class,
         'effectiveness' => Effectiveness::class,
+        'details' => SanitizedHtml::class,
+        'test_procedure' => SanitizedHtml::class,
     ];
 
     /**

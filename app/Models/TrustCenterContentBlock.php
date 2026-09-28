@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\SanitizedHtml;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -21,6 +22,7 @@ class TrustCenterContentBlock extends Model
     protected $casts = [
         'is_enabled' => 'boolean',
         'sort_order' => 'integer',
+        'content' => SanitizedHtml::class,
     ];
 
     /**

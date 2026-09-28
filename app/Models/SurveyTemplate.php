@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\SanitizedHtml;
 use App\Enums\RecurrenceFrequency;
 use App\Enums\SurveyTemplateStatus;
 use App\Enums\SurveyType;
@@ -43,6 +44,7 @@ class SurveyTemplate extends Model
         'recurrence_day_of_month' => 'integer',
         'last_checklist_generated_at' => 'datetime',
         'next_checklist_due_at' => 'datetime',
+        'description' => SanitizedHtml::class,
     ];
 
     public function questions(): HasMany
