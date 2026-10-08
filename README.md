@@ -44,11 +44,11 @@ consultant to operate, and still nickel-and-dimed on every module.
 
 ## Requirements
 
-- PHP 8.2+
+- PHP 8.4+
 - MySQL / MariaDB (or PostgreSQL)
-- Composer and Node.js
+- Composer and Node.js 20.19+ (20.x) or 22.12+
 
-Built on [Laravel](https://laravel.com) and [Filament](https://filamentphp.com).
+Built on [Laravel 13](https://laravel.com) and [Filament](https://filamentphp.com).
 
 ## Quick start
 

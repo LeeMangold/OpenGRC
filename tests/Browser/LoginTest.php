@@ -22,8 +22,8 @@ class LoginTest extends DuskTestCase
             $browser->logout()
                 ->visit('/app/login')
                 ->assertSee('Sign in')
-                ->assertPresent('#data\\.email')
-                ->assertPresent('#data\\.password');
+                ->assertPresent('#form\\.email')
+                ->assertPresent('#form\\.password');
         });
     }
 
@@ -32,11 +32,11 @@ class LoginTest extends DuskTestCase
         $this->browse(function (Browser $browser) {
             $browser->logout()
                 ->visit('/app/login')
-                ->type('#data\\.email', 'admin@example.com')
-                ->type('#data\\.password', 'password')
+                ->type('#form\\.email', 'admin@example.com')
+                ->type('#form\\.password', 'password')
                 ->press('Sign in')
-                ->waitForLocation('/app', 10)
-                ->assertPathIs('/app')
+                ->waitForRoute('filament.app.pages.dashboard', [], 10)
+                ->assertRouteIs('filament.app.pages.dashboard')
                 ->assertSee('Dashboard');
         });
     }
@@ -46,8 +46,8 @@ class LoginTest extends DuskTestCase
         $this->browse(function (Browser $browser) {
             $browser->logout()
                 ->visit('/app/login')
-                ->type('#data\\.email', 'invalid@example.com')
-                ->type('#data\\.password', 'wrongpassword')
+                ->type('#form\\.email', 'invalid@example.com')
+                ->type('#form\\.password', 'wrongpassword')
                 ->press('Sign in')
                 ->pause(1000)
                 ->assertPathIs('/app/login')

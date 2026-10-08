@@ -55,8 +55,8 @@ fi
 
 # Check Node.js version
 node_version=$(node -v | cut -c 2-)
-if [[ "$node_version" < "16" ]]; then
-  echo "Checking Node.js version... FAILED! Node.js version 16 or higher is required. You have $node_version"
+if ! node -e 'const [major, minor] = process.versions.node.split(".").map(Number); process.exit((major === 20 && minor >= 19) || (major === 22 && minor >= 12) || major > 22 ? 0 : 1);'; then
+  echo "Checking Node.js version... FAILED! Node.js 20.19+ or 22.12+ is required. You have $node_version"
   exit 1
 else
   echo -e "Checking Node.js version... \033[32mGOOD!\033[0m"

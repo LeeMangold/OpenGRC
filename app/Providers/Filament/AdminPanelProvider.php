@@ -3,6 +3,15 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Admin\Pages\RolePermissionMatrix;
+use App\Filament\Admin\Pages\Settings\AiSettings;
+use App\Filament\Admin\Pages\Settings\AuthenticationSettings;
+use App\Filament\Admin\Pages\Settings\MailSettings;
+use App\Filament\Admin\Pages\Settings\ReportSettings;
+use App\Filament\Admin\Pages\Settings\SecuritySettings;
+use App\Filament\Admin\Pages\Settings\Settings;
+use App\Filament\Admin\Pages\Settings\StorageSettings;
+use App\Filament\Admin\Pages\Settings\TrustCenterSettings;
+use App\Filament\Admin\Pages\Settings\VendorPortalSettings;
 use DB;
 use Exception;
 use Filament\Http\Middleware\Authenticate;
@@ -18,7 +27,7 @@ use Filament\Widgets\AccountWidget;
 use Filament\Widgets\FilamentInfoWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
-use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
+use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Blade;
@@ -77,7 +86,7 @@ class AdminPanelProvider extends PanelProvider
                 StartSession::class,
                 AuthenticateSession::class,
                 ShareErrorsFromSession::class,
-                VerifyCsrfToken::class,
+                PreventRequestForgery::class,
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
@@ -99,15 +108,15 @@ class AdminPanelProvider extends PanelProvider
                     ),
                 SettingsPlugin::make()
                     ->pages([
-                        \App\Filament\Admin\Pages\Settings\Settings::class,
-                        \App\Filament\Admin\Pages\Settings\StorageSettings::class,
-                        \App\Filament\Admin\Pages\Settings\MailSettings::class,
-                        \App\Filament\Admin\Pages\Settings\AiSettings::class,
-                        \App\Filament\Admin\Pages\Settings\ReportSettings::class,
-                        \App\Filament\Admin\Pages\Settings\SecuritySettings::class,
-                        \App\Filament\Admin\Pages\Settings\AuthenticationSettings::class,
-                        \App\Filament\Admin\Pages\Settings\VendorPortalSettings::class,
-                        \App\Filament\Admin\Pages\Settings\TrustCenterSettings::class,
+                        Settings::class,
+                        StorageSettings::class,
+                        MailSettings::class,
+                        AiSettings::class,
+                        ReportSettings::class,
+                        SecuritySettings::class,
+                        AuthenticationSettings::class,
+                        VendorPortalSettings::class,
+                        TrustCenterSettings::class,
                     ]),
                 DataManagerPlugin::make(),
             ])
